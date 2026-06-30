@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blogr – A Modern Publishing Platform</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Overpass:wght@300;400;600;700&family=Ubuntu:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+
+    <!-- HEADER / NAV -->
+    <header class="site-header">
+      <nav class="navbar">
+        <a href="#" class="logo">Blogr</a>
+
+        <button class="hamburger" id="hamburger" aria-label="Toggle menu">
+          <span></span><span></span><span></span>
+        </button>
+
+        <div class="nav-menu" id="navMenu">
+          <ul class="nav-list">
+
+            <li class="nav-item">
+              <span class="nav-link">Product <span class="arrow">▾</span></span>
+              <ul class="dropdown">
+                <li><a href="#">Overview</a></li>
+                <li><a href="#">Pricing</a></li>
+                <li><a href="#">Marketplace</a></li>
+                <li><a href="#">Features</a></li>
+                <li><a href="#">Integrations</a></li>
+              </ul>
+            </li>
+
+            <li class="nav-item">
+              <span class="nav-link">Company <span class="arrow">▾</span></span>
+              <ul class="dropdown">
+                <li><a href="#">About</a></li>
+                <li><a href="#">Team</a></li>
+                <li><a href="#">Blog</a></li>
+                <li><a href="#">Careers</a></li>
+              </ul>
+            </li>
+
+            <li class="nav-item">
+              <span class="nav-link">Connect <span class="arrow">▾</span></span>
+              <ul class="dropdown">
+                <li><a href="#">Contact</a></li>
+                <li><a href="#">Newsletter</a></li>
+                <li><a href="#">LinkedIn</a></li>
+              </ul>
+            </li>
+
+          </ul>
+
+          <div class="nav-auth">
+            <a href="#" class="btn-login">Login</a>
+            <a href="#" class="btn-signup" id="openModal">Sign Up</a>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+
+      <!-- HERO -->
+      <section class="hero" id="home">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="hero-content">
+          <h1>A modern publishing platform</h1>
+          <p>Grow your audience and build your online brand</p>
+          <div class="hero-buttons">
+            <a class="btn-primary">Start for Free</a>
+            <a href="#features" class="btn-outline">Learn More</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- FEATURES -->
+      <section class="features" id="features">
+        <h2>Designed for the future</h2>
+        <div class="features-grid">
+
+          <div class="features-text">
+            <div class="feature-card">
+              <h3>Introducing an extensible editor</h3>
+              <p>Blogr features an exceedingly intuitive interface which lets you
+                focus on one thing: creating content. The editor supports management
+                of multiple blogs and allows easy manipulation of embeds such as
+                images, videos, and Markdown. Extensibility with plugins and themes
+                provide easy ways to add functionality or change the looks of a blog.</p>
+            </div>
+            <div class="feature-card">
+              <h3>Robust content management</h3>
+              <p>Flexible content management enables users to easily move through
+                posts. Increase the usability of your blog by adding customized
+                categories, sections, format, or flow. With this functionality,
+                you're in full control.</p>
+            </div>
+          </div>
+
+        <figure class="features-illustration">
+            <img src="images/illustration.png"
+                alt="Editor Illustration">
+        </figure>
+
+        </div>
+      </section>
+
+      <!-- INFRASTRUCTURE -->
+      <section class="infrastructure">
+        <div class="infra-phones">
+            <img src="images/phones.png"
+                alt="Phones">
+        </div>
+        <article class="infra-text">
+          <h2>State of the Art Infrastructure</h2>
+          <p>With reliability and speed in mind, worldwide data centers provide
+            the backbone for ultra-fast connectivity. This ensures your site will
+            load instantly, no matter where your readers are, keeping your site
+            competitive.</p>
+        </article>
+      </section>
+
+      <!-- OPEN SOURCE -->
+      <section class="opensource">
+<figure class="laptop-illustration">
+    <img src="images/laptop.png"
+         alt="Laptop Illustration">
+</figure>
+
+        <div class="opensource-text">
+          <div class="opensource-card">
+            <h3>Free, open, simple</h3>
+            <p>Blogr is a free and open source application backed by a large
+              community of helpful developers. It supports features such as code
+              syntax highlighting, RSS feeds, social media integration, third-party
+              commenting tools, and works seamlessly with Google Analytics. The
+              architecture is clean and is relatively easy to learn.</p>
+          </div>
+          <div class="opensource-card">
+            <h3>Powerful tooling</h3>
+            <p>Batteries included. We built a simple and straightforward CLI tool
+              that makes customization and deployment a breeze, but capable of
+              producing even the most complicated sites.</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <span class="logo">Blogr</span>
+        </div>
+        <div class="footer-columns">
+
+          <div class="footer-col">
+            <h4>Product</h4>
+            <ul>
+              <li><a href="#">Overview</a></li>
+              <li><a href="#">Pricing</a></li>
+              <li><a href="#">Marketplace</a></li>
+              <li><a href="#">Features</a></li>
+              <li><a href="#">Integrations</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h4>Company</h4>
+            <ul>
+              <li><a href="#">About</a></li>
+              <li><a href="#">Team</a></li>
+              <li><a href="#">Blog</a></li>
+              <li><a href="#">Careers</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-col">
+            <h4>Connect</h4>
+            <ul>
+              <li><a href="#">Contact</a></li>
+              <li><a href="#">Newsletter</a></li>
+              <li><a href="#">LinkedIn</a></li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </footer>
+
+    <!-- SIGNUP MODAL -->
+    <div class="modal-overlay" id="modalOverlay">
+      <div class="modal-box">
+
+        <button class="modal-close" id="modalClose">&#x2715;</button>
+
+        <h2 class="modal-title">Sign Up</h2>
+
+        <form class="modal-form" id="modalForm" novalidate>
+
+          <div class="modal-row">
+            <div class="form-group">
+              <label for="firstName">First Name <span class="required">*</span></label>
+              <input type="text" id="firstName" placeholder="" />
+              <span class="error-msg" id="firstNameError"></span>
+            </div>
+            <div class="form-group">
+              <label for="lastName">Last Name <span class="required">*</span></label>
+              <input type="text" id="lastName" placeholder="" />
+              <span class="error-msg" id="lastNameError"></span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="modalEmail">Email Address <span class="required">*</span></label>
+            <input type="email" id="modalEmail" placeholder="" />
+            <span class="error-msg" id="modalEmailError"></span>
+          </div>
+
+          <div class="form-group">
+            <label>Query Type <span class="required">*</span></label>
+            <div class="radio-group">
+              <label class="radio-option">
+                <input type="radio" name="queryType" value="General Enquiry" />
+                <span class="radio-custom"></span>
+                General Enquiry
+              </label>
+              <label class="radio-option">
+                <input type="radio" name="queryType" value="Support Request" />
+                <span class="radio-custom"></span>
+                Support Request
+              </label>
+            </div>
+            <span class="error-msg" id="queryError"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="modalMessage">Message <span class="required">*</span></label>
+            <textarea id="modalMessage" rows="4"></textarea>
+            <span class="error-msg" id="messageError"></span>
+          </div>
+
+          <div class="form-group checkbox-group">
+            <label class="checkbox-option">
+              <input type="checkbox" id="modalConsent" />
+              <span class="checkbox-custom"></span>
+              I consent to being contacted by the team <span class="required">*</span>
+            </label>
+            <span class="error-msg" id="consentError"></span>
+          </div>
+
+          <button type="submit" class="modal-submit">Submit</button>
+
+        </form>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
