@@ -44,6 +44,7 @@ const modalCloseBtn = document.getElementById("modalClose");
 openModalBtn.addEventListener("click", function (e) {
   e.preventDefault();
   modalOverlay.classList.add("open");
+  document.body.style.overflow = "hidden";
 });
 
 // Close modal when X is clicked
@@ -51,12 +52,6 @@ modalCloseBtn.addEventListener("click", function () {
   modalOverlay.classList.remove("open");
 });
 
-// Close modal when clicking outside the box
-modalOverlay.addEventListener("click", function (e) {
-  if (e.target === modalOverlay) {
-    modalOverlay.classList.remove("open");
-  }
-});
 
 
 // MODAL FORM — Validation + console.log
