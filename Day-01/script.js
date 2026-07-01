@@ -93,36 +93,37 @@ modalForm.addEventListener("submit", function (e) {
 
   let isValid = true;
 
-  // Validate each field
-  if (firstName.length < 2) {
+switch (true) {
+  case firstName.length < 2:
     firstNameError.textContent = "Please enter your first name.";
     isValid = false;
-  }
+    break;
 
-  if (lastName.length = "") {
+  case lastName.length === 0:
     lastNameError.textContent = "Please enter your last name.";
     isValid = false;
-  }
+    break;
 
-  if (!email.includes("@") || !email.includes(".")) {
+  case !email.includes("@") || !email.includes("."):
     modalEmailError.textContent = "Please enter a valid email address.";
     isValid = false;
-  }
+    break;
 
-  if (queryType === "") {
+  case queryType === "":
     queryError.textContent = "Please select a query type.";
     isValid = false;
-  }
+    break;
 
-  if (message.length == "") {
+  case message.length === 0:
     messageError.textContent = "Please enter a message.";
     isValid = false;
-  }
+    break;
 
-  if (!consent) {
+  case !consent:
     consentError.textContent = "You must consent to being contacted.";
     isValid = false;
-  }
+    break;
+}
 
   // If all valid — console.log the details
   if (isValid) {
