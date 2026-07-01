@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Management System</title>
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <!-- Heading -->
+      <h1>🎓 Student Management System</h1>
+
+      <!-- Student Form -->
+      <div class="form-section">
+        <h2>Add / Edit Student</h2>
+        <div class="form-group">
+          <label>Student Name</label>
+          <input
+            type="text"
+            id="studentName"
+            placeholder="Enter student name"
+          />
+        </div>
+
+        <div class="form-group">
+          <label>Age</label>
+          <input type="number" id="studentAge" placeholder="Enter age" />
+        </div>
+
+        <div class="form-group">
+          <label>Department</label>
+          <select id="studentDepartment">
+            <option value="">Select Department</option>
+            <option value="CSE">CSE</option>
+            <option value="IT">IT</option>
+            <option value="ECE">ECE</option>
+            <option value="EEE">EEE</option>
+            <option value="Mechanical">Mechanical</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Email</label>
+          <input type="email" id="studentEmail" placeholder="Enter email" />
+        </div>
+
+        <button id="saveBtn">Add Student</button>
+      </div>
+
+      <!-- Search & Filter -->
+      <div class="top-controls">
+        <input type="text" id="searchInput" placeholder="🔍 Search Student" />
+        <select id="departmentFilter">
+          <option value="All">All Departments</option>
+          <option value="CSE">CSE</option>
+          <option value="IT">IT</option>
+          <option value="ECE">ECE</option>
+          <option value="EEE">EEE</option>
+          <option value="Mechanical">Mechanical</option>
+        </select>
+        <button id="sortBtn">Sort A → Z</button>
+      </div>
+
+      <!-- Statistics -->
+      <div class="stats">
+        <div class="card">
+          <h3>Total Students</h3>
+          <p id="totalStudents">0</p>
+        </div>
+
+        <div class="card">
+          <h3>Average Age</h3>
+          <p id="averageAge">0</p>
+        </div>
+      </div>
+
+      <!-- Student Table -->
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Age</th>
+            <th>Department</th>
+            <th>Email</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="studentTable">
+          <!-- JavaScript will display students here -->
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Student Details Modal -->
+    <div class="modal" id="detailsModal">
+      <div class="modal-content">
+        <span class="close-btn" id="closeModal"> &times; </span>
+        <h2>Student Details</h2>
+        <div id="studentDetails"></div>
+      </div>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>
