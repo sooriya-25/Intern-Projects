@@ -1,0 +1,47 @@
+.ant-card {
+  height: 100%;
+}
+
+.ant-card-body {
+  text-align: center;
+}
+
+.ant-card-cover img {
+  border-radius: 8px 8px 0 0;
+}
+
+.ant-pagination {
+  display: flex;
+  justify-content: center;
+}
+
+.ant-card {
+  transition: all 0.35s ease;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.ant-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.18);
+}
+
+.ant-card-cover {
+  overflow: hidden;
+}
+
+.ant-card-cover img {
+  transition: transform 0.45s ease;
+}
+
+.ant-card:hover .ant-card-cover img {
+  transform: scale(1.05);
+}
+
+.ant-btn {
+  transition: all 0.3s ease;
+}
+
+.ant-btn:hover {
+  transform: translateY(-2px);
+}
