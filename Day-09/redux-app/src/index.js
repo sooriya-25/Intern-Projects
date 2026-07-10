@@ -1,17 +1,19 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 
-import "antd/dist/reset.css";
-
 import { BrowserRouter } from "react-router-dom";
 
 import { Provider } from "react-redux";
 
-import App from "./App";
+import { PersistGate } from "redux-persist/integration/react";
 
-import store from "./app/store";
+import { store, persistor } from "./app/store";
+
+import "antd/dist/reset.css";
 
 import "./index.css";
+
+import App from "./App";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root")
@@ -19,8 +21,13 @@ const root = ReactDOM.createRoot(
 
 root.render(
   <Provider store={store}>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <PersistGate
+      loading={null}
+      persistor={persistor}
+    >
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </PersistGate>
   </Provider>
 );
