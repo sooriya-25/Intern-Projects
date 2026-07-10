@@ -1,0 +1,17 @@
+{
+  "tasks": [
+    {
+      "title": "Learn Redux Toolkit",
+      "status": "Completed",
+      "priority": "Medium",
+      "id": "2"
+    },
+    {
+      "title": "Learn React Query",
+      "status": "Completed",
+      "priority": "High",
+      "id": "3"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
