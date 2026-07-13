@@ -1,4 +1,4 @@
-import { Grid, Layout } from "antd";
+import { Grid, Layout, message } from "antd";
 import { useEffect, useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -215,6 +215,7 @@ function Dashboard() {
         })
       );
       setShowAddTask(false);
+      message.success("Task added successfully");
     },
     [board?.id, dispatch, setShowAddTask]
   );
@@ -230,6 +231,7 @@ function Dashboard() {
         })
       );
       setSelectedTask(null);
+      message.success("Task updated successfully");
     },
     [board?.id, dispatch, setSelectedTask]
   );
@@ -245,6 +247,7 @@ function Dashboard() {
         })
       );
       setSelectedTask(null);
+      message.success("Task deleted successfully");
     },
     [board?.id, dispatch, setSelectedTask]
   );
@@ -260,6 +263,7 @@ function Dashboard() {
           status,
         })
       );
+      message.success("Task status updated");
     },
     [board?.id, dispatch]
   );
@@ -275,6 +279,7 @@ function Dashboard() {
           status: destinationColumnId,
         })
       );
+      message.success("Task moved successfully");
     },
     [board?.id, dispatch]
   );
