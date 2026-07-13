@@ -1,0 +1,41 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "name": "Sooriya",
+      "email": "admin@test.com",
+      "password": "123456"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "1",
+      "title": "Learn React Router",
+      "priority": "High"
+    },
+    {
+      "id": "2",
+      "title": "Learn Context API",
+      "priority": "Medium"
+    },
+    {
+      "title": "asdfgh",
+      "priority": "Medium",
+      "createdAt": "2026-07-09T04:31:52.719Z",
+      "id": "a3MXlOR-kvM"
+    },
+    {
+      "title": "dfgh",
+      "priority": "Medium",
+      "createdAt": "2026-07-09T04:31:55.079Z",
+      "id": "QAk8AJXinp8"
+    },
+    {
+      "id": "f617566e-e5dd-40f7-beb0-f0827f2da6b3",
+      "title": "sdfghjk",
+      "priority": "Medium",
+      "createdAt": "2026-07-13T11:05:42.966Z"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
