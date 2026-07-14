@@ -1,0 +1,42 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "name": "Sooriya",
+      "email": "admin@test.com",
+      "password": "123456"
+    }
+  ],
+  "tasks": [
+    {
+      "id": "2",
+      "title": "Learn Context API",
+      "priority": "High"
+    },
+    {
+      "id": "3",
+      "title": "Learn Redux",
+      "priority": "Medium",
+      "createdAt": "2026-07-14T10:04:03.457Z"
+    },
+    {
+      "id": "4",
+      "title": "Learn Zustand",
+      "priority": "Medium",
+      "createdAt": "2026-07-14T10:04:09.863Z"
+    },
+    {
+      "id": "5",
+      "title": "Learn Node.js",
+      "priority": "Low",
+      "createdAt": "2026-07-14T10:04:16.089Z"
+    },
+    {
+      "id": "6",
+      "title": "Learn Express",
+      "priority": "Medium",
+      "createdAt": "2026-07-14T10:04:58.910Z"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}
