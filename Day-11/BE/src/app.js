@@ -7,7 +7,6 @@ const authRoutes = require("./routes/authRoutes");
 const taskRoutes = require("./routes/taskRoutes");
 
 const notFoundMiddleware = require("./middleware/notFoundMiddleware");
-const errorMiddleware = require("./middleware/errorMiddleware");
 
 const app = express();
 
@@ -30,8 +29,5 @@ app.get("/", (req, res) => {
 
 // 404 Middleware
 app.use(notFoundMiddleware);
-
-// Error Middleware
-app.use(errorMiddleware);
 
 module.exports = app;
