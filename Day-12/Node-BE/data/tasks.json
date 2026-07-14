@@ -9,11 +9,6 @@
   ],
   "tasks": [
     {
-      "id": "2",
-      "title": "Learn Context API",
-      "priority": "High"
-    },
-    {
       "id": "3",
       "title": "Learn Redux",
       "priority": "Medium",
@@ -36,6 +31,12 @@
       "title": "Learn Express",
       "priority": "Medium",
       "createdAt": "2026-07-14T10:04:58.910Z"
+    },
+    {
+      "id": "7",
+      "title": "bnm,",
+      "priority": "Medium",
+      "createdAt": "2026-07-14T11:18:56.827Z"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

@@ -4,6 +4,7 @@ import { Menu } from "antd";
 import {
   ProfileOutlined,
   CheckSquareOutlined,
+  UsergroupAddOutlined,
   LogoutOutlined,
 } from "@ant-design/icons";
 
@@ -31,6 +32,10 @@ const Sidebar = ({ collapsed }) => {
       <Menu theme="dark" mode="inline">
         <Menu.Item key="tasks" icon={<CheckSquareOutlined />}>
           <NavLink to="/dashboard/tasks">Tasks</NavLink>
+        </Menu.Item>
+
+        <Menu.Item key="users" icon={<UsergroupAddOutlined />}>
+          <NavLink to="/dashboard/users">Users</NavLink>
         </Menu.Item>
 
         <Menu.Item key="profile" icon={<ProfileOutlined />}>

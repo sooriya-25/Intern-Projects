@@ -10,6 +10,7 @@ import {
   Spin,
   Table,
   Tag,
+  message,
 } from "antd";
 
 import TaskForm from "../components/TaskForm";
@@ -58,6 +59,7 @@ const Tasks = () => {
       const response = await addTask(task);
 
       if (response.success) {
+        message.success("Task created successfully");
         fetchTasks();
       }
     } catch {
@@ -79,6 +81,7 @@ const Tasks = () => {
 
       if (response.success) {
         setOpenEdit(false);
+        message.success("Task updated successfully");
         fetchTasks();
       }
     } catch {
@@ -91,6 +94,7 @@ const Tasks = () => {
       const response = await deleteTask(id);
 
       if (response.success) {
+        message.success("Task deleted successfully");
         fetchTasks();
       }
     } catch {
@@ -151,7 +155,11 @@ const Tasks = () => {
   ];
 
   if (loading) {
-    return <Spin size="large" />;
+    return (
+      <div style={{ minHeight: "60vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
+        <Spin size="large" />
+      </div>
+    );
   }
 
   return (

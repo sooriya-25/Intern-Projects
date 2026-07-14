@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import Login from "../pages/Login";
 import Tasks from "../pages/Tasks";
 import Profile from "../pages/Profile";
+import Users from "../pages/Users";
 import NotFound from "../pages/NotFound";
 
 import DashboardLayout from "../layouts/DashboardLayout";
@@ -27,6 +28,8 @@ const AppRoutes = () => {
         <Route index element={<Navigate to="tasks" replace />} />
 
         <Route path="tasks" element={<Tasks />} />
+
+        <Route path="users" element={<Users />} />
 
         <Route path="profile" element={<Profile />} />
       </Route>

@@ -2,6 +2,7 @@ const http = require("http");
 
 const taskRoutes = require("./routes/taskRoutes");
 const authRoutes = require("./routes/authRoutes");
+const userRoutes = require("./routes/userRoutes");
 
 const PORT = 3001;
 
@@ -37,6 +38,11 @@ const server = http.createServer((req, res) => {
 
   // Then try task routes
   if (taskRoutes(req, res)) {
+    return;
+  }
+
+  // Then try user routes
+  if (userRoutes(req, res)) {
     return;
   }
 
