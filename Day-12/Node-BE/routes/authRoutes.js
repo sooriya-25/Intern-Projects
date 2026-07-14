@@ -3,12 +3,10 @@ const {
   getProfile,
 } = require("../controllers/authController");
 
-function authRoutes(req, res) {
+const authRoutes = (req, res) => {
   const { method, url } = req;
 
-  // ==========================
   // POST /auth/login
-  // ==========================
 
   if (
     method === "POST" &&
@@ -18,9 +16,7 @@ function authRoutes(req, res) {
     return true;
   }
 
-  // ==========================
   // GET /auth/profile?id=:id
-  // ==========================
 
   if (
     method === "GET" &&

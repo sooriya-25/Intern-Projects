@@ -5,7 +5,7 @@ const {
   deleteUser,
 } = require("../controllers/userController");
 
-function userRoutes(req, res) {
+const userRoutes = (req, res) => {
   const { method, url } = req;
   const urlObj = new URL(url, "http://localhost");
   const pathname = urlObj.pathname;

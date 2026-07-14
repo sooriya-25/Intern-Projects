@@ -6,25 +6,21 @@ const {
   deleteTask,
 } = require("../controllers/taskController");
 
-function taskRoutes(req, res) {
+const taskRoutes = (req, res) => {
   const { method, url } = req;
 
   // Parse URL to get pathname (without query string)
   const urlObj = new URL(url, "http://localhost");
   const pathname = urlObj.pathname;
 
-  // ==========================
   // GET /tasks
-  // ==========================
 
   if (method === "GET" && pathname === "/tasks") {
     getTasks(req, res);
     return true;
   }
 
-  // ==========================
   // GET /tasks/:id
-  // ==========================
 
   if (
     method === "GET" &&
@@ -36,9 +32,7 @@ function taskRoutes(req, res) {
     return true;
   }
 
-  // ==========================
   // POST /tasks
-  // ==========================
 
   if (
     method === "POST" &&
@@ -48,9 +42,7 @@ function taskRoutes(req, res) {
     return true;
   }
 
-  // ==========================
   // PUT /tasks/:id
-  // ==========================
 
   if (
     method === "PUT" &&
@@ -62,9 +54,7 @@ function taskRoutes(req, res) {
     return true;
   }
 
-  // ==========================
   // DELETE /tasks/:id
-  // ==========================
 
   if (
     method === "DELETE" &&
@@ -76,9 +66,7 @@ function taskRoutes(req, res) {
     return true;
   }
 
-  // ==========================
   // No route matched
-  // ==========================
 
   return false;
 }

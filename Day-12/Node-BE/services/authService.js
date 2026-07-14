@@ -1,6 +1,6 @@
 const { readDB } = require("../config/db");
 
-function loginUser({ email, password }) {
+const loginUser = ({ email, password }) => {
   const db = readDB();
 
   const user = db.users.find(
@@ -16,7 +16,7 @@ function loginUser({ email, password }) {
   return userData;
 }
 
-function getUserProfile(id) {
+const getUserProfile = (id) => {
   const db = readDB();
 
   return (

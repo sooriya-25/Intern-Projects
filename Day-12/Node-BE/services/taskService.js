@@ -1,11 +1,11 @@
 const { readDB, writeDB } = require("../config/db");
 
-function getAllTasks() {
+const getAllTasks = () => {
   const db = readDB();
   return db.tasks;
-}
+};
 
-function getTaskById(id) {
+const getTaskById = (id) => {
   const db = readDB();
   const tasks = db.tasks;
 
@@ -14,7 +14,7 @@ function getTaskById(id) {
   );
 }
 
-function createTask(task) {
+const createTask = (task) => {
   const db = readDB();
   const tasks = db.tasks;
 
@@ -39,7 +39,7 @@ function createTask(task) {
   return newTask;
 }
 
-function updateTask(id, updatedTask) {
+const updateTask = (id, updatedTask) => {
   const db = readDB();
   const tasks = db.tasks;
 
@@ -62,7 +62,7 @@ function updateTask(id, updatedTask) {
   return tasks[index];
 }
 
-function deleteTask(id) {
+const deleteTask = (id) => {
   const db = readDB();
   const tasks = db.tasks;
 

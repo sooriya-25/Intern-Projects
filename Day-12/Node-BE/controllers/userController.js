@@ -2,7 +2,7 @@ const userService = require("../services/userService");
 const parseBody = require("../utils/bodyParser");
 const sendJSON = require("../utils/response");
 
-async function getUsers(req, res) {
+const getUsers = async (req, res) => {
   try {
     const users = await userService.getAllUsers();
 
@@ -18,7 +18,7 @@ async function getUsers(req, res) {
   }
 }
 
-async function createUser(req, res) {
+const createUser = async (req, res) => {
   try {
     const body = await parseBody(req);
     const user = userService.createUser(body);
@@ -36,7 +36,7 @@ async function createUser(req, res) {
   }
 }
 
-async function updateUser(req, res, id) {
+const updateUser = async (req, res, id) => {
   try {
     const body = await parseBody(req);
     const updatedUser = userService.updateUser(id, body);
@@ -61,7 +61,7 @@ async function updateUser(req, res, id) {
   }
 }
 
-function deleteUser(req, res, id) {
+const deleteUser = (req, res, id) => {
   const deleted = userService.deleteUser(id);
 
   if (!deleted) {

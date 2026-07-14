@@ -1,8 +1,8 @@
-function sendJSON(
+const sendJSON = (
   res,
   statusCode,
   data
-) {
+) => {
   res.writeHead(statusCode, {
     "Content-Type":
       "application/json",

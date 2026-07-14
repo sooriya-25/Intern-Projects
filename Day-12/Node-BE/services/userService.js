@@ -4,7 +4,7 @@ const path = require("path");
 
 const USERS_FILE_PATH = path.join(__dirname, "../data/users.json");
 
-function readUsersStore() {
+const readUsersStore = () => {
   if (!fs.existsSync(USERS_FILE_PATH)) {
     return [];
   }
@@ -17,11 +17,11 @@ function readUsersStore() {
   }
 }
 
-function writeUsersStore(users) {
+const writeUsersStore = (users) => {
   fs.writeFileSync(USERS_FILE_PATH, JSON.stringify(users, null, 2));
-}
+};
 
-function fetchUsersFromPlaceholder() {
+const fetchUsersFromPlaceholder = () => {
   return new Promise((resolve, reject) => {
     const req = https.get(
       "https://jsonplaceholder.typicode.com/users",
@@ -38,6 +38,7 @@ function fetchUsersFromPlaceholder() {
         });
 
         res.on("end", () => {
+          console.log("Fetched users from placeholder:");
           try {
             const parsed = JSON.parse(data);
 
@@ -58,13 +59,13 @@ function fetchUsersFromPlaceholder() {
   });
 }
 
-async function getAllUsers() {
+const getAllUsers = async () => {
   const users = await fetchUsersFromPlaceholder();
   writeUsersStore(users);
   return users;
-}
+};
 
-function createUser(userData) {
+const createUser = (userData) => {
   const users = readUsersStore();
   const newUser = {
     id: String(Date.now()),
@@ -76,7 +77,7 @@ function createUser(userData) {
   return newUser;
 }
 
-function updateUser(id, updates) {
+const updateUser = (id, updates) => {
   const users = readUsersStore();
   const index = users.findIndex((user) => String(user.id) === String(id));
 
@@ -95,7 +96,7 @@ function updateUser(id, updates) {
   return updatedUser;
 }
 
-function deleteUser(id) {
+const deleteUser = (id) => {
   const users = readUsersStore();
   const filteredUsers = users.filter((user) => String(user.id) !== String(id));
 

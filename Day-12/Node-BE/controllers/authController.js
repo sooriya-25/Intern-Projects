@@ -6,11 +6,11 @@ const {
 const parseBody = require("../utils/bodyParser");
 const sendJSON = require("../utils/response");
 
-// ================================
-// POST /auth/login
-// ================================
 
-async function login(req, res) {
+// POST /auth/login
+
+
+const login = async (req, res) => {
   try {
     const body = await parseBody(req);
 
@@ -36,11 +36,11 @@ async function login(req, res) {
   }
 }
 
-// ================================
-// GET /auth/profile?id=:id
-// ================================
 
-function getProfile(req, res, userId) {
+// GET /auth/profile?id=:id
+
+
+const getProfile = (req, res, userId) => {
   try {
     const user = getUserProfile(userId);
 

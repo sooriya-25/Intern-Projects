@@ -4,11 +4,9 @@ const parseBody = require("../utils/bodyParser");
 
 const sendJSON = require("../utils/response");
 
-// ================================
 // GET /tasks
-// ================================
 
-function getTasks(req, res) {
+const getTasks = (req, res) => {
   const tasks = taskService.getAllTasks();
 
   sendJSON(res, 200, {
@@ -17,11 +15,9 @@ function getTasks(req, res) {
   });
 }
 
-// ================================
 // GET /tasks/:id
-// ================================
 
-function getTask(req, res, id) {
+const getTask = (req, res, id) => {
   const task = taskService.getTaskById(id);
 
   if (!task) {
@@ -37,11 +33,9 @@ function getTask(req, res, id) {
   });
 }
 
-// ================================
 // POST /tasks
-// ================================
 
-async function createTask(req, res) {
+const createTask = async (req, res) => {
   try {
     const body = await parseBody(req);
 
@@ -61,15 +55,13 @@ async function createTask(req, res) {
   }
 }
 
-// ================================
 // PUT /tasks/:id
-// ================================
 
-async function updateTask(
+const updateTask = async (
   req,
   res,
   id
-) {
+) => {
   try {
     const body = await parseBody(req);
 
@@ -99,11 +91,9 @@ async function updateTask(
   }
 }
 
-// ================================
 // DELETE /tasks/:id
-// ================================
 
-function deleteTask(req, res, id) {
+const deleteTask = (req, res, id) => {
   const deleted =
     taskService.deleteTask(id);
 
