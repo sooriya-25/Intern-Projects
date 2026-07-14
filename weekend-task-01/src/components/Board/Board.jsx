@@ -34,9 +34,12 @@ function Board({
         gap: 24,
         padding: 24,
         overflowX: "auto",
-        overflowY: "hidden",
-        height: "calc(100vh - 96px)",
+        overflowY: "auto",
+        flexWrap: "nowrap",
+        alignItems: "flex-start",
+        minHeight: "calc(100vh - 96px)",
         background: darkMode ? "#20212C" : "#F5F7FB",
+        whiteSpace: "nowrap",
       }}
     >
       {columns.map((column) => (

@@ -1,13 +1,16 @@
 import { create } from "zustand";
 
 const savedTheme = localStorage.getItem("theme");
+const initialTheme = savedTheme === "light" ? "light" : "dark";
+
+document.body.setAttribute("data-theme", initialTheme);
 
 const useUIStore = create((set) => ({
   // ======================================
   // Theme
   // ======================================
 
-  darkMode: savedTheme ? savedTheme === "dark" : true,
+  darkMode: initialTheme === "dark",
 
   toggleTheme: () =>
     set((state) => {

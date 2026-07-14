@@ -102,12 +102,14 @@ function Sidebar({
       {/* Boards */}
       <Menu
         mode="inline"
+        theme={darkMode ? "dark" : "light"}
         selectedKeys={[String(currentBoard)]}
         items={menuItems}
         onClick={({ key }) => onBoardChange(key)}
         style={{
           background: bgColor,
           border: "none",
+          color: textColor,
         }}
       />
 

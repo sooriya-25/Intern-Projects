@@ -53,6 +53,7 @@ const DEFAULT_COLUMN_COLORS = [
 function Dashboard() {
   const screens = useBreakpoint();
   const dispatch = useDispatch();
+  const isDesktop = screens.lg;
 
   const {
     sidebarCollapsed,
@@ -306,7 +307,7 @@ function Dashboard() {
         background: darkMode ? "#20212C" : "#F4F7FD",
       }}
     >
-      {screens.md ? (
+      {isDesktop ? (
         <Sidebar
           collapsed={sidebarCollapsed}
           boards={boards}
@@ -341,7 +342,12 @@ function Dashboard() {
           onAddTask={() => setShowAddTask(true)}
           onEditBoard={() => setShowEditBoard(true)}
           onDeleteBoard={() => setShowDeleteBoard(true)}
-          onMenuClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+          onMenuClick={() =>
+            isDesktop
+              ? setSidebarCollapsed(!sidebarCollapsed)
+              : setMobileSidebar(true)
+          }
+          showMenuButton={!isDesktop}
           collapsed={sidebarCollapsed}
           darkMode={darkMode}
           onThemeChange={toggleTheme}

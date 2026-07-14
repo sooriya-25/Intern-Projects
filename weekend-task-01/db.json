@@ -98,55 +98,6 @@
               ]
             }
           ]
-        },
-        {
-          "id": "board-1-column-1783922409116",
-          "name": "On Hold",
-          "color": "#e52a33",
-          "tasks": [
-            {
-              "id": "task-1",
-              "title": "Build UI for onboarding flow",
-              "description": "Create responsive onboarding screens using React and Ant Design.",
-              "status": "board-1-column-1783922409116",
-              "subtasks": [
-                {
-                  "id": "sub-1",
-                  "title": "Create Login Screen",
-                  "done": true
-                },
-                {
-                  "id": "sub-2",
-                  "title": "Create Dashboard Layout",
-                  "done": false
-                }
-              ]
-            },
-            {
-              "id": "task-3",
-              "title": "Create Redux Store",
-              "description": "Configure Redux Toolkit store.",
-              "status": "board-1-column-1783922409116",
-              "subtasks": [
-                {
-                  "id": "sub-5",
-                  "title": "Board Slice",
-                  "done": false
-                },
-                {
-                  "id": "sub-6",
-                  "title": "Task Slice",
-                  "done": true
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "id": "board-1-column-1783923991146",
-          "name": "cvbn",
-          "color": "#49C4E5",
-          "tasks": []
         }
       ]
     },

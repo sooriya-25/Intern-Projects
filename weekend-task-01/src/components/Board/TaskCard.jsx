@@ -24,10 +24,8 @@ function TaskCard({ task, onClick }) {
       draggable
       onClick={() => onClick?.(task)}
       onDragStart={handleDragStart}
-      styles={{
-        body: {
-          padding: 20,
-        },
+      bodyStyle={{
+        padding: 20,
       }}
       style={{
         width: "100%",

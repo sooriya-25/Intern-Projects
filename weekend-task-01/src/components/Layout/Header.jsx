@@ -19,11 +19,16 @@ function Header({
   onEditBoard,
   onDeleteBoard,
   onMenuClick,
+  showMenuButton,
   collapsed,
   darkMode,
   onThemeChange,
 }) {
   const screens = useBreakpoint();
+  const bgColor = darkMode ? "#2B2C37" : "#FFFFFF";
+  const borderColor = darkMode ? "#3E3F4E" : "#E4EBFA";
+  const titleColor = darkMode ? "#FFFFFF" : "#0F172A";
+  const subtitleColor = darkMode ? "#828FA3" : "#64748B";
 
   const menuItems = [
     {
@@ -57,20 +62,20 @@ function Header({
   return (
     <AntHeader
       style={{
-        background: "#2B2C37",
+        background: bgColor,
         height: 96,
         padding: "0 24px",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        borderBottom: "1px solid #3E3F4E",
+        borderBottom: `1px solid ${borderColor}`,
       }}
     >
       <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-        {collapsed && (
+        {(showMenuButton || collapsed) && (
           <Button
             type="text"
-            icon={<MenuOutlined style={{ color: "#FFFFFF", fontSize: 22 }} />}
+            icon={<MenuOutlined style={{ color: titleColor, fontSize: 22 }} />}
             onClick={onMenuClick}
             style={{ minWidth: 40, height: 40, borderRadius: 8 }}
           />
@@ -80,7 +85,7 @@ function Header({
           level={screens.md ? 2 : 3}
           style={{
             margin: 0,
-            color: "#FFFFFF",
+            color: titleColor,
             fontWeight: 700,
           }}
         >
