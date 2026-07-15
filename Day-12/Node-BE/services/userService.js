@@ -21,42 +21,17 @@ const writeUsersStore = (users) => {
   fs.writeFileSync(USERS_FILE_PATH, JSON.stringify(users, null, 2));
 };
 
-const fetchUsersFromPlaceholder = () => {
-  return new Promise((resolve, reject) => {
-    const req = https.get(
-      "https://jsonplaceholder.typicode.com/users",
-      {
-        headers: {
-          Accept: "application/json",
-        },
-      },
-      (res) => {
-        let data = "";
+const fetchUsersFromPlaceholder = async () => {
+  const response = await fetch(
+    "https://jsonplaceholder.typicode.com/users"
+  );
 
-        res.on("data", (chunk) => {
-          data += chunk;
-        });
+  const users = await response.json();
 
-        res.on("end", () => {
-          console.log("Fetched users from placeholder:");
-          try {
-            const parsed = JSON.parse(data);
-
-            resolve(
-              parsed.map((user) => ({
-                ...user,
-                id: String(user.id),
-              }))
-            );
-          } catch (error) {
-            reject(error);
-          }
-        });
-      }
-    );
-
-    req.on("error", reject);
-  });
+  return users.map((user) => ({
+    ...user,
+    id: String(user.id),
+  }));
 }
 
 const getAllUsers = async () => {
