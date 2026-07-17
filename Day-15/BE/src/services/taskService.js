@@ -1,11 +1,12 @@
-const Task = require("../models/Task");
+const Task = require("../models/task");
 
-const getTasks = async ({ search = "", page = 1, limit = 5 }) => {
+const getTasks = async ({ userId, search = "", page = 1, limit = 5 }) => {
   page = Number(page);
   limit = Number(limit);
 
   const query = {
     isDeleted: false,
+    userId,
     title: {
       $regex: search,
       $options: "i",
@@ -29,9 +30,10 @@ const getTasks = async ({ search = "", page = 1, limit = 5 }) => {
   };
 };
 
-const getTask = async (id) => {
+const getTask = async (id, userId) => {
   return await Task.findOne({
     _id: id,
+    userId,
     isDeleted: false,
   }).populate("userId", "name email");
 };
@@ -48,16 +50,20 @@ const addTask = async (taskData) => {
   return task;
 };
 
-const editTask = async (id, updatedData) => {
-  return await Task.findByIdAndUpdate(id, updatedData, {
-    new: true,
-    runValidators: true,
-  });
+const editTask = async (id, updatedData, userId) => {
+  return await Task.findOneAndUpdate(
+    { _id: id, userId, isDeleted: false },
+    updatedData,
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
 };
 
-const removeTask = async (id) => {
-  const task = await Task.findByIdAndUpdate(
-    id,
+const removeTask = async (id, userId) => {
+  const task = await Task.findOneAndUpdate(
+    { _id: id, userId, isDeleted: false },
     {
       isDeleted: true,
     },

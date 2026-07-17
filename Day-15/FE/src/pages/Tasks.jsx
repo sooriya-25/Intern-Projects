@@ -11,6 +11,7 @@ import {
   Spin,
   Table,
   Tag,
+  notification,
 } from "antd";
 import {
   DeleteOutlined,
@@ -42,7 +43,7 @@ const Tasks = () => {
 
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(5);
   const [total, setTotal] = useState(0);
 
   // Search
@@ -79,10 +80,18 @@ const Tasks = () => {
       });
 
       if (response.success) {
+        notification.success({
+          message: "Task added",
+          description: "The task was created successfully.",
+        });
         fetchTasks();
       }
     } catch (err) {
       setError("Unable to add task.");
+      notification.error({
+        message: "Task add failed",
+        description: "Unable to add the task right now.",
+      });
     }
   };
 
@@ -93,10 +102,18 @@ const Tasks = () => {
       if (response.success) {
         setIsModalOpen(false);
         setEditingTask(null);
+        notification.success({
+          message: "Task updated",
+          description: "The task was updated successfully.",
+        });
         fetchTasks();
       }
     } catch (err) {
       setError("Unable to update task.");
+      notification.error({
+        message: "Task update failed",
+        description: "Unable to update the task right now.",
+      });
     }
   };
 
@@ -105,10 +122,18 @@ const Tasks = () => {
       const response = await deleteTask(id);
 
       if (response.success) {
+        notification.success({
+          message: "Task deleted",
+          description: "The task was deleted successfully.",
+        });
         fetchTasks();
       }
     } catch (err) {
       setError("Unable to delete task.");
+      notification.error({
+        message: "Task delete failed",
+        description: "Unable to delete the task right now.",
+      });
     }
   };
 

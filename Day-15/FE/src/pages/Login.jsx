@@ -1,6 +1,6 @@
 import "./Login.css";
 import { useContext, useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { Navigate, useNavigate, Link } from "react-router-dom";
 import { Button, Card, Form, Input, Typography, Alert } from "antd";
 
 import { AuthContext } from "../context/AuthContext";
@@ -15,10 +15,8 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // If already logged in
   if (user) {
-    console.log("console from login",user)
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/dashboard/tasks" replace />;
   }
 
   const handleLogin = async (values) => {
@@ -30,7 +28,7 @@ const Login = () => {
 
       login(loggedInUser);
 
-      navigate("/dashboard");
+      navigate("/dashboard/tasks");
     } catch (err) {
       setError(err.message);
     } finally {
@@ -59,16 +57,12 @@ const Login = () => {
 
         <Form layout="vertical" onFinish={handleLogin}>
           <Form.Item
-            label="Email"
+            label="Email or Username"
             name="email"
             rules={[
               {
                 required: true,
-                message: "Please enter email",
-              },
-              {
-                type: "email",
-                message: "Invalid email",
+                message: "Please enter email or username",
               },
             ]}
           >
@@ -96,6 +90,9 @@ const Login = () => {
             Login
           </Button>
         </Form>
+        <div style={{ marginTop: 16, textAlign: "center" }}>
+          <Link to="/register">Create an account</Link>
+        </div>
       </Card>
     </div>
   );

@@ -4,6 +4,7 @@ import { Menu } from "antd";
 import {
   ProfileOutlined,
   CheckSquareOutlined,
+  UserOutlined,
   LogoutOutlined,
 } from "@ant-design/icons";
 
@@ -16,7 +17,7 @@ import { AuthContext } from "../context/AuthContext";
 const Sidebar = ({ collapsed }) => {
   const navigate = useNavigate();
 
-  const { logout } = useContext(AuthContext);
+  const { logout, user } = useContext(AuthContext);
 
   const handleLogout = () => {
     logout();
@@ -36,6 +37,12 @@ const Sidebar = ({ collapsed }) => {
         <Menu.Item key="profile" icon={<ProfileOutlined />}>
           <NavLink to="/dashboard/profile">Profile</NavLink>
         </Menu.Item>
+
+        {user?.role === "Admin" && (
+          <Menu.Item key="users" icon={<UserOutlined />}>
+            <NavLink to="/dashboard/users">Users</NavLink>
+          </Menu.Item>
+        )}
 
         <Menu.Item
           key="logout"

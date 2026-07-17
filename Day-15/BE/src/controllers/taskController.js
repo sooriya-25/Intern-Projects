@@ -10,6 +10,7 @@ const {
 const getAllTasks = async (req, res) => {
   try {
     const result = await getTasks({
+      userId: req.user?._id || req.user?.id,
       search: req.query.search,
       page: req.query.page,
       limit: req.query.limit,
@@ -31,7 +32,7 @@ const getAllTasks = async (req, res) => {
 
 const getTaskById = async (req, res) => {
   try {
-    const task = await getTask(req.params.id);
+    const task = await getTask(req.params.id, req.user?._id || req.user?.id);
 
     if (!task) {
       return res.status(404).json({
@@ -55,7 +56,10 @@ const getTaskById = async (req, res) => {
 
 const createTask = async (req, res) => {
   try {
-    const task = await addTask(req.body);
+    const task = await addTask({
+      ...req.body,
+      userId: req.user?._id || req.user?.id,
+    });
 
     res.status(201).json({
       success: true,
@@ -75,7 +79,8 @@ const updateTask = async (req, res) => {
   try {
     const task = await editTask(
       req.params.id,
-      req.body
+      req.body,
+      req.user?._id || req.user?.id
     );
 
     if (!task) {
@@ -101,7 +106,7 @@ const updateTask = async (req, res) => {
 
 const deleteTask = async (req, res) => {
   try {
-    const task = await removeTask(req.params.id);
+    const task = await removeTask(req.params.id, req.user?._id || req.user?.id);
 
     if (!task) {
       return res.status(404).json({
