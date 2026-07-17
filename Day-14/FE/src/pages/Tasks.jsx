@@ -1,31 +1,65 @@
 import "./Tasks.css";
 import { useContext, useEffect, useState } from "react";
-import { Alert, Button, Card, Modal, Popconfirm, Space, Spin, Table, Tag } from "antd";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import {
+  Alert,
+  Button,
+  Card,
+  Input,
+  Modal,
+  Popconfirm,
+  Space,
+  Spin,
+  Table,
+  Tag,
+} from "antd";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
 
 import TaskForm from "../components/TaskForm";
 import { AuthContext } from "../context/AuthContext";
 
-import { addTask, deleteTask, getTasks, updateTask } from "../api/taskApi";
+import {
+  addTask,
+  deleteTask,
+  getTasks,
+  updateTask,
+} from "../api/taskApi";
+
+const { Search } = Input;
 
 const Tasks = () => {
   const { user } = useContext(AuthContext);
+
   const [tasks, setTasks] = useState([]);
-
   const [loading, setLoading] = useState(true);
-
   const [error, setError] = useState("");
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const [editingTask, setEditingTask] = useState(null);
+
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+  const [total, setTotal] = useState(0);
+
+  // Search
+  const [search, setSearch] = useState("");
 
   const fetchTasks = async () => {
     try {
       setLoading(true);
 
-      const response = await getTasks();
+      const response = await getTasks(
+        currentPage,
+        pageSize,
+        search
+      );
+
       setTasks(response.data);
+      setTotal(response.total);
     } catch (err) {
       setError("Unable to fetch tasks.");
     } finally {
@@ -35,13 +69,13 @@ const Tasks = () => {
 
   useEffect(() => {
     fetchTasks();
-  }, []);
+  }, [currentPage, pageSize, search]);
 
   const handleAddTask = async (task) => {
     try {
       const response = await addTask({
         ...task,
-        userId: user?.id,
+        userId: user?._id,
       });
 
       if (response.success) {
@@ -109,17 +143,17 @@ const Tasks = () => {
     {
       title: "Progress",
       dataIndex: "status",
-      render: (status, record) => (
+      render: (status) => (
         <Tag
           color={
-            status === "Done"
+            status === "Completed"
               ? "green"
-              : status === "In progress"
+              : status === "In Progress"
               ? "blue"
               : "default"
           }
         >
-          {status || "Yet to do"}
+          {status}
         </Tag>
       ),
     },
@@ -135,13 +169,19 @@ const Tasks = () => {
           >
             Edit
           </Button>
+
           <Popconfirm
             title="Delete this task?"
-            onConfirm={() => handleDeleteTask(record.id)}
+            onConfirm={() =>
+              handleDeleteTask(record._id)
+            }
             okText="Yes"
             cancelText="No"
           >
-            <Button danger icon={<DeleteOutlined />}>
+            <Button
+              danger
+              icon={<DeleteOutlined />}
+            >
               Delete
             </Button>
           </Popconfirm>
@@ -149,8 +189,7 @@ const Tasks = () => {
       ),
     },
   ];
-
-  if (loading) {
+    if (loading) {
     return <Spin size="large" />;
   }
 
@@ -166,17 +205,43 @@ const Tasks = () => {
           message={error}
           showIcon
           style={{
+            marginTop: 20,
             marginBottom: 20,
           }}
         />
       )}
 
-      <Card title="Task List">
+      <Card
+        title="Task List"
+        extra={
+          <Search
+            placeholder="Search tasks..."
+            allowClear
+            enterButton={<SearchOutlined />}
+            style={{ width: 300 }}
+            onSearch={(value) => {
+              setCurrentPage(1);
+              setSearch(value);
+            }}
+          />
+        }
+      >
         <Table
-          rowKey="id"
+          rowKey="_id"
           columns={columns}
           dataSource={tasks}
-          pagination={false}
+          loading={loading}
+          pagination={{
+            current: currentPage,
+            pageSize,
+            total,
+            showSizeChanger: true,
+            pageSizeOptions: ["5", "10", "20"],
+            onChange: (page, size) => {
+              setCurrentPage(page);
+              setPageSize(size);
+            },
+          }}
         />
       </Card>
 
@@ -185,16 +250,23 @@ const Tasks = () => {
         open={isModalOpen}
         onCancel={handleModalCancel}
         footer={null}
+        destroyOnClose
       >
         {editingTask && (
           <TaskForm
             initialValues={{
               title: editingTask.title,
               priority: editingTask.priority,
-              status: editingTask.status || "Yet to do",
+              status:
+                editingTask.status || "Yet to do",
             }}
             submitLabel="Save"
-            onAddTask={(values) => handleUpdateTask(editingTask.id, values)}
+            onAddTask={(values) =>
+              handleUpdateTask(
+                editingTask._id,
+                values
+              )
+            }
           />
         )}
       </Modal>

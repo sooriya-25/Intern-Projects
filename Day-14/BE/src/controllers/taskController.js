@@ -4,74 +4,162 @@ const {
   addTask,
   editTask,
   removeTask,
+  getDashboardStats,
 } = require("../services/taskService");
 
-const getAllTasks = (req, res) => {
-  const tasks = getTasks();
+const getAllTasks = async (req, res) => {
+  try {
+    const result = await getTasks({
+      search: req.query.search,
+      page: req.query.page,
+      limit: req.query.limit,
+    });
 
-  res.status(200).json({
-    success: true,
-    data: tasks,
-  });
-};
+    res.status(200).json({
+      success: true,
+      ...result,
+    });
 
-const getTaskById = (req, res) => {
-  const task = getTask(req.params.id);
-
-  if (!task) {
-    return res.status(404).json({
+  } catch (err) {
+    res.status(500).json({
       success: false,
-      message: "Task not found",
+      message: err.message,
     });
   }
-
-  res.status(200).json({
-    success: true,
-    data: task,
-  });
 };
 
-const createTask = (req, res) => {
-  const task = addTask(req.body);
 
-  res.status(201).json({
-    success: true,
-    message: "Task created successfully",
-    data: task,
-  });
-};
+const getTaskById = async (req, res) => {
+  try {
+    const task = await getTask(req.params.id);
 
-const updateTask = (req, res) => {
-  const task = editTask(req.params.id, req.body);
+    if (!task) {
+      return res.status(404).json({
+        success: false,
+        message: "Task not found",
+      });
+    }
 
-  if (!task) {
-    return res.status(404).json({
+    res.status(200).json({
+      success: true,
+      data: task,
+    });
+
+  } catch (err) {
+    res.status(500).json({
       success: false,
-      message: "Task not found",
+      message: err.message,
     });
   }
-
-  res.status(200).json({
-    success: true,
-    message: "Task updated successfully",
-    data: task,
-  });
 };
 
-const deleteTask = (req, res) => {
-  const deleted = removeTask(req.params.id);
+const createTask = async (req, res) => {
+  try {
+    const task = await addTask(req.body);
 
-  if (!deleted) {
-    return res.status(404).json({
+    res.status(201).json({
+      success: true,
+      message: "Task created successfully",
+      data: task,
+    });
+
+  } catch (err) {
+    res.status(500).json({
       success: false,
-      message: "Task not found",
+      message: err.message,
     });
   }
+};
 
-  res.status(200).json({
-    success: true,
-    message: "Task deleted successfully",
-  });
+const updateTask = async (req, res) => {
+  try {
+    const task = await editTask(
+      req.params.id,
+      req.body
+    );
+
+    if (!task) {
+      return res.status(404).json({
+        success: false,
+        message: "Task not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Task updated successfully",
+      data: task,
+    });
+
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
+const deleteTask = async (req, res) => {
+  try {
+    const task = await removeTask(req.params.id);
+
+    if (!task) {
+      return res.status(404).json({
+        success: false,
+        message: "Task not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Task deleted successfully",
+    });
+
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
+  }
+};
+
+const dashboardStats = async (req, res) => {
+  try {
+    const stats = await getDashboardStats();
+
+    let result = {
+      totalTasks: 0,
+      completedTasks: 0,
+      inProgressTasks: 0,
+      yetToDoTasks: 0,
+    };
+
+    stats.forEach((item) => {
+      result.totalTasks += item.count;
+
+      if (item._id === "Completed") {
+        result.completedTasks = item.count;
+      }
+
+      if (item._id === "In Progress") {
+        result.inProgressTasks = item.count;
+      }
+
+      if (item._id === "Yet to do") {
+        result.yetToDoTasks = item.count;
+      }
+    });
+
+    res.status(200).json({
+      success: true,
+      data: result,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
 };
 
 module.exports = {
@@ -80,4 +168,5 @@ module.exports = {
   createTask,
   updateTask,
   deleteTask,
+  dashboardStats,
 };

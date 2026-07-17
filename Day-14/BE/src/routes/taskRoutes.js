@@ -7,9 +7,11 @@ const {
   createTask,
   updateTask,
   deleteTask,
+  dashboardStats,
 } = require("../controllers/taskController");
 
 router.get("/", getAllTasks);
+router.get("/dashboard", dashboardStats);
 router.get("/:id", getTaskById);
 router.post("/", createTask);
 router.put("/:id", updateTask);

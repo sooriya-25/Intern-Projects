@@ -1,9 +1,14 @@
 import { useEffect } from "react";
 import { Button, Form, Input, Select } from "antd";
 
-const showPriority = process.env.REACT_APP_ENABLE_PRIORITY === "true";
+const showPriority =
+  process.env.REACT_APP_ENABLE_PRIORITY === "true";
 
-const TaskForm = ({ onAddTask, initialValues = {}, submitLabel = "Add Task" }) => {
+const TaskForm = ({
+  onAddTask,
+  initialValues = {},
+  submitLabel = "Add Task",
+}) => {
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -13,10 +18,12 @@ const TaskForm = ({ onAddTask, initialValues = {}, submitLabel = "Add Task" }) =
   const handleFinish = (values) => {
     onAddTask({
       ...values,
-      createdAt: new Date().toISOString(),
     });
 
-    form.resetFields();
+    // Don't clear form while editing
+    if (submitLabel === "Add Task") {
+      form.resetFields();
+    }
   };
 
   return (
@@ -24,7 +31,11 @@ const TaskForm = ({ onAddTask, initialValues = {}, submitLabel = "Add Task" }) =
       form={form}
       layout="vertical"
       onFinish={handleFinish}
-      initialValues={initialValues}
+      initialValues={{
+        priority: "Medium",
+        status: "Yet to do",
+        ...initialValues,
+      }}
     >
       <Form.Item
         label="Task Title"
@@ -40,11 +51,14 @@ const TaskForm = ({ onAddTask, initialValues = {}, submitLabel = "Add Task" }) =
           },
         ]}
       >
-        <Input />
+        <Input placeholder="Enter task title" />
       </Form.Item>
 
       {showPriority && (
-        <Form.Item label="Priority" name="priority" initialValue="Medium">
+        <Form.Item
+          label="Priority"
+          name="priority"
+        >
           <Select
             options={[
               {
@@ -64,7 +78,10 @@ const TaskForm = ({ onAddTask, initialValues = {}, submitLabel = "Add Task" }) =
         </Form.Item>
       )}
 
-      <Form.Item label="Progress" name="status" initialValue="Yet to do">
+      <Form.Item
+        label="Progress"
+        name="status"
+      >
         <Select
           options={[
             {
@@ -72,18 +89,22 @@ const TaskForm = ({ onAddTask, initialValues = {}, submitLabel = "Add Task" }) =
               value: "Yet to do",
             },
             {
-              label: "In progress",
-              value: "In progress",
+              label: "In Progress",
+              value: "In Progress",
             },
             {
-              label: "Done",
-              value: "Done",
+              label: "Completed",
+              value: "Completed",
             },
           ]}
         />
       </Form.Item>
 
-      <Button type="primary" htmlType="submit">
+      <Button
+        type="primary"
+        htmlType="submit"
+        block
+      >
         {submitLabel}
       </Button>
     </Form>

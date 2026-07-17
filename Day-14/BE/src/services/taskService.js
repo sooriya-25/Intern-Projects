@@ -1,74 +1,92 @@
-const { v4: uuid } = require("uuid");
-const {
-  readDB,
-  writeDB,
-} = require("../config/db");
+const Task = require("../models/Task");
 
-const getTasks = () => {
-  const db = readDB();
-  return db.tasks;
-};
+const getTasks = async ({ search = "", page = 1, limit = 5 }) => {
+  page = Number(page);
+  limit = Number(limit);
 
-const getTask = (id) => {
-  const db = readDB();
-
-  return (
-    db.tasks.find(
-      (task) => task.id === id
-    ) || null
-  );
-};
-
-const addTask = (taskData) => {
-  const db = readDB();
-
-  const newTask = {
-    id: uuid(),
-    status: "Yet to do",
-    userId: taskData.userId || null,
-    ...taskData,
+  const query = {
+    isDeleted: false,
+    title: {
+      $regex: search,
+      $options: "i",
+    },
   };
 
-  db.tasks.push(newTask);
+  const total = await Task.countDocuments(query);
 
-  writeDB(db);
+  const tasks = await Task.find(query)
+    .populate("userId", "name email")
+    .sort({ createdAt: -1 })
+    .skip((page - 1) * limit)
+    .limit(limit);
 
-  return newTask;
-};
-
-const editTask = (id, updatedData) => {
-  const db = readDB();
-
-  const index = db.tasks.findIndex(
-    (task) => task.id === id
-  );
-
-  if (index === -1) return null;
-
-  db.tasks[index] = {
-    ...db.tasks[index],
-    ...updatedData,
+  return {
+    page,
+    limit,
+    total,
+    totalPages: Math.ceil(total / limit),
+    data: tasks,
   };
-
-  writeDB(db);
-
-  return db.tasks[index];
 };
 
-const removeTask = (id) => {
-  const db = readDB();
+const getTask = async (id) => {
+  return await Task.findOne({
+    _id: id,
+    isDeleted: false,
+  }).populate("userId", "name email");
+};
 
-  const index = db.tasks.findIndex(
-    (task) => task.id === id
+const addTask = async (taskData) => {
+  const task = await Task.create({
+    title: taskData.title,
+    description: taskData.description,
+    priority: taskData.priority,
+    status: taskData.status || "Yet to do",
+    userId: taskData.userId,
+  });
+
+  return task;
+};
+
+const editTask = async (id, updatedData) => {
+  return await Task.findByIdAndUpdate(id, updatedData, {
+    new: true,
+    runValidators: true,
+  });
+};
+
+const removeTask = async (id) => {
+  const task = await Task.findByIdAndUpdate(
+    id,
+    {
+      isDeleted: true,
+    },
+    {
+      new: true,
+    },
   );
 
-  if (index === -1) return false;
+  return task;
+};
 
-  db.tasks.splice(index, 1);
+const getDashboardStats = async () => {
+  return await Task.aggregate([
+    {
+      $match: {
+        isDeleted: false,
+      },
+    },
 
-  writeDB(db);
+    {
+      $group: {
+        _id: "$status",
 
-  return true;
+        count: {
+          $sum: 2,
+        },
+      },
+    },
+  ]);
 };
 
 module.exports = {
@@ -77,4 +95,5 @@ module.exports = {
   addTask,
   editTask,
   removeTask,
+  getDashboardStats,
 };

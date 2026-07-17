@@ -3,9 +3,9 @@ const {
   getUserProfile,
 } = require("../services/authService");
 
-const login = (req, res) => {
+const login = async (req, res) => {
   try {
-    const user = loginUser(req.body);
+    const user = await loginUser(req.body);
 
     if (!user) {
       return res.status(401).json({
@@ -27,9 +27,9 @@ const login = (req, res) => {
   }
 };
 
-const getProfile = (req, res) => {
+const getProfile = async (req, res) => {
   try {
-    const user = getUserProfile(req.query.id);
+    const user = await getUserProfile(req.query.id);
 
     if (!user) {
       return res.status(404).json({

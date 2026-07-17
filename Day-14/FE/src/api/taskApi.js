@@ -2,9 +2,20 @@ import axios from "axios";
 
 const API_URL = process.env.REACT_APP_API_BASE_URL;
 
-// Get All Tasks
-export const getTasks = async () => {
-  const response = await axios.get(`${API_URL}/tasks`);
+// Get All Tasks (Search + Pagination)
+export const getTasks = async (
+  page = 1,
+  limit = 10,
+  search = ""
+) => {
+  const response = await axios.get(`${API_URL}/tasks`, {
+    params: {
+      page,
+      limit,
+      search,
+    },
+  });
+
   return response.data;
 };
 
@@ -30,7 +41,7 @@ export const updateTask = async (id, task) => {
   return response.data;
 };
 
-// Delete Task
+// Soft Delete Task
 export const deleteTask = async (id) => {
   const response = await axios.delete(
     `${API_URL}/tasks/${id}`

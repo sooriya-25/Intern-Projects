@@ -1,29 +1,18 @@
-const { readDB } = require("../config/db");
+const User = require("../models/User");
 
-const loginUser = ({ email, password }) => {
-  const db = readDB();
+const loginUser = async ({ email, password }) => {
+  const user = await User.findOne({
+    email,
+    password,
+  }).select("-password");
 
-  const user = db.users.find(
-    (user) =>
-      user.email === email &&
-      user.password === password
-  );
-
-  if (!user) return null;
-
-  const { password: _, ...userData } = user;
-
-  return userData;
+  return user;
 };
 
-const getUserProfile = (id) => {
-  const db = readDB();
+const getUserProfile = async (id) => {
+  const user = await User.findById(id).select("-password");
 
-  return (
-    db.users.find(
-      (user) => user.id === Number(id)
-    ) || null
-  );
+  return user;
 };
 
 module.exports = {
