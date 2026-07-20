@@ -123,8 +123,33 @@ const getAllUsers = async () => {
   return User.find({}).select("-password").sort({ createdAt: -1 });
 };
 
+const updateUserProfile = async (id, updates) => {
+  const allowedUpdates = {};
+
+  if (typeof updates?.name === "string") {
+    allowedUpdates.name = updates.name.trim();
+  }
+
+  if (typeof updates?.email === "string") {
+    allowedUpdates.email = updates.email.trim().toLowerCase();
+  }
+
+  if (Object.keys(allowedUpdates).length === 0) {
+    return null;
+  }
+
+  return User.findByIdAndUpdate(id, allowedUpdates, {
+    new: true,
+    runValidators: true,
+  }).select("-password");
+};
+
 const updateUserRole = async (id, role) => {
   return User.findByIdAndUpdate(id, { role }, { new: true }).select("-password");
+};
+
+const deleteUserById = async (id) => {
+  return User.findByIdAndDelete(id).select("-password");
 };
 
 const refreshAccessToken = async ({ refreshToken }) => {
@@ -158,7 +183,9 @@ module.exports = {
   registerUser,
   getUserProfile,
   getAllUsers,
+  updateUserProfile,
   updateUserRole,
+  deleteUserById,
   refreshAccessToken,
   buildLoginQuery,
   normalizeRegistrationInput,

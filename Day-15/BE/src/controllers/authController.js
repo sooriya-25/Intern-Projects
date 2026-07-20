@@ -3,7 +3,9 @@ const {
   registerUser,
   getUserProfile,
   getAllUsers,
+  updateUserProfile,
   updateUserRole,
+  deleteUserById,
   refreshAccessToken,
 } = require("../services/authService");
 
@@ -80,6 +82,30 @@ const listUsers = async (req, res) => {
   }
 };
 
+const updateUser = async (req, res) => {
+  try {
+    const user = await updateUserProfile(req.params.id, req.body);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "User updated successfully",
+      data: user,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 const changeUserRole = async (req, res) => {
   try {
     const user = await updateUserRole(req.params.id, req.body.role);
@@ -95,6 +121,29 @@ const changeUserRole = async (req, res) => {
       success: true,
       message: "Role updated successfully",
       data: user,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+const deleteUser = async (req, res) => {
+  try {
+    const user = await deleteUserById(req.params.id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "User deleted successfully",
     });
   } catch (error) {
     res.status(500).json({
@@ -126,6 +175,8 @@ module.exports = {
   login,
   getProfile,
   listUsers,
+  updateUser,
   changeUserRole,
+  deleteUser,
   refresh,
 };
