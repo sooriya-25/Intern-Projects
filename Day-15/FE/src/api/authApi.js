@@ -1,14 +1,7 @@
-import axios from "axios";
-
-const API_URL = process.env.REACT_APP_API_BASE_URL;
-
-const getAuthHeaders = () => {
-  const token = localStorage.getItem("token");
-  return token ? { Authorization: `Bearer ${token}` } : {};
-};
+import api from "./axios";
 
 export const registerUser = async (name, email, password) => {
-  const response = await axios.post(`${API_URL}/auth/register`, {
+  const response = await api.post("/auth/register", {
     name,
     email,
     password,
@@ -18,7 +11,7 @@ export const registerUser = async (name, email, password) => {
 };
 
 export const loginUser = async (identifier, password) => {
-  const response = await axios.post(`${API_URL}/auth/login`, {
+  const response = await api.post("/auth/login", {
     email: identifier,
     username: identifier,
     password,
@@ -28,39 +21,31 @@ export const loginUser = async (identifier, password) => {
 };
 
 export const getProfile = async () => {
-  const response = await axios.get(`${API_URL}/auth/profile`, {
-    headers: getAuthHeaders(),
-  });
+  const response = await api.get("/auth/profile");
 
   return response.data;
 };
 
 export const getUsers = async () => {
-  const response = await axios.get(`${API_URL}/auth/users`, {
-    headers: getAuthHeaders(),
-  });
+  const response = await api.get("/auth/users");
 
   return response.data;
 };
 
 export const updateUser = async (id, payload) => {
-  const response = await axios.put(`${API_URL}/auth/users/${id}`, payload, {
-    headers: getAuthHeaders(),
-  });
+  const response = await api.put(`/auth/users/${id}`, payload);
 
   return response.data;
 };
 
 export const deleteUser = async (id) => {
-  const response = await axios.delete(`${API_URL}/auth/users/${id}`, {
-    headers: getAuthHeaders(),
-  });
+  const response = await api.delete(`/auth/users/${id}`);
 
   return response.data;
 };
 
 export const refreshToken = async () => {
   const refresh = localStorage.getItem("refreshToken");
-  const response = await axios.post(`${API_URL}/auth/refresh`, { refreshToken: refresh });
+  const response = await api.post("/auth/refresh", { refreshToken: refresh });
   return response.data;
 };
