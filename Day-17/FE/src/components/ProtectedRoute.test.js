@@ -4,9 +4,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import { AuthContext } from "../context/AuthContext";
 
 describe("ProtectedRoute", () => {
-
   test("renders children when user is logged in", () => {
-
     render(
       <MemoryRouter>
         <AuthContext.Provider
@@ -21,17 +19,13 @@ describe("ProtectedRoute", () => {
             <h1>Dashboard</h1>
           </ProtectedRoute>
         </AuthContext.Provider>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
-    expect(
-      screen.getByText("Dashboard")
-    ).toBeInTheDocument();
-
+    expect(screen.getByText("Dashboard")).toBeInTheDocument();
   });
 
   test("redirects to login when user is not logged in", () => {
-
     render(
       <MemoryRouter initialEntries={["/dashboard"]}>
         <AuthContext.Provider
@@ -43,13 +37,9 @@ describe("ProtectedRoute", () => {
             <h1>Dashboard</h1>
           </ProtectedRoute>
         </AuthContext.Provider>
-      </MemoryRouter>
+      </MemoryRouter>,
     );
 
-    expect(
-      screen.queryByText("Dashboard")
-    ).not.toBeInTheDocument();
-
+    expect(screen.queryByText("Dashboard")).not.toBeInTheDocument();
   });
-
 });

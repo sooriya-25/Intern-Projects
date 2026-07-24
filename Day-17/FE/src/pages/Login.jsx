@@ -92,7 +92,7 @@ const Login = () => {
             <Input.Password />
           </Form.Item>
 
-          <Button type="primary" htmlType="submit" block loading={loading}>
+          <Button type="primary" htmlType="submit" block loading={loading} disabled={loading}>
             Login
           </Button>
         </Form>

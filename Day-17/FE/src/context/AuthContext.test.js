@@ -1,26 +1,14 @@
 import React, { useContext } from "react";
-import {
-  render,
-  screen,
-  fireEvent,
-} from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 
-import {
-  AuthProvider,
-  AuthContext,
-  normalizeUserData,
-} from "./AuthContext";
+import { AuthProvider, AuthContext, normalizeUserData } from "./AuthContext";
 
 const TestComponent = () => {
-
-  const { user, login, logout } =
-    useContext(AuthContext);
+  const { user, login, logout } = useContext(AuthContext);
 
   return (
     <>
-      <h1 data-testid="user">
-        {user ? user.name : "No User"}
-      </h1>
+      <h1 data-testid="user">{user ? user.name : "No User"}</h1>
 
       <button
         onClick={() =>
@@ -33,113 +21,75 @@ const TestComponent = () => {
         Login
       </button>
 
-      <button
-        onClick={logout}
-      >
-        Logout
-      </button>
+      <button onClick={logout}>Logout</button>
     </>
   );
 };
 
 describe("normalizeUserData", () => {
+  test("returns null when input is null", () => {
+    expect(normalizeUserData(null)).toBeNull();
+  });
 
-    test("returns null when input is null", () => {
-
-        expect(
-            normalizeUserData(null)
-        ).toBeNull();
-
-    });
-
-    test("returns data when API response contains success and data", () => {
-
+  test("returns data when API response contains success and data", () => {
     const response = {
-        success: true,
-        data: {
-            id: 1,
-            name: "John"
-        }
+      success: true,
+      data: {
+        id: 1,
+        name: "John",
+      },
     };
 
-    expect(
-        normalizeUserData(response)
-    ).toEqual({
-        id: 1,
-        name: "John"
+    expect(normalizeUserData(response)).toEqual({
+      id: 1,
+      name: "John",
     });
+  });
 
-});
-
-test("returns original object when already normalized", () => {
-
+  test("returns original object when already normalized", () => {
     const user = {
-        id: 1,
-        name: "John"
+      id: 1,
+      name: "John",
     };
 
-    expect(
-        normalizeUserData(user)
-    ).toEqual(user);
-
-});
-
+    expect(normalizeUserData(user)).toEqual(user);
+  });
 });
 
 describe("AuthProvider", () => {
-
   test("shows No User initially", () => {
-
     render(
       <AuthProvider>
         <TestComponent />
-      </AuthProvider>
+      </AuthProvider>,
     );
 
-    expect(
-      screen.getByTestId("user")
-    ).toHaveTextContent("No User");
-
+    expect(screen.getByTestId("user")).toHaveTextContent("No User");
   });
 
   test("logs in the user", () => {
+    render(
+      <AuthProvider>
+        <TestComponent />
+      </AuthProvider>,
+    );
 
-  render(
-    <AuthProvider>
-      <TestComponent />
-    </AuthProvider>
-  );
+    fireEvent.click(screen.getByText("Login"));
 
-  fireEvent.click(
-    screen.getByText("Login")
-  );
+    expect(screen.getByTestId("user")).toHaveTextContent("John");
+  });
 
-  expect(
-    screen.getByTestId("user")
-  ).toHaveTextContent("John");
+  test("logs out the user", () => {
+    render(
+      <AuthProvider>
+        <TestComponent />
+      </AuthProvider>,
+    );
 
-});
+    fireEvent.click(screen.getByText("Login"));
 
-test("logs out the user", () => {
+    fireEvent.click(screen.getByText("Logout"));
 
-  render(
-    <AuthProvider>
-      <TestComponent />
-    </AuthProvider>
-  );
-
-  fireEvent.click(
-    screen.getByText("Login")
-  );
-
-  fireEvent.click(
-    screen.getByText("Logout")
-  );
-
-  expect(
-    screen.getByTestId("user")
-  ).toHaveTextContent("No User");
-
-});
-
+    expect(screen.getByTestId("user")).toHaveTextContent("No User");
+  });
 });
