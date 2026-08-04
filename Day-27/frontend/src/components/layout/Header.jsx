@@ -1,4 +1,8 @@
-import { Avatar, Button } from "antd";
+import {
+  Avatar,
+  Button,
+} from "antd";
+
 import {
   BellOutlined,
   MoonOutlined,
@@ -6,20 +10,32 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 
+import { useNavigate } from "react-router-dom";
+
 import { useDispatch, useSelector } from "react-redux";
+
+import { logout } from "../../store/slices/authSlice";
 import { toggleTheme } from "../../store/slices/themeSlice";
 
 const Header = () => {
   const dispatch = useDispatch();
 
+  const navigate = useNavigate();
+
   const { theme } = useSelector((state) => state.theme);
 
   const { user } = useSelector((state) => state.auth);
 
-  return (
-    <header className="flex items-center justify-between h-16 px-6 bg-white border-b dark:bg-slate-900 dark:border-slate-700">
+  const handleLogout = () => {
+    dispatch(logout());
 
-      <h2 className="text-xl font-semibold dark:text-white">
+    navigate("/login");
+  };
+
+  return (
+    <header className="flex items-center justify-between h-16 px-6 bg-white border-b">
+
+      <h2 className="text-xl font-semibold">
         Dashboard
       </h2>
 
@@ -40,15 +56,20 @@ const Header = () => {
           }
         />
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
 
           <Avatar
             icon={<UserOutlined />}
           />
 
-          <span className="font-medium dark:text-white">
-            {user?.name || "Guest"}
-          </span>
+          <span>{user?.name}</span>
+
+          <Button
+            danger
+            onClick={handleLogout}
+          >
+            Logout
+          </Button>
 
         </div>
 
