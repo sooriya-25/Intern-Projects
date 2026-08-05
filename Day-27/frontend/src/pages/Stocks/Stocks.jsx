@@ -11,6 +11,7 @@ import { useStocks } from "../../hooks/useStocks";
 import useDebounce from "../../hooks/useDebounce";
 
 import { useAddWatchlist } from "../../hooks/useAddWatchlist";
+import { useWatchlist } from "../../hooks/useWatchlist";
 import { useCreateStock } from "../../hooks/useCreateStock";
 import { useUpdateStock } from "../../hooks/useUpdateStock";
 import { useDeleteStock } from "../../hooks/useDeleteStock";
@@ -38,6 +39,12 @@ const Stocks = () => {
     useStocks(debouncedSearch);
 
   const { mutate: addWatchlist } = useAddWatchlist();
+  const { data: watchlistData } = useWatchlist();
+
+  const watchlistIds = useMemo(() => {
+    if (!watchlistData) return [];
+    return watchlistData.map((item) => item.stock?._id || item._id);
+  }, [watchlistData]);
 
   const stocks = useMemo(() => {
     if (!data) return [];
@@ -164,6 +171,7 @@ const Stocks = () => {
     key={stock._id}
     stock={stock}
     isAdmin={user?.role === "ADMIN"}
+    isInWatchlist={watchlistIds.includes(stock._id)}
     onWatchlist={handleWatchlist}
     onEdit={handleEdit}
     onDelete={handleDelete}

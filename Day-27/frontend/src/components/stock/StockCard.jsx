@@ -9,6 +9,7 @@ import {
 const StockCard = ({
   stock,
   isAdmin,
+  isInWatchlist,
   onWatchlist,
   onEdit,
   onDelete,
@@ -57,14 +58,14 @@ const StockCard = ({
       </p>
 
       <Button
-        type="primary"
+        type={isInWatchlist ? "default" : "primary"}
         size="large"
         block
         icon={<StarOutlined />}
-        className="mt-6 rounded-full"
+        className={`mt-6 rounded-full ${isInWatchlist ? "border border-slate-200 bg-slate-100 text-slate-700" : ""}`}
         onClick={() => onWatchlist(stock._id)}
       >
-        Add To Watchlist
+        {isInWatchlist ? "Added to Watchlist" : "Add To Watchlist"}
       </Button>
 
       {isAdmin && (
