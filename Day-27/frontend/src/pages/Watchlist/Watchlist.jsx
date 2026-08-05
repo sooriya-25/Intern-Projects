@@ -30,13 +30,17 @@ const Watchlist = () => {
     );
   }
 
-  if (!data || data.length === 0) {
+  const watchlistItems = Array.isArray(data)
+    ? data.filter((item) => item?.stock)
+    : [];
+
+  if (!watchlistItems.length) {
     return <Empty description="No Stocks In Watchlist" />;
   }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-      {data.map((item) => {
+      {watchlistItems.map((item) => {
         const stock = item.stock;
 
         return (
@@ -47,10 +51,10 @@ const Watchlist = () => {
             <div className="flex justify-between items-start">
               <div>
                 <h2 className="text-xl font-bold text-slate-800">
-                  {stock.company}
+                  {stock?.company || "Unknown Company"}
                 </h2>
 
-                <p className="text-gray-500">{stock.symbol}</p>
+                <p className="text-gray-500">{stock?.symbol || "--"}</p>
               </div>
 
               <div>
@@ -61,13 +65,13 @@ const Watchlist = () => {
             </div>
 
             <div className="flex gap-2 mt-4">
-              <Tag color="blue">{stock.sector}</Tag>
+              <Tag color="blue">{stock?.sector || "Unknown"}</Tag>
 
-              <Tag color="green">{stock.exchange}</Tag>
+              <Tag color="green">{stock?.exchange || "--"}</Tag>
             </div>
 
             <p className="text-gray-500 text-sm mt-4 line-clamp-2">
-              {stock.description}
+              {stock?.description || "No description available."}
             </p>
 
             <Button

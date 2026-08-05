@@ -17,9 +17,11 @@ const addToWatchlist = async (userId, stockId) => {
 };
 
 const getWatchlist = async (userId) => {
-  return await Watchlist.find({
+  const watchlist = await Watchlist.find({
     user: userId,
   }).populate("stock");
+
+  return watchlist.filter((item) => item?.stock);
 };
 
 const removeFromWatchlist = async (userId, stockId) => {
