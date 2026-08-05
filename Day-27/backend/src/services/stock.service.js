@@ -1,4 +1,5 @@
 const Stock = require("../models/Stock");
+const getPagination = require("../utils/pagination");
 
 const createStock = async (stockData) => {
   return await Stock.create(stockData);
@@ -10,7 +11,7 @@ const getStocks = async ({
   search = "",
   sort = "company",
   order = "asc",
-}) => {
+} = {}) => {
   const query = {};
 
   if (search) {
@@ -19,21 +20,26 @@ const getStocks = async ({
     };
   }
 
+  const { page: parsedPage, limit: parsedLimit, skip } = getPagination(
+    page,
+    limit
+  );
+
   const stocks = await Stock.find(query)
     .sort({
       [sort]: order === "asc" ? 1 : -1,
     })
-    .skip((page - 1) * limit)
-    .limit(Number(limit));
+    .skip(skip)
+    .limit(parsedLimit);
 
   const total = await Stock.countDocuments(query);
 
   return {
     stocks,
-    page: Number(page),
-    limit: Number(limit),
+    page: parsedPage,
+    limit: parsedLimit,
     total,
-    hasMore: page * limit < total,
+    hasMore: parsedPage * parsedLimit < total,
   };
 };
 
