@@ -1,18 +1,13 @@
 module.exports = {
   testEnvironment: "node",
-  testMatch: ["**/?(*.)+(test).[jt]s"],
+  testMatch: ["**/src/test/**/*.test.js", "**/?(*.)+(test).[jt]s"],
   collectCoverage: true,
   collectCoverageFrom: [
     "src/**/*.js",
     "!src/server.js",
     "!src/app.js",
     "!src/config/**",
-    "!src/routes/**",
-    "!src/validators/**",
-    "!src/controllers/**",
-    "!src/middlewares/**",
-    "!src/models/**",
-    "!src/constants/**"
+    "!src/test/**"
   ],
   coverageDirectory: "coverage",
   coverageThreshold: {

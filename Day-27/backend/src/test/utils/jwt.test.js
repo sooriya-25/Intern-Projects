@@ -5,7 +5,7 @@ describe("JWT utils", () => {
     process.env.JWT_SECRET = "test-secret";
     process.env.JWT_EXPIRES_IN = "1h";
     jest.resetModules();
-    jwtUtils = require("./jwt");
+    jwtUtils = require("../../utils/jwt");
   });
 
   test("generateToken returns a signed token", () => {

@@ -1,12 +1,12 @@
 const mockFindById = jest.fn();
 const mockFindByIdAndUpdate = jest.fn();
 
-jest.mock("../models/User", () => ({
+jest.mock("../../models/User", () => ({
   findById: mockFindById,
   findByIdAndUpdate: mockFindByIdAndUpdate,
 }));
 
-const profileService = require("./profile.service");
+const profileService = require("../../services/profile.service");
 
 describe("profile.service", () => {
   beforeEach(() => {

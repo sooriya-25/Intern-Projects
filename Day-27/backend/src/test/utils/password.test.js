@@ -1,4 +1,4 @@
-const { hashPassword, comparePassword } = require("./password");
+const { hashPassword, comparePassword } = require("../../utils/password");
 
 describe("password utilities", () => {
   test("hashPassword produces a hash and comparePassword validates it", async () => {

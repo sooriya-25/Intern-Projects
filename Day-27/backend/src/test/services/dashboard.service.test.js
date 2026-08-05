@@ -2,7 +2,7 @@ const mockCountDocuments = jest.fn();
 const mockAggregate = jest.fn();
 const mockFind = jest.fn();
 
-jest.mock("../models/Stock", () => ({
+jest.mock("../../models/Stock", () => ({
   countDocuments: mockCountDocuments,
   aggregate: mockAggregate,
   find: mockFind,
@@ -11,15 +11,15 @@ jest.mock("../models/Stock", () => ({
 const mockUserCountDocuments = jest.fn();
 const mockWatchlistCountDocuments = jest.fn();
 
-jest.mock("../models/User", () => ({
+jest.mock("../../models/User", () => ({
   countDocuments: mockUserCountDocuments,
 }));
 
-jest.mock("../models/Watchlist", () => ({
+jest.mock("../../models/Watchlist", () => ({
   countDocuments: mockWatchlistCountDocuments,
 }));
 
-const dashboardService = require("./dashboard.service");
+const dashboardService = require("../../services/dashboard.service");
 
 describe("dashboard.service", () => {
   beforeEach(() => {

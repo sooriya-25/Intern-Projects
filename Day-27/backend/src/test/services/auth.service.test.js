@@ -1,7 +1,7 @@
 const mockCreate = jest.fn();
 const mockFindOne = jest.fn();
 
-jest.mock("../models/User", () => ({
+jest.mock("../../models/User", () => ({
   findOne: mockFindOne,
   create: mockCreate,
 }));
@@ -9,18 +9,18 @@ jest.mock("../models/User", () => ({
 const mockHashPassword = jest.fn();
 const mockComparePassword = jest.fn();
 
-jest.mock("../utils/password", () => ({
+jest.mock("../../utils/password", () => ({
   hashPassword: mockHashPassword,
   comparePassword: mockComparePassword,
 }));
 
 const mockGenerateToken = jest.fn();
 
-jest.mock("../utils/jwt", () => ({
+jest.mock("../../utils/jwt", () => ({
   generateToken: mockGenerateToken,
 }));
 
-const authService = require("./auth.service");
+const authService = require("../../services/auth.service");
 
 describe("auth.service", () => {
   beforeEach(() => {

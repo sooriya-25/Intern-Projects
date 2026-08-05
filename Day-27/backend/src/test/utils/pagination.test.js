@@ -1,4 +1,4 @@
-const getPagination = require("./pagination");
+const getPagination = require("../../utils/pagination");
 
 describe("getPagination utility", () => {
   test("uses default values and computes skip", () => {

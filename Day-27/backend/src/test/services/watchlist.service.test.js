@@ -3,14 +3,14 @@ const mockCreate = jest.fn();
 const mockFind = jest.fn();
 const mockFindOneAndDelete = jest.fn();
 
-jest.mock("../models/Watchlist", () => ({
+jest.mock("../../models/Watchlist", () => ({
   findOne: mockFindOne,
   create: mockCreate,
   find: mockFind,
   findOneAndDelete: mockFindOneAndDelete,
 }));
 
-const watchlistService = require("./watchlist.service");
+const watchlistService = require("../../services/watchlist.service");
 
 describe("watchlist.service", () => {
   beforeEach(() => {
@@ -40,13 +40,13 @@ describe("watchlist.service", () => {
   });
 
   test("getWatchlist returns populated watchlist data", async () => {
-    const mockData = [{ _id: "1" }];
+    const mockData = [{ _id: "1", stock: { _id: 's1' } }];
     mockFind.mockReturnValue({ populate: jest.fn().mockResolvedValue(mockData) });
 
     const result = await watchlistService.getWatchlist("user1");
 
     expect(mockFind).toHaveBeenCalledWith({ user: "user1" });
-    expect(result).toBe(mockData);
+    expect(result).toEqual(mockData);
   });
 
   test("removeFromWatchlist deletes the matching entry", async () => {

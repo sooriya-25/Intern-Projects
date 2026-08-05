@@ -4,7 +4,7 @@ const mockCountDocuments = jest.fn();
 const mockFindByIdAndUpdate = jest.fn();
 const mockFindByIdAndDelete = jest.fn();
 
-jest.mock("../models/Stock", () => ({
+jest.mock("../../models/Stock", () => ({
   create: mockCreate,
   find: mockFind,
   countDocuments: mockCountDocuments,
@@ -12,7 +12,7 @@ jest.mock("../models/Stock", () => ({
   findByIdAndDelete: mockFindByIdAndDelete,
 }));
 
-const stockService = require("./stock.service");
+const stockService = require("../../services/stock.service");
 
 describe("stock.service", () => {
   beforeEach(() => {
