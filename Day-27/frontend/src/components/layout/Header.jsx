@@ -5,6 +5,8 @@ import {
 
 import {
   BellOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 
@@ -14,7 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { logout } from "../../store/slices/authSlice";
 
-const Header = () => {
+const Header = ({ collapsed, onToggle }) => {
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
@@ -39,10 +41,18 @@ const Header = () => {
   };
 
   return (
-    <header className="flex items-center justify-between h-20 px-6 bg-white/95 border-b border-slate-200 shadow-sm backdrop-blur-sm">
+    <header className="flex items-center justify-between h-20 px-6 bg-[#eff8ff]/95 border-b border-[#d8e7f8] shadow-sm backdrop-blur-sm">
 
-      <div>
-        <h2 className="text-2xl font-semibold leading-tight text-slate-900" style={{ letterSpacing: '-0.03em' }}>
+      <div className="flex items-center gap-4">
+        <Button
+          type="text"
+          shape="circle"
+          icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+          onClick={onToggle}
+          className="text-blue-700 hover:bg-[#d8e7f8]"
+        />
+
+        <h2 className="text-2xl font-semibold leading-tight text-blue-900" style={{ letterSpacing: '-0.03em' }}>
           {title}
         </h2>
       </div>

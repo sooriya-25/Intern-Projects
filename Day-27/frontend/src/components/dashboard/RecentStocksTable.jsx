@@ -29,12 +29,12 @@ const RecentStocksTable = ({ data }) => {
   return (
     <Card
       title="Recent Stocks"
-      className="rounded-[1.5rem] border border-slate-200 bg-slate-50 shadow-sm"
+      className="rounded-[1.5rem] border border-[#d8e7f8] bg-[#eef6ff] shadow-sm"
       headStyle={{ borderBottom: "none", paddingBottom: 0, color: "#1e3a8a" }}
     >
-      <div className="mb-4 flex items-center justify-between gap-2 text-sm text-slate-500">
+      <div className="mb-4 flex items-center justify-between gap-2 text-sm text-[#5b7b9d]">
         <div>Latest stocks added to the system.</div>
-        <div className="rounded-full border border-slate-200 bg-white px-3 py-1 text-slate-600">
+        <div className="rounded-full border border-[#d8e7f8] bg-[#eff8ff] px-3 py-1 text-[#386fc1]">
           Updated
         </div>
       </div>

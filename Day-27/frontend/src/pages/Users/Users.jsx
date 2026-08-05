@@ -81,10 +81,6 @@ const Users = () => {
               handleStatus(user)
             }
           />
-
-          <Button className="rounded-full">
-            Edit
-          </Button>
         </Space>
       ),
     },
@@ -99,11 +95,15 @@ const Users = () => {
   }
 
   return (
-    <Table
-      rowKey="_id"
-      columns={columns}
-      dataSource={data}
-    />
+    <div className="rounded-[1.5rem] border border-[#d8e7f8] bg-[#eef6ff] shadow-sm overflow-hidden">
+      <Table
+        rowKey="_id"
+        columns={columns}
+        dataSource={data}
+        className="bg-transparent"
+        rowClassName={() => "hover:bg-sky-50 transition-colors duration-200"}
+      />
+    </div>
   );
 };
 

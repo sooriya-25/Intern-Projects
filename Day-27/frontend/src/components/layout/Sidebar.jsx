@@ -13,7 +13,7 @@ import { useSelector } from "react-redux";
 
 import Logo from "./Logo";
 
-const Sidebar = () => {
+const Sidebar = ({ collapsed }) => {
   const location = useLocation();
 
   const { user } = useSelector((state) => state.auth);
@@ -51,13 +51,14 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="w-72 h-screen sidebar-surface">
+    <aside className={`h-screen sidebar-surface transition-all duration-300 ${collapsed ? "w-20" : "w-72"}`}>
 
-      <Logo />
+      <Logo collapsed={collapsed} />
 
-      <div className="px-4 mt-4">
+      <div className={`mt-4 ${collapsed ? "px-2" : "px-4"}`}>
         <Menu
           mode="inline"
+          inlineCollapsed={collapsed}
           selectedKeys={[location.pathname]}
           items={items}
           className="border-0 bg-transparent"
