@@ -1,6 +1,6 @@
 import { Button, Input, Spin, message, Modal } from "antd";
 
-import { PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
 
 import { useMemo, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -40,6 +40,7 @@ const Stocks = () => {
 
   const { mutate: addWatchlist } = useAddWatchlist();
   const { data: watchlistData } = useWatchlist();
+  const [pendingAdds, setPendingAdds] = useState([]);
 
   const watchlistIds = useMemo(() => {
     if (!watchlistData) return [];
@@ -53,11 +54,16 @@ const Stocks = () => {
   }, [data]);
 
   const handleWatchlist = (stockId) => {
+    // optimistically mark as pending to avoid duplicate calls
+    setPendingAdds((p) => [...p, stockId]);
+
     addWatchlist(stockId, {
       onSuccess: (response) => {
+        setPendingAdds((p) => p.filter((id) => id !== stockId));
         message.success(response.message);
       },
       onError: (error) => {
+        setPendingAdds((p) => p.filter((id) => id !== stockId));
         message.error(error.response?.data?.message || "Failed");
       },
     });
@@ -137,19 +143,27 @@ const Stocks = () => {
 
   return (
     <div>
-      <div className="mb-6 flex justify-between items-center">
-        <Input.Search
-          placeholder="Search Company or Symbol..."
-          allowClear
-          size="large"
-          loading={isFetching}
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="max-w-md"
-        />
+      <div className="mb-6 flex justify-between items-center gap-4">
+        <div className="relative w-full max-w-md">
+          <Input
+            placeholder="Search Company or Symbol..."
+            allowClear
+            size="large"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            suffix={isFetching ? <Spin size="small" /> : <SearchOutlined className="text-slate-400" />}
+            className="w-full rounded-full overflow-hidden shadow-sm stocks-search"
+            style={{ height: 44 }}
+          />
+        </div>
 
         {user?.role === "ADMIN" && (
-          <Button type="primary" className="rounded-full" icon={<PlusOutlined />} onClick={handleAdd}>
+          <Button
+            type="primary"
+            className="rounded-full"
+            icon={<PlusOutlined />}
+            onClick={handleAdd}
+          >
             Add Stock
           </Button>
         )}
@@ -166,17 +180,18 @@ const Stocks = () => {
         }
       >
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-{stocks.map((stock) => (
-  <StockCard
-    key={stock._id}
-    stock={stock}
-    isAdmin={user?.role === "ADMIN"}
-    isInWatchlist={watchlistIds.includes(stock._id)}
-    onWatchlist={handleWatchlist}
-    onEdit={handleEdit}
-    onDelete={handleDelete}
-  />
-))}
+          {stocks.map((stock) => (
+            <StockCard
+              key={stock._id}
+              stock={stock}
+              isAdmin={user?.role === "ADMIN"}
+              isInWatchlist={watchlistIds.includes(stock._id)}
+              isPending={pendingAdds.includes(stock._id)}
+              onWatchlist={handleWatchlist}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            />
+          ))}
         </div>
       </InfiniteScroll>
       <StockModal

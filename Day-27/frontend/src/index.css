@@ -245,12 +245,21 @@ body {
   margin-right: 0.85rem;
 }
 
+.ant-input-search .ant-input,
+.ant-input-search .ant-input-search-button {
+  border-radius: 9999px !important;
+  height: 44px !important;
+}
+
 .ant-input-search .ant-input {
-  border-radius: 1rem 0 0 1rem;
+  border-top-right-radius: 9999px !important;
+  border-bottom-right-radius: 9999px !important;
 }
 
 .ant-input-search .ant-input-search-button {
-  border-radius: 0 1rem 1rem 0;
+  border-top-left-radius: 9999px !important;
+  border-bottom-left-radius: 9999px !important;
+  margin-left: 0 !important;
 }
 
 .header-surface {
@@ -287,3 +296,53 @@ body {
 .page-background {
   background: #f8fafc;
 }
+
+/* Strong autofill reset to avoid browser blue overlay misalignment */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover,
+textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus,
+input:-internal-autofill-selected {
+  -webkit-box-shadow: 0 0 0px 1000px var(--surface) inset !important;
+  box-shadow: 0 0 0px 1000px var(--surface) inset !important;
+  -webkit-text-fill-color: var(--text) !important;
+  background-clip: padding-box !important;
+  border-radius: 1rem !important;
+}
+
+/* Target affix wrapper used by Antd (icon + input) */
+.ant-input-affix-wrapper:-webkit-autofill,
+.ant-input-affix-wrapper input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px var(--surface) inset !important;
+  box-shadow: 0 0 0px 1000px var(--surface) inset !important;
+  -webkit-text-fill-color: var(--text) !important;
+}
+
+/* Stocks page specific search alignment */
+.stocks-search.ant-input-affix-wrapper,
+.stocks-search .ant-input-affix-wrapper {
+  height: 44px !important;
+  display: flex;
+  align-items: center;
+}
+
+.stocks-search .ant-input-prefix,
+.stocks-search .ant-input-suffix {
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.stocks-search input {
+  height: 44px !important;
+  line-height: 44px !important;
+  padding-top: 0.375rem !important;
+  padding-bottom: 0.375rem !important;
+}
+
+/* Make search inputs fully rounded and consistent height (handled earlier) */

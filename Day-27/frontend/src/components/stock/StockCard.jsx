@@ -6,90 +6,73 @@ import {
   StarOutlined,
 } from "@ant-design/icons";
 
-const StockCard = ({
-  stock,
-  isAdmin,
-  isInWatchlist,
-  onWatchlist,
-  onEdit,
-  onDelete,
-}) => {
+const StockCard = ({ stock, isAdmin, isInWatchlist, isPending, onWatchlist, onEdit, onDelete }) => {
+  let buttonLabel;
+  if (isPending) buttonLabel = "Adding...";
+  else if (isInWatchlist) buttonLabel = "Added to Watchlist";
+  else buttonLabel = "Add to Watchlist";
   return (
-    <div className="rounded-[1.5rem] bg-white border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300 p-6">
+    <div className="h-full flex flex-col justify-between rounded-2xl bg-white border border-slate-200 shadow-sm hover:shadow-lg transition-shadow duration-300 p-6">
 
-      <div className="flex justify-between items-start gap-4">
+      <div>
+        <div className="flex items-start justify-between gap-4">
+          <div className="min-w-0">
+            <h3 className="text-lg md:text-xl font-semibold text-slate-900 truncate">
+              {stock.company}
+            </h3>
+            <p className="text-sm text-slate-500 mt-1">{stock.symbol}</p>
+          </div>
 
-        <div>
-
-          <h2 className="text-xl font-bold text-slate-800">
-            {stock.company}
-          </h2>
-
-          <p className="text-gray-500">
-            {stock.symbol}
-          </p>
-
+          <div className="text-right">
+            <div className="inline-flex items-baseline gap-2">
+              <span className="text-2xl md:text-3xl font-bold text-indigo-600">${stock.currentPrice}</span>
+              <span className="text-xs text-slate-400">USD</span>
+            </div>
+          </div>
         </div>
 
-        <div className="text-right">
-
-          <p className="text-2xl font-bold text-blue-600">
-            ${stock.currentPrice}
-          </p>
-
+        <div className="flex gap-2 mt-4">
+          <Tag color="#2563EB" className="text-sm font-medium">{stock.sector}</Tag>
+          <Tag color="#16A34A" className="text-sm font-medium">{stock.exchange}</Tag>
         </div>
 
+        <p className="text-sm text-slate-600 mt-4 line-clamp-2 leading-relaxed">{stock.description}</p>
       </div>
 
-      <div className="flex gap-2 mt-4">
+      <div className="mt-6 grid gap-3">
+        <Button
+          type="default"
+          size="large"
+          block
+          icon={<StarOutlined className={isInWatchlist || isPending ? "text-slate-700" : "text-indigo-600"} />}
+          className={`rounded-full h-11 px-6 font-semibold ${isInWatchlist || isPending ? "border border-slate-200 bg-slate-100 text-slate-700" : "bg-white text-indigo-600 border border-indigo-200 hover:bg-indigo-50 shadow-md"}`}
+          onClick={() => !isInWatchlist && !isPending && onWatchlist(stock._id)}
+          disabled={isInWatchlist || isPending}
+        >
+          {buttonLabel}
+        </Button>
 
-        <Tag color="blue">
-          {stock.sector}
-        </Tag>
+        {isAdmin && (
+          <div className="flex gap-3">
+            <Button
+              className="flex-1 rounded-full h-10 font-medium"
+              icon={<EditOutlined />}
+              onClick={() => onEdit(stock)}
+            >
+              Edit
+            </Button>
 
-        <Tag color="green">
-          {stock.exchange}
-        </Tag>
-
+            <Button
+              danger
+              className="flex-1 rounded-full h-10 font-medium"
+              icon={<DeleteOutlined />}
+              onClick={() => onDelete(stock)}
+            >
+              Delete
+            </Button>
+          </div>
+        )}
       </div>
-
-      <p className="text-gray-500 text-sm mt-4 line-clamp-2">
-        {stock.description}
-      </p>
-
-      <Button
-        type={isInWatchlist ? "default" : "primary"}
-        size="large"
-        block
-        icon={<StarOutlined />}
-        className={`mt-6 rounded-full ${isInWatchlist ? "border border-slate-200 bg-slate-100 text-slate-700" : ""}`}
-        onClick={() => onWatchlist(stock._id)}
-      >
-        {isInWatchlist ? "Added to Watchlist" : "Add To Watchlist"}
-      </Button>
-
-      {isAdmin && (
-        <div className="flex flex-col gap-3 mt-4 sm:flex-row">
-
-          <Button
-            className="flex-1"
-            icon={<EditOutlined />}
-            onClick={() => onEdit(stock)}
-          >
-            Edit
-          </Button>
-
-          <Button
-            danger
-            className="flex-1"
-            icon={<DeleteOutlined />}
-            onClick={() => onDelete(stock)}
-          >
-            Delete
-          </Button>
-
-        </div>
-      )}
 
     </div>
   );
