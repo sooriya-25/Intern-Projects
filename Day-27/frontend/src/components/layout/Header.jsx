@@ -5,8 +5,6 @@ import {
 
 import {
   BellOutlined,
-  MoonOutlined,
-  SunOutlined,
   UserOutlined,
 } from "@ant-design/icons";
 
@@ -15,7 +13,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import { logout } from "../../store/slices/authSlice";
-import { toggleTheme } from "../../store/slices/themeSlice";
 
 const Header = () => {
   const dispatch = useDispatch();
@@ -23,8 +20,6 @@ const Header = () => {
   const navigate = useNavigate();
 
   const location = useLocation();
-
-  const { theme } = useSelector((state) => state.theme);
 
   const { user } = useSelector((state) => state.auth);
 
@@ -44,16 +39,19 @@ const Header = () => {
   };
 
   return (
-    <header className="flex items-center justify-between h-16 px-6 bg-white border-b">
+    <header className="flex items-center justify-between h-20 px-6 bg-white/95 border-b border-slate-200 shadow-sm backdrop-blur-sm">
 
-      <h2 className="text-2xl font-semibold">
-        {title}
-      </h2>
+      <div>
+        <h2 className="text-2xl font-semibold leading-tight text-slate-900" style={{ letterSpacing: '-0.03em' }}>
+          {title}
+        </h2>
+      </div>
 
       <div className="flex items-center gap-4">
 
         <Button
           shape="circle"
+          className="bg-slate-100 border-slate-200 text-slate-600"
           icon={<BellOutlined />}
         />
 
@@ -67,15 +65,19 @@ const Header = () => {
           }
         /> */}
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 rounded-full border border-slate-200 bg-slate-50 px-4 py-2">
 
-          <Avatar icon={<UserOutlined />} />
+          <Avatar className="bg-slate-100 text-slate-700" icon={<UserOutlined />} />
 
-          <span>{user?.name}</span>
+          <div className="min-w-[160px]">
+            <p className="text-sm font-semibold text-slate-900 leading-none">{user?.name}</p>
+            <p className="text-xs text-slate-500">Administrator</p>
+          </div>
 
           <Button
-            danger
+            type="default"
             onClick={handleLogout}
+            className="rounded-full px-5 h-11 font-semibold"
           >
             Logout
           </Button>

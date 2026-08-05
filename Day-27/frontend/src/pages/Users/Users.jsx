@@ -82,7 +82,7 @@ const Users = () => {
             }
           />
 
-          <Button>
+          <Button className="rounded-full">
             Edit
           </Button>
         </Space>

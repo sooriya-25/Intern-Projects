@@ -2,7 +2,288 @@
 @tailwind components;
 @tailwind utilities;
 
-body{
-  margin:0;
-  font-family: sans-serif;
+:root {
+  color-scheme: light;
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --surface-soft: #f1f5f9;
+  --surface-border: #e2e8f0;
+  --primary: #2563eb;
+  --primary-strong: #1d4ed8;
+  --text: #0f172a;
+  --muted: #64748b;
+  --shadow-card: 0 18px 48px rgba(15, 23, 42, 0.08);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background: radial-gradient(circle at top, rgba(37, 99, 235, 0.08), transparent 35%), #f8fafc;
+  color: var(--text);
+}
+
+.ant-btn {
+  border-radius: 9999px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  height: 44px;
+  min-width: 100px;
+  padding: 0 1.25rem;
+}
+
+.ant-btn-primary {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+
+.ant-btn-primary:hover,
+.ant-btn-primary:focus,
+.ant-btn-primary:active {
+  background: var(--primary-strong);
+  border-color: var(--primary-strong);
+  color: #fff;
+}
+
+.ant-btn-default,
+.ant-btn-text,
+.ant-btn-link,
+.ant-btn-ghost {
+  background: var(--surface);
+  border: 1px solid var(--surface-border);
+  color: var(--text);
+}
+
+.ant-btn-default:hover,
+.ant-btn-text:hover,
+.ant-btn-link:hover,
+.ant-btn-ghost:hover {
+  background: #eef2ff;
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.ant-btn-danger {
+  background: #dc2626;
+  border-color: #dc2626;
+  color: #fff;
+}
+
+.ant-btn-danger:hover,
+.ant-btn-danger:focus,
+.ant-btn-danger:active {
+  background: #b91c1c;
+  border-color: #b91c1c;
+}
+
+.ant-btn-icon-only,
+.ant-btn.circle,
+.ant-btn.shape-circle {
+  width: 44px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.ant-btn:hover,
+.ant-btn:focus {
+  transform: translateY(-1px);
+}
+
+.ant-card,
+.ant-modal-content,
+.ant-input,
+.ant-input-affix-wrapper,
+.ant-input-number,
+.ant-select-selector,
+.ant-input-password,
+.ant-input-textarea textarea {
+  transition: all 0.2s ease;
+}
+
+.ant-card {
+  border-radius: 1.5rem;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  background: var(--surface);
+  box-shadow: var(--shadow-card);
+}
+
+.ant-card-head {
+  border-bottom: none;
+  background: transparent;
+  padding-bottom: 0;
+  margin-bottom: 1rem;
+}
+
+.ant-card-head-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.ant-card-body {
+  padding: 1.5rem;
+}
+
+.ant-table {
+  background: transparent;
+}
+
+.ant-table-thead > tr > th {
+  background: transparent;
+  color: #475569;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.95);
+  font-weight: 700;
+}
+
+.ant-table-tbody > tr > td {
+  border-bottom: 1px solid rgba(226, 232, 240, 0.9);
+  padding: 1rem 0.75rem;
+}
+
+.ant-table-tbody > tr:hover {
+  background: rgba(37, 99, 235, 0.05);
+}
+
+.ant-input,
+.ant-input-affix-wrapper,
+.ant-input-number,
+.ant-select-selector,
+.ant-input-password,
+.ant-input-textarea textarea {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 1rem;
+  height: 48px;
+}
+
+.ant-input-affix-wrapper:not(.ant-input-affix-wrapper-disabled):hover,
+.ant-input:not(.ant-input-disabled):hover,
+.ant-select-selector:not(.ant-select-disabled):hover,
+.ant-input-number:hover .ant-input-number-input {
+  border-color: #cbd5e1;
+}
+
+.ant-form-item-label > label {
+  font-weight: 600;
+  color: #334155;
+}
+
+.ant-input::placeholder,
+.ant-input-number input::placeholder,
+.ant-input-textarea textarea::placeholder {
+  color: #94a3b8;
+}
+
+.ant-modal-content {
+  border-radius: 1.5rem;
+  overflow: hidden;
+}
+
+.ant-modal-header {
+  background: #f8fafc;
+  border-bottom: 1px solid rgba(226, 232, 240, 0.9);
+  padding: 1.5rem 1.5rem 1rem;
+}
+
+.ant-modal-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.ant-modal-body {
+  padding: 1.5rem;
+}
+
+.ant-modal-footer {
+  border-top: none;
+  padding: 1.25rem 1.5rem 1.5rem;
+}
+
+.ant-modal-footer .ant-btn {
+  min-width: 120px;
+}
+
+.ant-spin-dot-item {
+  background-color: var(--primary);
+}
+
+.ant-menu-vertical,
+.ant-menu {
+  background: transparent;
+  border: none;
+}
+
+.ant-menu-vertical .ant-menu-item {
+  border-radius: 1rem;
+  margin: 0.25rem 0;
+}
+
+.ant-menu-vertical .ant-menu-item-selected {
+  background: rgba(37, 99, 235, 0.12);
+  color: var(--primary);
+}
+
+.ant-menu-vertical .ant-menu-item:hover {
+  background: rgba(37, 99, 235, 0.08);
+}
+
+.ant-menu-item-icon {
+  margin-right: 0.85rem;
+}
+
+.ant-input-search .ant-input {
+  border-radius: 1rem 0 0 1rem;
+}
+
+.ant-input-search .ant-input-search-button {
+  border-radius: 0 1rem 1rem 0;
+}
+
+.header-surface {
+  background: rgba(255, 255, 255, 0.95);
+  border-bottom: 1px solid rgba(226, 232, 240, 1);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+}
+
+.sidebar-surface {
+  background: #ffffff;
+  box-shadow: 10px 0 40px rgba(15, 23, 42, 0.04);
+}
+
+.card-elevated {
+  border-radius: 1.5rem;
+  box-shadow: 0 18px 48px rgba(15, 23, 42, 0.06);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+}
+
+.btn-modern {
+  border-radius: 9999px;
+}
+
+.btn-secondary {
+  background: #f8fafc;
+  border-color: #e2e8f0;
+  color: var(--text);
+}
+
+.btn-soft {
+  border-radius: 1.5rem;
+}
+
+.page-background {
+  background: #f8fafc;
 }

@@ -14,9 +14,9 @@ const StockCard = ({
   onDelete,
 }) => {
   return (
-    <div className="rounded-xl bg-white border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 p-5">
+    <div className="rounded-[1.5rem] bg-white border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300 p-6">
 
-      <div className="flex justify-between items-start">
+      <div className="flex justify-between items-start gap-4">
 
         <div>
 
@@ -61,14 +61,14 @@ const StockCard = ({
         size="large"
         block
         icon={<StarOutlined />}
-        className="mt-5 rounded-lg"
+        className="mt-6 rounded-full"
         onClick={() => onWatchlist(stock._id)}
       >
         Add To Watchlist
       </Button>
 
       {isAdmin && (
-        <div className="flex gap-3 mt-3">
+        <div className="flex flex-col gap-3 mt-4 sm:flex-row">
 
           <Button
             className="flex-1"

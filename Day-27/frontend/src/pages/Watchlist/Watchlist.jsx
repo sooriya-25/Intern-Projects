@@ -42,7 +42,7 @@ const Watchlist = () => {
         return (
           <div
             key={item._id}
-            className="rounded-xl bg-white border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 p-5"
+            className="rounded-[1.5rem] bg-white border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300 p-6"
           >
             <div className="flex justify-between items-start">
               <div>
@@ -72,13 +72,13 @@ const Watchlist = () => {
 
             <Button
               danger
+              type="default"
               size="large"
-              block
               icon={<DeleteOutlined />}
-              className="mt-5 rounded-lg"
+              className="mt-5 rounded-full w-full md:w-auto px-6 font-semibold"
               onClick={() => handleRemove(stock._id)}
             >
-              Remove From Watchlist
+              Remove
             </Button>
           </div>
         );

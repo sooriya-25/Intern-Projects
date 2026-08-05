@@ -9,7 +9,7 @@ const MainLayout = () => {
 
   return (
     <div className={theme}>
-      <div className="flex h-screen bg-gray-100 dark:bg-slate-950">
+      <div className="flex h-screen page-background">
 
         <Sidebar />
 

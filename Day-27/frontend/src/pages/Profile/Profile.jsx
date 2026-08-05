@@ -57,11 +57,11 @@ const Profile = () => {
   }
 
   return (
-    <div className="max-w-3xl mx-auto">
+    <div className="max-w-3xl mx-auto px-4">
 
-      <Card className="rounded-xl shadow">
+      <Card className="rounded-[1.5rem] shadow-xl border border-slate-200">
 
-        <div className="flex items-center gap-5">
+        <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
 
           <Avatar
             size={80}
@@ -127,6 +127,7 @@ const Profile = () => {
             htmlType="submit"
             size="large"
             loading={isPending}
+            className="rounded-full"
           >
             Update Profile
           </Button>

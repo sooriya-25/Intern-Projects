@@ -51,16 +51,18 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="w-64 h-screen bg-white border-r dark:bg-slate-900 dark:border-slate-700">
+    <aside className="w-72 h-screen sidebar-surface">
 
       <Logo />
 
-      <Menu
-        mode="inline"
-        selectedKeys={[location.pathname]}
-        items={items}
-        className="border-0"
-      />
+      <div className="px-4 mt-4">
+        <Menu
+          mode="inline"
+          selectedKeys={[location.pathname]}
+          items={items}
+          className="border-0 bg-transparent"
+        />
+      </div>
 
     </aside>
   );

@@ -37,13 +37,13 @@ const Login = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-slate-100">
+    <div className="flex items-center justify-center min-h-screen bg-slate-100 px-4">
 
-      <Card className="w-full max-w-md shadow-xl rounded-xl">
+      <Card className="w-full max-w-md shadow-2xl rounded-[1.5rem] border border-slate-200">
 
         <Title
           level={2}
-          className="text-center"
+          className="text-center text-slate-900"
         >
           StockPro Login
         </Title>
@@ -90,6 +90,7 @@ const Login = () => {
             htmlType="submit"
             block
             loading={isPending}
+            className="rounded-full"
           >
             Login
           </Button>

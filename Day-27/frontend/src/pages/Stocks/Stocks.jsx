@@ -1,6 +1,6 @@
 import { Button, Input, Spin, message, Modal } from "antd";
 
-import { EditOutlined, DeleteOutlined, PlusOutlined } from "@ant-design/icons";
+import { PlusOutlined } from "@ant-design/icons";
 
 import { useMemo, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
@@ -142,7 +142,7 @@ const Stocks = () => {
         />
 
         {user?.role === "ADMIN" && (
-          <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
+          <Button type="primary" className="rounded-full" icon={<PlusOutlined />} onClick={handleAdd}>
             Add Stock
           </Button>
         )}
