@@ -1,4 +1,6 @@
-import { Button, Card, Empty, Spin, message } from "antd";
+import { Button, Empty, Spin, Tag, message } from "antd";
+
+import { DeleteOutlined } from "@ant-design/icons";
 
 import { useWatchlist } from "../../hooks/useWatchlist";
 import { useRemoveWatchlist } from "../../hooks/useRemoveWatchlist";
@@ -15,9 +17,7 @@ const Watchlist = () => {
       },
 
       onError: (error) => {
-        message.error(
-          error.response?.data?.message || "Failed"
-        );
+        message.error(error.response?.data?.message || "Failed");
       },
     });
   };
@@ -31,45 +31,58 @@ const Watchlist = () => {
   }
 
   if (!data || data.length === 0) {
-    return (
-      <Empty description="No Stocks In Watchlist" />
-    );
+    return <Empty description="No Stocks In Watchlist" />;
   }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+      {data.map((item) => {
+        const stock = item.stock;
 
-      {data.map((item) => (
-        <Card key={item._id}>
-
-          <h2 className="text-xl font-semibold">
-            {item.stock.company}
-          </h2>
-
-          <p className="mt-2">
-            Symbol : {item.stock.symbol}
-          </p>
-
-          <p>
-            Sector : {item.stock.sector}
-          </p>
-
-          <p className="text-blue-600 font-bold mt-2">
-            ${item.stock.currentPrice}
-          </p>
-
-          <Button
-            danger
-            block
-            className="mt-4"
-            onClick={() => handleRemove(item.stock._id)}
+        return (
+          <div
+            key={item._id}
+            className="rounded-xl bg-white border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 p-5"
           >
-            Remove
-          </Button>
+            <div className="flex justify-between items-start">
+              <div>
+                <h2 className="text-xl font-bold text-slate-800">
+                  {stock.company}
+                </h2>
 
-        </Card>
-      ))}
+                <p className="text-gray-500">{stock.symbol}</p>
+              </div>
 
+              <div>
+                <p className="text-2xl font-bold text-blue-600">
+                  ${stock.currentPrice}
+                </p>
+              </div>
+            </div>
+
+            <div className="flex gap-2 mt-4">
+              <Tag color="blue">{stock.sector}</Tag>
+
+              <Tag color="green">{stock.exchange}</Tag>
+            </div>
+
+            <p className="text-gray-500 text-sm mt-4 line-clamp-2">
+              {stock.description}
+            </p>
+
+            <Button
+              danger
+              size="large"
+              block
+              icon={<DeleteOutlined />}
+              className="mt-5 rounded-lg"
+              onClick={() => handleRemove(stock._id)}
+            >
+              Remove From Watchlist
+            </Button>
+          </div>
+        );
+      })}
     </div>
   );
 };

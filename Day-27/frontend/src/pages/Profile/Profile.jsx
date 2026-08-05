@@ -1,16 +1,23 @@
 import {
+  Avatar,
   Button,
   Card,
+  Divider,
   Form,
   Input,
   Spin,
+  Typography,
   message,
 } from "antd";
+
+import { UserOutlined } from "@ant-design/icons";
 
 import { useEffect } from "react";
 
 import { useProfile } from "../../hooks/useProfile";
 import { useUpdateProfile } from "../../hooks/useUpdateProfile";
+
+const { Title, Text } = Typography;
 
 const Profile = () => {
   const [form] = Form.useForm();
@@ -33,11 +40,9 @@ const Profile = () => {
       onSuccess: (response) => {
         message.success(response.message);
       },
-
       onError: (error) => {
         message.error(
-          error.response?.data?.message ||
-            "Update Failed"
+          error.response?.data?.message || "Update Failed"
         );
       },
     });
@@ -45,51 +50,92 @@ const Profile = () => {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex justify-center items-center h-[70vh]">
         <Spin size="large" />
       </div>
     );
   }
 
   return (
-    <Card
-      title="My Profile"
-      className="max-w-xl"
-    >
-      <Form
-        form={form}
-        layout="vertical"
-        onFinish={onFinish}
-      >
-        <Form.Item
-          label="Name"
-          name="name"
-          rules={[
-            {
-              required: true,
-              message: "Name is required",
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
+    <div className="max-w-3xl mx-auto">
 
-        <Form.Item
-          label="Email"
-          name="email"
-        >
-          <Input disabled />
-        </Form.Item>
+      <Card className="rounded-xl shadow">
 
-        <Button
-          type="primary"
-          htmlType="submit"
-          loading={isPending}
+        <div className="flex items-center gap-5">
+
+          <Avatar
+            size={80}
+            icon={<UserOutlined />}
+          />
+
+          <div>
+            <Title
+              level={3}
+              style={{ marginBottom: 0 }}
+            >
+              {data?.name}
+            </Title>
+
+            <Text type="secondary">
+              {data?.email}
+            </Text>
+
+            <br />
+
+            <Text strong>
+              {data?.role}
+            </Text>
+          </div>
+
+        </div>
+
+        <Divider />
+
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={onFinish}
         >
-          Update Profile
-        </Button>
-      </Form>
-    </Card>
+          <Form.Item
+            label="Full Name"
+            name="name"
+            rules={[
+              {
+                required: true,
+                message: "Please enter your name",
+              },
+            ]}
+          >
+            <Input
+              size="large"
+              placeholder="Enter your name"
+            />
+          </Form.Item>
+
+          <Form.Item
+            label="Email"
+            name="email"
+          >
+            <Input
+              size="large"
+              disabled
+            />
+          </Form.Item>
+
+          <Button
+            type="primary"
+            htmlType="submit"
+            size="large"
+            loading={isPending}
+          >
+            Update Profile
+          </Button>
+
+        </Form>
+
+      </Card>
+
+    </div>
   );
 };
 

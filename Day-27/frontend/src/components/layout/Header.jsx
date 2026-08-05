@@ -10,7 +10,7 @@ import {
   UserOutlined,
 } from "@ant-design/icons";
 
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { useDispatch, useSelector } from "react-redux";
 
@@ -22,21 +22,32 @@ const Header = () => {
 
   const navigate = useNavigate();
 
+  const location = useLocation();
+
   const { theme } = useSelector((state) => state.theme);
 
   const { user } = useSelector((state) => state.auth);
 
+  const pageTitles = {
+    "/": "Dashboard",
+    "/stocks": "Stocks",
+    "/watchlist": "Watchlist",
+    "/users": "Users",
+    "/profile": "Profile",
+  };
+
+  const title = pageTitles[location.pathname] || "StockPro";
+
   const handleLogout = () => {
     dispatch(logout());
-
     navigate("/login");
   };
 
   return (
     <header className="flex items-center justify-between h-16 px-6 bg-white border-b">
 
-      <h2 className="text-xl font-semibold">
-        Dashboard
+      <h2 className="text-2xl font-semibold">
+        {title}
       </h2>
 
       <div className="flex items-center gap-4">
@@ -46,7 +57,7 @@ const Header = () => {
           icon={<BellOutlined />}
         />
 
-        <Button
+        {/* <Button
           shape="circle"
           onClick={() => dispatch(toggleTheme())}
           icon={
@@ -54,13 +65,11 @@ const Header = () => {
               ? <MoonOutlined />
               : <SunOutlined />
           }
-        />
+        /> */}
 
         <div className="flex items-center gap-3">
 
-          <Avatar
-            icon={<UserOutlined />}
-          />
+          <Avatar icon={<UserOutlined />} />
 
           <span>{user?.name}</span>
 
