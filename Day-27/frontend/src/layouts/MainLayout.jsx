@@ -19,7 +19,7 @@ const MainLayout = () => {
 
           <Header collapsed={collapsed} onToggle={() => setCollapsed((prev) => !prev)} />
 
-          <main className="flex-1 overflow-y-auto p-6">
+          <main id="page-content-main" className="flex-1 overflow-y-auto p-6">
             <Outlet />
           </main>
 

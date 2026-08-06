@@ -27,6 +27,8 @@ const Stocks = () => {
 
   const { user } = useSelector((state) => state.auth);
 
+  const SCROLLABLE_TARGET = "page-content-main";
+
   const { mutate: createStock } = useCreateStock();
 
   const { mutate: updateStock } = useUpdateStock();
@@ -178,6 +180,8 @@ const Stocks = () => {
             <Spin />
           </div>
         }
+        scrollableTarget={SCROLLABLE_TARGET}
+        window={false}
       >
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
           {stocks.map((stock) => (

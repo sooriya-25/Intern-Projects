@@ -1,4 +1,4 @@
-import { Button, Empty, Spin, Tag, message } from "antd";
+import { Button, Card, Empty, Spin, Tag, message } from "antd";
 
 import { DeleteOutlined } from "@ant-design/icons";
 
@@ -44,33 +44,34 @@ const Watchlist = () => {
         const stock = item.stock;
 
         return (
-          <div
+          <Card
             key={item._id}
-            className="rounded-[1.5rem] bg-white border border-slate-200 shadow-sm hover:shadow-lg transition-all duration-300 p-6"
-          >
-            <div className="flex justify-between items-start">
+            hoverable
+            className="rounded-[1.5rem] border border-slate-200 shadow-sm transition-all duration-300"
+            headStyle={{ paddingTop: 20 }}
+            bodyStyle={{ padding: 24 }}
+            title={
               <div>
-                <h2 className="text-xl font-bold text-slate-800">
+                <h2 className="text-xl font-bold text-slate-800 mb-1">
                   {stock?.company || "Unknown Company"}
                 </h2>
-
-                <p className="text-gray-500">{stock?.symbol || "--"}</p>
+                <p className="text-gray-500 mb-0">{stock?.symbol || "--"}</p>
               </div>
-
-              <div>
-                <p className="text-2xl font-bold text-blue-600">
+            }
+            extra={
+              <div className="text-right">
+                <p className="text-2xl font-bold text-blue-600 mb-0">
                   ${stock.currentPrice}
                 </p>
               </div>
-            </div>
-
-            <div className="flex gap-2 mt-4">
+            }
+          >
+            <div className="flex flex-wrap gap-2 mb-3">
               <Tag color="blue">{stock?.sector || "Unknown"}</Tag>
-
               <Tag color="green">{stock?.exchange || "--"}</Tag>
             </div>
 
-            <p className="text-gray-500 text-sm mt-4 line-clamp-2">
+            <p className="text-gray-500 text-sm mb-4 line-clamp-2">
               {stock?.description || "No description available."}
             </p>
 
@@ -79,12 +80,12 @@ const Watchlist = () => {
               type="default"
               size="large"
               icon={<DeleteOutlined />}
-              className="mt-5 rounded-full w-full md:w-auto px-6 font-semibold"
+              className="rounded-full w-full md:w-auto px-6 font-semibold"
               onClick={() => handleRemove(stock._id)}
             >
               Remove
             </Button>
-          </div>
+          </Card>
         );
       })}
     </div>
