@@ -6,6 +6,7 @@ const env = require("./config/env");
 
 const routes = require("./routes");
 
+const createRateLimiter = require("./middlewares/rateLimit.middleware");
 const notFound = require("./middlewares/notFound.middleware");
 const errorHandler = require("./middlewares/error.middleware");
 
@@ -23,6 +24,12 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(morgan("dev"));
 
+const apiLimiter = createRateLimiter({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  message: "Too many requests, please try again later.",
+});
+
 app.get("/", (req, res) => {
   res.json({
     success: true,
@@ -30,7 +37,7 @@ app.get("/", (req, res) => {
   });
 });
 
-app.use("/api", routes);
+app.use("/api", apiLimiter, routes);
 
 app.use(notFound);
 
