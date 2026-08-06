@@ -13,3 +13,11 @@ export const updateUserStatus = async (id, status) => {
 
   return response.data;
 };
+
+export const updateUserRole = async ({ id, role }) => {
+  const response = await api.patch(`/users/${id}/role`, {
+    role,
+  });
+
+  return response.data;
+};

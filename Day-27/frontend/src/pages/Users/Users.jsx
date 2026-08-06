@@ -1,5 +1,5 @@
 import {
-  Button,
+  Select,
   Space,
   Spin,
   Switch,
@@ -10,14 +10,19 @@ import {
 
 import { useUsers } from "../../hooks/useUsers";
 import { useUpdateUserStatus } from "../../hooks/useUpdateUserStatus";
+import { useUpdateUserRole } from "../../hooks/useUpdateUserRole";
+import { useRoles } from "../../hooks/useRoles";
 
 const Users = () => {
   const { data, isLoading } = useUsers();
 
-  const { mutate } = useUpdateUserStatus();
+  const { data: roles } = useRoles();
+
+  const { mutate: mutateStatus } = useUpdateUserStatus();
+  const { mutate: mutateRole } = useUpdateUserRole();
 
   const handleStatus = (user) => {
-    mutate(
+    mutateStatus(
       {
         id: user._id,
         status:
@@ -40,6 +45,20 @@ const Users = () => {
     );
   };
 
+  const handleRoleChange = (user, roleId) => {
+    mutateRole(
+      { id: user._id, role: roleId },
+      {
+        onSuccess: (response) => {
+          message.success(response.message);
+        },
+        onError: (error) => {
+          message.error(error.response?.data?.message || "Failed");
+        },
+      }
+    );
+  };
+
   const columns = [
     {
       title: "Name",
@@ -52,8 +71,20 @@ const Users = () => {
     {
       title: "Role",
       dataIndex: "role",
-      render: (role) => (
-        <Tag color="blue">{role}</Tag>
+      // role is now a populated Role document ({ _id, name, isSystem, ... })
+      // instead of a plain "ADMIN" / "USER" string.
+      render: (role, user) => (
+        <Select
+          size="small"
+          value={role?._id}
+          style={{ minWidth: 140 }}
+          disabled={role?.isSystem}
+          onChange={(roleId) => handleRoleChange(user, roleId)}
+          options={roles?.map((r) => ({
+            value: r._id,
+            label: r.name,
+          }))}
+        />
       ),
     },
     {

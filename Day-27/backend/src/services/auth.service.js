@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const roleService = require("./role.service");
 
 const { hashPassword, comparePassword } = require("../utils/password");
 const { generateToken } = require("../utils/jwt");
@@ -12,12 +13,21 @@ const register = async ({ name, email, password }) => {
     throw new Error("Email already exists");
   }
 
+  const defaultRole = await roleService.getDefaultRole();
+
+  if (!defaultRole) {
+    throw new Error(
+      "No default role is configured. Please contact an administrator."
+    );
+  }
+
   const hashedPassword = await hashPassword(password);
 
   const user = await User.create({
     name,
     email,
     password: hashedPassword,
+    role: defaultRole._id,
   });
 
   return {
@@ -28,7 +38,7 @@ const register = async ({ name, email, password }) => {
 };
 
 const login = async ({ email, password }) => {
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email }).populate("role");
 
   if (!user) {
     throw new Error("Invalid email or password");
@@ -53,7 +63,6 @@ const login = async ({ email, password }) => {
 
   const token = generateToken({
     id: user._id,
-    role: user.role,
   });
 
   return {

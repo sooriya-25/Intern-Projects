@@ -37,7 +37,32 @@ const updateUserStatus = async (req, res, next) => {
   }
 };
 
+const updateUserRole = async (req, res, next) => {
+  try {
+    const user = await userService.updateUserRole(
+      req.params.id,
+      req.body.role
+    );
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "User role updated successfully",
+      data: user,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getUsers,
   updateUserStatus,
+  updateUserRole,
 };

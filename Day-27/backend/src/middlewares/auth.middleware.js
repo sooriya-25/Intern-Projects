@@ -17,12 +17,21 @@ const authenticate = async (req, res, next) => {
 
     const decoded = verifyToken(token);
 
-    const user = await User.findById(decoded.id).select("-password");
+    const user = await User.findById(decoded.id)
+      .select("-password")
+      .populate("role");
 
     if (!user) {
       return res.status(401).json({
         success: false,
         message: "User not found",
+      });
+    }
+
+    if (!user.role) {
+      return res.status(403).json({
+        success: false,
+        message: "No role assigned to this user",
       });
     }
 

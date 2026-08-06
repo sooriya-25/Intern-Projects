@@ -8,7 +8,8 @@
     "start": "node src/server.js",
     "seed": "node seeds/seed.js",
     "test": "jest --runInBand --coverage",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "migrate": "node scripts/migrateUserRoles.js"
   },
   "dependencies": {
     "bcrypt": "^6.0.0",

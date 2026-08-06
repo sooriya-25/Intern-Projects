@@ -23,6 +23,7 @@ const Profile = () => {
   const [form] = Form.useForm();
 
   const { data, isLoading } = useProfile();
+  console.log("profile data", data);
 
   const { mutate, isPending } = useUpdateProfile();
 

@@ -24,6 +24,7 @@ const Header = ({ collapsed, onToggle }) => {
   const location = useLocation();
 
   const { user } = useSelector((state) => state.auth);
+  console.log("user", user);
 
   const pageTitles = {
     "/": "Dashboard",
@@ -81,7 +82,7 @@ const Header = ({ collapsed, onToggle }) => {
 
           <div className="min-w-[160px]">
             <p className="text-sm font-semibold text-slate-900 leading-none">{user?.name}</p>
-            <p className="text-xs text-slate-500">Administrator</p>
+            <p className="text-xs text-slate-500">{user?.role?.name}</p>
           </div>
 
           <Button

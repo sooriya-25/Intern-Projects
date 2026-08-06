@@ -5,8 +5,6 @@ import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
 import { useMemo, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 
-import { useSelector } from "react-redux";
-
 import { useStocks } from "../../hooks/useStocks";
 import useDebounce from "../../hooks/useDebounce";
 
@@ -15,6 +13,7 @@ import { useWatchlist } from "../../hooks/useWatchlist";
 import { useCreateStock } from "../../hooks/useCreateStock";
 import { useUpdateStock } from "../../hooks/useUpdateStock";
 import { useDeleteStock } from "../../hooks/useDeleteStock";
+import usePermission from "../../hooks/usePermission";
 
 import StockModal from "../../components/stock/StockModal";
 import StockCard from "../../components/stock/StockCard";
@@ -25,7 +24,12 @@ const Stocks = () => {
 
   const [selectedStock, setSelectedStock] = useState(null);
 
-  const { user } = useSelector((state) => state.auth);
+  const { hasPermission } = usePermission();
+
+  const canAddStock = hasPermission("STOCKS", "add");
+  const canEditStock = hasPermission("STOCKS", "edit");
+  const canDeleteStock = hasPermission("STOCKS", "delete");
+  const canAddWatchlist = hasPermission("WATCHLIST", "add");
 
   const SCROLLABLE_TARGET = "page-content-main";
 
@@ -159,7 +163,7 @@ const Stocks = () => {
           />
         </div>
 
-        {user?.role === "ADMIN" && (
+        {canAddStock && (
           <Button
             type="primary"
             className="rounded-full"
@@ -188,7 +192,9 @@ const Stocks = () => {
             <StockCard
               key={stock._id}
               stock={stock}
-              isAdmin={user?.role === "ADMIN"}
+              canEdit={canEditStock}
+              canDelete={canDeleteStock}
+              canAddWatchlist={canAddWatchlist}
               isInWatchlist={watchlistIds.includes(stock._id)}
               isPending={pendingAdds.includes(stock._id)}
               onWatchlist={handleWatchlist}

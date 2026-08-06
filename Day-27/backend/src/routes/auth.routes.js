@@ -13,7 +13,7 @@ const {
 
 const loginLimiter = createRateLimiter({
   windowMs: 15 * 60 * 1000,
-  max: 3,
+  max: 100,
   message: "Too many login attempts, please try again later.",
 });
 

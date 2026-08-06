@@ -12,26 +12,26 @@ const Stocks = lazy(() => import("../pages/Stocks/Stocks"));
 const Watchlist = lazy(() => import("../pages/Watchlist/Watchlist"));
 const Users = lazy(() => import("../pages/Users/Users"));
 const Profile = lazy(() => import("../pages/Profile/Profile"));
+const RoleManagement = lazy(() => import("../pages/RoleManagement/RoleManagement"));
+const Todo = lazy(() => import("../pages/Todo/Todo"));
 
+const withSuspense = (element) => (
+  <Suspense
+    fallback={
+      <div className="flex justify-center py-4">
+        <Spin />
+      </div>
+    }
+  >
+    {element}
+  </Suspense>
+);
 
 const AppRoutes = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route
-          path="/login"
-          element={
-            <Suspense
-              fallback={
-                <div className="flex justify-center py-4">
-                  <Spin />
-                </div>
-              }
-            >
-              <Login />
-            </Suspense>
-          }
-        />
+        <Route path="/login" element={withSuspense(<Login />)} />
 
         <Route
           path="/"
@@ -41,48 +41,32 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         >
-          <Route
-            index
-            element={
-              <Suspense
-                fallback={
-                  <div className="flex justify-center py-4">
-                    <Spin />
-                  </div>
-                }
-              >
-                <Dashboard />
-              </Suspense>
-            }
-          />
+          <Route index element={withSuspense(<Dashboard />)} />
 
           <Route
             path="stocks"
             element={
-              <Suspense
-                fallback={
-                  <div className="flex justify-center py-4">
-                    <Spin />
-                  </div>
-                }
-              >
-                <Stocks />
-              </Suspense>
+              <ProtectedRoute module="STOCKS" action="view">
+                {withSuspense(<Stocks />)}
+              </ProtectedRoute>
             }
           />
 
           <Route
             path="watchlist"
             element={
-              <Suspense
-                fallback={
-                  <div className="flex justify-center py-4">
-                    <Spin />
-                  </div>
-                }
-              >
-                <Watchlist />
-              </Suspense>
+              <ProtectedRoute module="WATCHLIST" action="view">
+                {withSuspense(<Watchlist />)}
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="todos"
+            element={
+              <ProtectedRoute module="TODO" action="view">
+                {withSuspense(<Todo />)}
+              </ProtectedRoute>
             }
           />
 
@@ -90,33 +74,21 @@ const AppRoutes = () => {
             path="users"
             element={
               <ProtectedRoute roles={["ADMIN"]}>
-                <Suspense
-                  fallback={
-                    <div className="flex justify-center py-4">
-                      <Spin />
-                    </div>
-                  }
-                >
-                  <Users />
-                </Suspense>
+                {withSuspense(<Users />)}
               </ProtectedRoute>
             }
           />
 
           <Route
-            path="profile"
+            path="roles"
             element={
-              <Suspense
-                fallback={
-                  <div className="flex justify-center py-4">
-                    <Spin />
-                  </div>
-                }
-              >
-                <Profile />
-              </Suspense>
+              <ProtectedRoute roles={["ADMIN"]}>
+                {withSuspense(<RoleManagement />)}
+              </ProtectedRoute>
             }
           />
+
+          <Route path="profile" element={withSuspense(<Profile />)} />
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />

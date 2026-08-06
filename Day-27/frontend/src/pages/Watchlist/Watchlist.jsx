@@ -4,11 +4,16 @@ import { DeleteOutlined } from "@ant-design/icons";
 
 import { useWatchlist } from "../../hooks/useWatchlist";
 import { useRemoveWatchlist } from "../../hooks/useRemoveWatchlist";
+import usePermission from "../../hooks/usePermission";
 
 const Watchlist = () => {
   const { data, isLoading } = useWatchlist();
 
   const { mutate } = useRemoveWatchlist();
+
+  const { hasPermission } = usePermission();
+
+  const canRemove = hasPermission("WATCHLIST", "delete");
 
   const handleRemove = (stockId) => {
     mutate(stockId, {
@@ -75,16 +80,18 @@ const Watchlist = () => {
               {stock?.description || "No description available."}
             </p>
 
-            <Button
-              danger
-              type="default"
-              size="large"
-              icon={<DeleteOutlined />}
-              className="rounded-full w-full md:w-auto px-6 font-semibold"
-              onClick={() => handleRemove(stock._id)}
-            >
-              Remove
-            </Button>
+            {canRemove && (
+              <Button
+                danger
+                type="default"
+                size="large"
+                icon={<DeleteOutlined />}
+                className="rounded-full w-full md:w-auto px-6 font-semibold"
+                onClick={() => handleRemove(stock._id)}
+              >
+                Remove
+              </Button>
+            )}
           </Card>
         );
       })}

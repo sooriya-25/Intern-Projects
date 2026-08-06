@@ -4,19 +4,22 @@ import {
   StarOutlined,
   UserOutlined,
   TeamOutlined,
+  CheckSquareOutlined,
+  SafetyCertificateOutlined,
 } from "@ant-design/icons";
 
 import { Menu } from "antd";
 
 import { Link, useLocation } from "react-router-dom";
-import { useSelector } from "react-redux";
+
+import usePermission from "../../hooks/usePermission";
 
 import Logo from "./Logo";
 
 const Sidebar = ({ collapsed }) => {
   const location = useLocation();
 
-  const { user } = useSelector((state) => state.auth);
+  const { hasPermission, isAdmin } = usePermission();
 
   const items = [
     {
@@ -24,22 +27,46 @@ const Sidebar = ({ collapsed }) => {
       icon: <DashboardOutlined />,
       label: <Link to="/">Dashboard</Link>,
     },
-    {
-      key: "/stocks",
-      icon: <StockOutlined />,
-      label: <Link to="/stocks">Stocks</Link>,
-    },
-    {
-      key: "/watchlist",
-      icon: <StarOutlined />,
-      label: <Link to="/watchlist">Watchlist</Link>,
-    },
-    ...(user?.role === "ADMIN"
+    ...(hasPermission("STOCKS", "view")
+      ? [
+          {
+            key: "/stocks",
+            icon: <StockOutlined />,
+            label: <Link to="/stocks">Stocks</Link>,
+          },
+        ]
+      : []),
+    ...(hasPermission("WATCHLIST", "view")
+      ? [
+          {
+            key: "/watchlist",
+            icon: <StarOutlined />,
+            label: <Link to="/watchlist">Watchlist</Link>,
+          },
+        ]
+      : []),
+    ...(hasPermission("TODO", "view")
+      ? [
+          {
+            key: "/todos",
+            icon: <CheckSquareOutlined />,
+            label: <Link to="/todos">Todo</Link>,
+          },
+        ]
+      : []),
+    // Users and Roles are admin-only (isSystem), not part of the
+    // dynamic matrix — see usePermission.js / backend requireSystemRole.
+    ...(isAdmin
       ? [
           {
             key: "/users",
             icon: <TeamOutlined />,
             label: <Link to="/users">Users</Link>,
+          },
+          {
+            key: "/roles",
+            icon: <SafetyCertificateOutlined />,
+            label: <Link to="/roles">Roles</Link>,
           },
         ]
       : []),

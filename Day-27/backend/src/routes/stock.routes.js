@@ -5,7 +5,7 @@ const router = express.Router();
 const stockController = require("../controllers/stock.controller");
 
 const authenticate = require("../middlewares/auth.middleware");
-const authorize = require("../middlewares/authorize.middleware");
+const checkPermission = require("../middlewares/checkPermission.middleware");
 const validate = require("../middlewares/validate.middleware");
 
 const {
@@ -13,36 +13,42 @@ const {
   updateStockValidator,
 } = require("../validators/stock.validator");
 
-const ROLES = require("../constants/roles");
+const MODULES = require("../constants/modules");
+const ACTIONS = require("../constants/actions");
 
-// Get all stocks (Logged-in users)
-router.get("/", authenticate, stockController.getStocks);
+// Get all stocks (any role with view permission on STOCKS)
+router.get(
+  "/",
+  authenticate,
+  checkPermission(MODULES.STOCKS, ACTIONS.VIEW),
+  stockController.getStocks
+);
 
-// Create Stock (Admin)
+// Create Stock
 router.post(
   "/",
   authenticate,
-  authorize(ROLES.ADMIN),
+  checkPermission(MODULES.STOCKS, ACTIONS.ADD),
   createStockValidator,
   validate,
   stockController.createStock
 );
 
-// Update Stock (Admin)
+// Update Stock
 router.put(
   "/:id",
   authenticate,
-  authorize(ROLES.ADMIN),
+  checkPermission(MODULES.STOCKS, ACTIONS.EDIT),
   updateStockValidator,
   validate,
   stockController.updateStock
 );
 
-// Delete Stock (Admin)
+// Delete Stock
 router.delete(
   "/:id",
   authenticate,
-  authorize(ROLES.ADMIN),
+  checkPermission(MODULES.STOCKS, ACTIONS.DELETE),
   stockController.deleteStock
 );
 

@@ -8,5 +8,7 @@ router.use("/watchlist", require("./watchlist.routes"));
 router.use("/users", require("./user.routes"));
 router.use("/profile", require("./profile.routes"));
 router.use("/dashboard", require("./dashboard.routes"));
+router.use("/roles", require("./role.routes"));
+router.use("/todos", require("./todo.routes"));
 
 module.exports = router;

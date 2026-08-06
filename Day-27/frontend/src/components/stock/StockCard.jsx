@@ -6,7 +6,17 @@ import {
   StarOutlined,
 } from "@ant-design/icons";
 
-const StockCard = ({ stock, isAdmin, isInWatchlist, isPending, onWatchlist, onEdit, onDelete }) => {
+const StockCard = ({
+  stock,
+  canEdit,
+  canDelete,
+  canAddWatchlist,
+  isInWatchlist,
+  isPending,
+  onWatchlist,
+  onEdit,
+  onDelete,
+}) => {
   const buttonLabel = isPending
     ? "Adding..."
     : isInWatchlist
@@ -48,36 +58,42 @@ const StockCard = ({ stock, isAdmin, isInWatchlist, isPending, onWatchlist, onEd
       </div>
 
       <div className="mt-4 grid gap-2">
-        <Button
-          type={isInWatchlist || isPending ? "default" : "primary"}
-          size="large"
-          block
-          icon={<StarOutlined />}
-          className={actionButtonClass}
-          onClick={() => !isInWatchlist && !isPending && onWatchlist(stock._id)}
-          disabled={isInWatchlist || isPending}
-        >
-          {buttonLabel}
-        </Button>
+        {canAddWatchlist && (
+          <Button
+            type={isInWatchlist || isPending ? "default" : "primary"}
+            size="large"
+            block
+            icon={<StarOutlined />}
+            className={actionButtonClass}
+            onClick={() => !isInWatchlist && !isPending && onWatchlist(stock._id)}
+            disabled={isInWatchlist || isPending}
+          >
+            {buttonLabel}
+          </Button>
+        )}
 
-        {isAdmin && (
+        {(canEdit || canDelete) && (
           <div className="flex gap-3">
-            <Button
-              className="flex-1 rounded-full h-10 font-medium"
-              icon={<EditOutlined />}
-              onClick={() => onEdit(stock)}
-            >
-              Edit
-            </Button>
+            {canEdit && (
+              <Button
+                className="flex-1 rounded-full h-10 font-medium"
+                icon={<EditOutlined />}
+                onClick={() => onEdit(stock)}
+              >
+                Edit
+              </Button>
+            )}
 
-            <Button
-              danger
-              className="flex-1 rounded-full h-10 font-medium"
-              icon={<DeleteOutlined />}
-              onClick={() => onDelete(stock)}
-            >
-              Delete
-            </Button>
+            {canDelete && (
+              <Button
+                danger
+                className="flex-1 rounded-full h-10 font-medium"
+                icon={<DeleteOutlined />}
+                onClick={() => onDelete(stock)}
+              >
+                Delete
+              </Button>
+            )}
           </div>
         )}
       </div>

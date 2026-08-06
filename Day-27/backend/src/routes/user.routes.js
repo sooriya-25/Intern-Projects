@@ -5,29 +5,37 @@ const router = express.Router();
 const userController = require("../controllers/user.controller");
 
 const authenticate = require("../middlewares/auth.middleware");
-const authorize = require("../middlewares/authorize.middleware");
+const requireSystemRole = require("../middlewares/requireSystemRole.middleware");
 const validate = require("../middlewares/validate.middleware");
 
 const {
   updateUserStatusValidator,
+  updateUserRoleValidator,
 } = require("../validators/user.validator");
-
-const ROLES = require("../constants/roles");
 
 router.get(
   "/",
   authenticate,
-  authorize(ROLES.ADMIN),
+  requireSystemRole,
   userController.getUsers
 );
 
 router.patch(
   "/:id/status",
   authenticate,
-  authorize(ROLES.ADMIN),
+  requireSystemRole,
   updateUserStatusValidator,
   validate,
   userController.updateUserStatus
+);
+
+router.patch(
+  "/:id/role",
+  authenticate,
+  requireSystemRole,
+  updateUserRoleValidator,
+  validate,
+  userController.updateUserRole
 );
 
 module.exports = router;

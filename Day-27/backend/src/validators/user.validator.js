@@ -8,6 +8,15 @@ const updateUserStatusValidator = [
     .withMessage("Invalid status"),
 ];
 
+const updateUserRoleValidator = [
+  body("role")
+    .notEmpty()
+    .withMessage("Role is required")
+    .isMongoId()
+    .withMessage("Role must be a valid id"),
+];
+
 module.exports = {
   updateUserStatusValidator,
+  updateUserRoleValidator,
 };
