@@ -1,12 +1,12 @@
+const HTTP_STATUS = require("../constants/httpStatus");
+const AppError = require("../utils/appError");
+
 const checkPermission = (module, action) => {
   return (req, res, next) => {
     const role = req.user && req.user.role;
 
     if (!role || !Array.isArray(role.permissions)) {
-      return res.status(403).json({
-        success: false,
-        message: "Access denied",
-      });
+      return next(new AppError("Access denied", HTTP_STATUS.FORBIDDEN));
     }
 
     const modulePermission = role.permissions.find(
@@ -14,10 +14,7 @@ const checkPermission = (module, action) => {
     );
 
     if (!modulePermission) {
-      return res.status(403).json({
-        success: false,
-        message: "Access denied",
-      });
+      return next(new AppError("Access denied", HTTP_STATUS.FORBIDDEN));
     }
 
     const hasAccess =
@@ -28,10 +25,7 @@ const checkPermission = (module, action) => {
           modulePermission.delete));
 
     if (!hasAccess) {
-      return res.status(403).json({
-        success: false,
-        message: "Access denied",
-      });
+      return next(new AppError("Access denied", HTTP_STATUS.FORBIDDEN));
     }
 
     next();

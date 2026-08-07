@@ -1,6 +1,8 @@
 const Role = require("../models/Role");
 const User = require("../models/User");
 const MODULES = require("../constants/modules");
+const HTTP_STATUS = require("../constants/httpStatus");
+const AppError = require("../utils/appError");
 
 const VALID_MODULES = Object.values(MODULES);
 
@@ -80,9 +82,7 @@ const updateRole = async (id, roleData) => {
   }
 
   if (role.isSystem) {
-    const error = new Error("System roles cannot be modified");
-    error.statusCode = 403;
-    throw error;
+    throw new AppError("System roles cannot be modified", HTTP_STATUS.FORBIDDEN);
   }
 
   if (roleData.name !== undefined) role.name = roleData.name;
@@ -116,27 +116,23 @@ const deleteRole = async (id) => {
   }
 
   if (role.isSystem) {
-    const error = new Error("System roles cannot be deleted");
-    error.statusCode = 403;
-    throw error;
+    throw new AppError("System roles cannot be deleted", HTTP_STATUS.FORBIDDEN);
   }
 
   if (role.isDefault) {
-    const error = new Error(
-      "This is the default signup role and cannot be deleted. Set another role as default first."
+    throw new AppError(
+      "This is the default signup role and cannot be deleted. Set another role as default first.",
+      HTTP_STATUS.CONFLICT
     );
-    error.statusCode = 409;
-    throw error;
   }
 
   const assignedCount = await User.countDocuments({ role: id });
 
   if (assignedCount > 0) {
-    const error = new Error(
-      `Cannot delete role: ${assignedCount} user(s) are currently assigned to it`
+    throw new AppError(
+      `Cannot delete role: ${assignedCount} user(s) are currently assigned to it`,
+      HTTP_STATUS.CONFLICT
     );
-    error.statusCode = 409;
-    throw error;
   }
 
   await Role.findByIdAndDelete(id);

@@ -1,4 +1,6 @@
 const roleService = require("../services/role.service");
+const HTTP_STATUS = require("../constants/httpStatus");
+const AppError = require("../utils/appError");
 
 const getRoles = async (req, res, next) => {
   try {
@@ -18,10 +20,7 @@ const getRole = async (req, res, next) => {
     const role = await roleService.getRoleById(req.params.id);
 
     if (!role) {
-      return res.status(404).json({
-        success: false,
-        message: "Role not found",
-      });
+      return next(new AppError("Role not found", HTTP_STATUS.NOT_FOUND));
     }
 
     res.status(200).json({
@@ -52,10 +51,7 @@ const updateRole = async (req, res, next) => {
     const role = await roleService.updateRole(req.params.id, req.body);
 
     if (!role) {
-      return res.status(404).json({
-        success: false,
-        message: "Role not found",
-      });
+      return next(new AppError("Role not found", HTTP_STATUS.NOT_FOUND));
     }
 
     res.status(200).json({
@@ -73,10 +69,7 @@ const deleteRole = async (req, res, next) => {
     const role = await roleService.deleteRole(req.params.id);
 
     if (!role) {
-      return res.status(404).json({
-        success: false,
-        message: "Role not found",
-      });
+      return next(new AppError("Role not found", HTTP_STATUS.NOT_FOUND));
     }
 
     res.status(200).json({

@@ -5,19 +5,22 @@ const { hashPassword, comparePassword } = require("../utils/password");
 const { generateToken } = require("../utils/jwt");
 
 const STATUS = require("../constants/status");
+const HTTP_STATUS = require("../constants/httpStatus");
+const AppError = require("../utils/appError");
 
 const register = async ({ name, email, password }) => {
   const existingUser = await User.findOne({ email });
 
   if (existingUser) {
-    throw new Error("Email already exists");
+    throw new AppError("Email already exists", HTTP_STATUS.CONFLICT);
   }
 
   const defaultRole = await roleService.getDefaultRole();
 
   if (!defaultRole) {
-    throw new Error(
-      "No default role is configured. Please contact an administrator."
+    throw new AppError(
+      "No default role is configured. Please contact an administrator.",
+      HTTP_STATUS.INTERNAL_SERVER_ERROR
     );
   }
 
@@ -41,7 +44,7 @@ const login = async ({ email, password }) => {
   const user = await User.findOne({ email }).populate("role");
 
   if (!user) {
-    throw new Error("Invalid email or password");
+    throw new AppError("Invalid email or password", HTTP_STATUS.UNAUTHORIZED);
   }
 
   const isPasswordCorrect = await comparePassword(
@@ -50,11 +53,11 @@ const login = async ({ email, password }) => {
   );
 
   if (!isPasswordCorrect) {
-    throw new Error("Invalid email or password");
+    throw new AppError("Invalid email or password", HTTP_STATUS.UNAUTHORIZED);
   }
 
   if (user.status === STATUS.INACTIVE) {
-    throw new Error("Your account has been deactivated");
+    throw new AppError("Your account has been deactivated", HTTP_STATUS.FORBIDDEN);
   }
 
   user.lastLogin = new Date();

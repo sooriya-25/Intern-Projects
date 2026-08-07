@@ -1,4 +1,5 @@
 const authenticate = require("../../middlewares/auth.middleware");
+const AppError = require("../../utils/appError");
 
 const mockVerifyToken = jest.fn();
 const mockUserFindById = jest.fn();
@@ -16,36 +17,32 @@ describe("auth.middleware", () => {
     jest.clearAllMocks();
   });
 
-  test("returns 401 when Authorization header is missing", async () => {
+  test("passes a 401 AppError when Authorization header is missing", async () => {
     const req = { headers: {} };
-    const json = jest.fn();
-    const status = jest.fn(() => ({ json }));
-    const res = { status };
+    const res = {};
     const next = jest.fn();
 
     await authenticate(req, res, next);
 
-    expect(status).toHaveBeenCalledWith(401);
-    expect(json).toHaveBeenCalledWith({ success: false, message: "Access token is required" });
-    expect(next).not.toHaveBeenCalled();
+    expect(next).toHaveBeenCalledWith(expect.any(AppError));
+    expect(next.mock.calls[0][0].statusCode).toBe(401);
+    expect(next.mock.calls[0][0].message).toBe("Access token is required");
   });
 
-  test("returns 401 when token is invalid", async () => {
+  test("passes a 401 AppError when token is invalid", async () => {
     mockVerifyToken.mockImplementation(() => { throw new Error("Invalid"); });
     const req = { headers: { authorization: "Bearer invalid" } };
-    const json = jest.fn();
-    const status = jest.fn(() => ({ json }));
-    const res = { status };
+    const res = {};
     const next = jest.fn();
 
     await authenticate(req, res, next);
 
-    expect(status).toHaveBeenCalledWith(401);
-    expect(json).toHaveBeenCalledWith({ success: false, message: "Invalid or expired token" });
-    expect(next).not.toHaveBeenCalled();
+    expect(next).toHaveBeenCalledWith(expect.any(AppError));
+    expect(next.mock.calls[0][0].statusCode).toBe(401);
+    expect(next.mock.calls[0][0].message).toBe("Invalid or expired token");
   });
 
-  test("calls next when token and user are valid", async () => {
+  test("calls next without error when token and user are valid", async () => {
     mockVerifyToken.mockReturnValue({ id: "user1" });
     mockUserFindById.mockReturnValue({ _id: "user1", role: "USER" });
     const req = { headers: { authorization: "Bearer valid" } };
@@ -54,7 +51,7 @@ describe("auth.middleware", () => {
 
     await authenticate(req, res, next);
 
-    expect(next).toHaveBeenCalled();
+    expect(next).toHaveBeenCalledWith();
     expect(req.user).toEqual({ _id: "user1", role: "USER" });
   });
 });

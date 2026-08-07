@@ -1,4 +1,6 @@
 const Watchlist = require("../models/Watchlist");
+const HTTP_STATUS = require("../constants/httpStatus");
+const AppError = require("../utils/appError");
 
 const addToWatchlist = async (userId, stockId) => {
   const existing = await Watchlist.findOne({
@@ -7,7 +9,7 @@ const addToWatchlist = async (userId, stockId) => {
   });
 
   if (existing) {
-    throw new Error("Stock already exists in watchlist");
+    throw new AppError("Stock already exists in watchlist", HTTP_STATUS.CONFLICT);
   }
 
   return await Watchlist.create({

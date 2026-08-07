@@ -1,4 +1,6 @@
 const todoService = require("../services/todo.service");
+const HTTP_STATUS = require("../constants/httpStatus");
+const AppError = require("../utils/appError");
 
 const getTodos = async (req, res, next) => {
   try {
@@ -32,10 +34,7 @@ const updateTodo = async (req, res, next) => {
     const todo = await todoService.updateTodo(req.params.id, req.body);
 
     if (!todo) {
-      return res.status(404).json({
-        success: false,
-        message: "Todo not found",
-      });
+      return next(new AppError("Todo not found", HTTP_STATUS.NOT_FOUND));
     }
 
     res.status(200).json({
@@ -53,10 +52,7 @@ const deleteTodo = async (req, res, next) => {
     const todo = await todoService.deleteTodo(req.params.id);
 
     if (!todo) {
-      return res.status(404).json({
-        success: false,
-        message: "Todo not found",
-      });
+      return next(new AppError("Todo not found", HTTP_STATUS.NOT_FOUND));
     }
 
     res.status(200).json({

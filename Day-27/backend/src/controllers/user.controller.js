@@ -1,4 +1,6 @@
 const userService = require("../services/user.service");
+const HTTP_STATUS = require("../constants/httpStatus");
+const AppError = require("../utils/appError");
 
 const getUsers = async (req, res, next) => {
   try {
@@ -21,10 +23,7 @@ const updateUserStatus = async (req, res, next) => {
     );
 
     if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found",
-      });
+      return next(new AppError("User not found", HTTP_STATUS.NOT_FOUND));
     }
 
     res.status(200).json({
@@ -45,10 +44,7 @@ const updateUserRole = async (req, res, next) => {
     );
 
     if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: "User not found",
-      });
+      return next(new AppError("User not found", HTTP_STATUS.NOT_FOUND));
     }
 
     res.status(200).json({

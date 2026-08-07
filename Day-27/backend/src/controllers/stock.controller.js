@@ -1,4 +1,6 @@
 const stockService = require("../services/stock.service");
+const HTTP_STATUS = require("../constants/httpStatus");
+const AppError = require("../utils/appError");
 
 const createStock = async (req, res, next) => {
   try {
@@ -32,10 +34,7 @@ const updateStock = async (req, res, next) => {
     const stock = await stockService.updateStock(req.params.id, req.body);
 
     if (!stock) {
-      return res.status(404).json({
-        success: false,
-        message: "Stock not found",
-      });
+      return next(new AppError("Stock not found", HTTP_STATUS.NOT_FOUND));
     }
 
     res.status(200).json({
@@ -53,10 +52,7 @@ const deleteStock = async (req, res, next) => {
     const stock = await stockService.deleteStock(req.params.id);
 
     if (!stock) {
-      return res.status(404).json({
-        success: false,
-        message: "Stock not found",
-      });
+      return next(new AppError("Stock not found", HTTP_STATUS.NOT_FOUND));
     }
 
     res.status(200).json({

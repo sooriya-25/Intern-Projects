@@ -1,16 +1,15 @@
 const { verifyToken } = require("../utils/jwt");
 
 const User = require("../models/User");
+const HTTP_STATUS = require("../constants/httpStatus");
+const AppError = require("../utils/appError");
 
 const authenticate = async (req, res, next) => {
   try {
     const authHeader = req.headers.authorization;
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(401).json({
-        success: false,
-        message: "Access token is required",
-      });
+      throw new AppError("Access token is required", HTTP_STATUS.UNAUTHORIZED);
     }
 
     const token = authHeader.split(" ")[1];
@@ -22,27 +21,22 @@ const authenticate = async (req, res, next) => {
       .populate("role");
 
     if (!user) {
-      return res.status(401).json({
-        success: false,
-        message: "User not found",
-      });
+      throw new AppError("User not found", HTTP_STATUS.UNAUTHORIZED);
     }
 
     if (!user.role) {
-      return res.status(403).json({
-        success: false,
-        message: "No role assigned to this user",
-      });
+      throw new AppError("No role assigned to this user", HTTP_STATUS.FORBIDDEN);
     }
 
     req.user = user;
 
     next();
   } catch (error) {
-    return res.status(401).json({
-      success: false,
-      message: "Invalid or expired token",
-    });
+    if (error instanceof AppError) {
+      return next(error);
+    }
+
+    return next(new AppError("Invalid or expired token", HTTP_STATUS.UNAUTHORIZED));
   }
 };
 
