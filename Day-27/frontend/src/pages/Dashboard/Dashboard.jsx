@@ -1,14 +1,16 @@
-import { Card, Col, Row, Spin } from "antd";
-
+import { Card, Col, Row, Spin, Modal } from "antd";
 import { useDashboard } from "../../hooks/useDashboard";
+import { useState } from "react";
 
 import StatsSection from "../../components/dashboard/StatsSection";
 import SectorChart from "../../components/dashboard/SectorChart";
 import TopStocksChart from "../../components/dashboard/TopStocksChart";
 import RecentStocksTable from "../../components/dashboard/RecentStocksTable";
+import Chart from "../../components/dashboard/Chart";
 
 const Dashboard = () => {
   const { data, isLoading } = useDashboard();
+  const [openChart, setOpenChart] = useState(false);
 
   if (isLoading) {
     return (
@@ -20,6 +22,31 @@ const Dashboard = () => {
 
   return (
     <div className="space-y-6">
+      <Modal
+        open={openChart}
+        footer={null}
+        onCancel={() => setOpenChart(false)}
+        width="90%"
+        centered
+        classNames={{
+          header: "border-b border-slate-200 px-6 py-5",
+          body: "p-8 rounded-b-2xl",
+        }}
+        title={
+          <div>
+            <h2 className="text-2xl font-bold text-slate-800">
+              📊 Market Sector Allocation
+            </h2>
+
+            <p className="mt-1 text-sm text-slate-500">
+              Distribution of all listed stocks across market sectors.
+            </p>
+          </div>
+        }
+      >
+        <Chart data={data.topStocks} height={600} />
+      </Modal>
+
       <StatsSection stats={data.stats} />
 
       <Row gutter={[20, 20]}>
@@ -29,7 +56,10 @@ const Dashboard = () => {
 
         <Col xs={24} lg={12}>
           <div className="space-y-6">
-            <TopStocksChart data={data.topStocks} />
+            <TopStocksChart
+              data={data.topStocks}
+              onExpand={() => setOpenChart(true)}
+            />
 
             <Card className="rounded-[1.5rem] border border-slate-200 bg-slate-50 shadow-sm">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -97,9 +127,7 @@ const Dashboard = () => {
         </Col>
       </Row>
 
-      <RecentStocksTable
-        data={data.recentStocks}
-      />
+      <RecentStocksTable data={data.recentStocks} />
     </div>
   );
 };

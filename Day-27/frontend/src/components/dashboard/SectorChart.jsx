@@ -3,8 +3,7 @@ import {
   Pie,
   Tooltip,
   ResponsiveContainer,
-  Cell,
-  Legend,
+  Cell
 } from "recharts";
 
 import { Card } from "antd";
