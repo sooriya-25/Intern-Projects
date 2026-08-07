@@ -465,4 +465,19 @@ input:-internal-autofill-selected {
   background: var(--surface) !important;
 }
 
+.recent-stock-table .ant-table-tbody > tr:hover > td {
+  background: white !important;
+}
+
+.recent-stock-table .ant-table-expanded-row:hover > td {
+  background: white !important;
+}
+
+.recent-stock-table .ant-table-expanded-row > td {
+  background: white !important;
+}
+.recent-stock-table .ant-table-expanded-row > td {
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+}
 /* Make search inputs fully rounded and consistent height (handled earlier) */
