@@ -20,6 +20,12 @@ const authSlice = createSlice({
       state.user = action.payload;
     },
 
+    updateProfileImage: (state, action) => {
+      if (state.user) {
+        state.user.profileImage = action.payload;
+      }
+    },
+
     logout: (state) => {
       state.token = null;
       state.user = null;
@@ -31,6 +37,7 @@ const authSlice = createSlice({
 export const {
   loginSuccess,
   updateUser,
+  updateProfileImage,
   logout,
 } = authSlice.actions;
 

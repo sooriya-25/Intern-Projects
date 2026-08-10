@@ -1,4 +1,5 @@
 import {
+  Avatar,
   Select,
   Space,
   Spin,
@@ -7,6 +8,8 @@ import {
   Tag,
   message,
 } from "antd";
+
+import { UserOutlined } from "@ant-design/icons";
 
 import { useUsers } from "../../hooks/useUsers";
 import { useUpdateUserStatus } from "../../hooks/useUpdateUserStatus";
@@ -60,6 +63,25 @@ const Users = () => {
   };
 
   const columns = [
+    {
+      title: "Photo",
+      dataIndex: "profileImage",
+      width: 80,
+      render: (profileImage, user) => {
+        const avatarUrl = profileImage
+          ? `${process.env.REACT_APP_API_URL.replace("/api", "")}${profileImage}`
+          : null;
+
+        return (
+          <Avatar
+            size={40}
+            src={avatarUrl}
+            icon={<UserOutlined />}
+            className="bg-blue-100 text-blue-600"
+          />
+        );
+      },
+    },
     {
       title: "Name",
       dataIndex: "name",
@@ -126,6 +148,15 @@ const Users = () => {
   }
 
   return (
+    <div className="flex flex-col gap-2 p-2">
+        <div>
+          <h1 className="text-xl font-semibold text-slate-800 mb-0">
+            User Management
+          </h1>
+          <p className="text-sm text-gray-500 mt-1">
+            Manage user accounts and their roles.
+          </p>
+        </div>
     <div className="rounded-[1.5rem] border border-[#d8e7f8] bg-[#eef6ff] shadow-sm overflow-hidden">
       <Table
         rowKey="_id"
@@ -133,7 +164,9 @@ const Users = () => {
         dataSource={data}
         className="bg-transparent"
         rowClassName={() => "hover:bg-sky-50 transition-colors duration-200"}
+        pagination={false}
       />
+    </div>
     </div>
   );
 };

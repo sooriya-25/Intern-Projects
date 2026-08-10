@@ -44,57 +44,65 @@ const Watchlist = () => {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
-      {watchlistItems.map((item) => {
-        const stock = item.stock;
+    <div className="flex flex-col gap-5 p-3">
+      <div>
+        <h1 className="text-xl font-semibold text-slate-800 mb-0">Watchlist</h1>
+        <p className="text-sm text-gray-500 mt-1">
+          Manage your watched stocks.
+        </p>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+        {watchlistItems.map((item) => {
+          const stock = item.stock;
 
-        return (
-          <Card
-            key={item._id}
-            hoverable
-            className="rounded-[1.5rem] border border-slate-200 shadow-sm transition-all duration-300"
-            headStyle={{ paddingTop: 20 }}
-            bodyStyle={{ padding: 24 }}
-            title={
-              <div>
-                <h2 className="text-xl font-bold text-slate-800 mb-1">
-                  {stock?.company || "Unknown Company"}
-                </h2>
-                <p className="text-gray-500 mb-0">{stock?.symbol || "--"}</p>
+          return (
+            <Card
+              key={item._id}
+              hoverable
+              className="rounded-[1.5rem] border border-slate-200 shadow-sm transition-all duration-300"
+              headStyle={{ paddingTop: 20 }}
+              bodyStyle={{ padding: 24 }}
+              title={
+                <div>
+                  <h2 className="text-xl font-bold text-slate-800 mb-1">
+                    {stock?.company || "Unknown Company"}
+                  </h2>
+                  <p className="text-gray-500 mb-0">{stock?.symbol || "--"}</p>
+                </div>
+              }
+              extra={
+                <div className="text-right">
+                  <p className="text-2xl font-bold text-blue-600 mb-0">
+                    ${stock.currentPrice}
+                  </p>
+                </div>
+              }
+            >
+              <div className="flex flex-wrap gap-2 mb-3">
+                <Tag color="blue">{stock?.sector || "Unknown"}</Tag>
+                <Tag color="green">{stock?.exchange || "--"}</Tag>
               </div>
-            }
-            extra={
-              <div className="text-right">
-                <p className="text-2xl font-bold text-blue-600 mb-0">
-                  ${stock.currentPrice}
-                </p>
-              </div>
-            }
-          >
-            <div className="flex flex-wrap gap-2 mb-3">
-              <Tag color="blue">{stock?.sector || "Unknown"}</Tag>
-              <Tag color="green">{stock?.exchange || "--"}</Tag>
-            </div>
 
-            <p className="text-gray-500 text-sm mb-4 line-clamp-2">
-              {stock?.description || "No description available."}
-            </p>
+              <p className="text-gray-500 text-sm mb-4 line-clamp-2">
+                {stock?.description || "No description available."}
+              </p>
 
-            {canRemove && (
-              <Button
-                danger
-                type="default"
-                size="large"
-                icon={<DeleteOutlined />}
-                className="rounded-full w-full md:w-auto px-6 font-semibold"
-                onClick={() => handleRemove(stock._id)}
-              >
-                Remove
-              </Button>
-            )}
-          </Card>
-        );
-      })}
+              {canRemove && (
+                <Button
+                  danger
+                  type="default"
+                  size="large"
+                  icon={<DeleteOutlined />}
+                  className="rounded-full w-full md:w-auto px-6 font-semibold"
+                  onClick={() => handleRemove(stock._id)}
+                >
+                  Remove
+                </Button>
+              )}
+            </Card>
+          );
+        })}
+      </div>
     </div>
   );
 };

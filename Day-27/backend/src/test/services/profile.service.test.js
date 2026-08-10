@@ -16,17 +16,23 @@ describe("profile.service", () => {
 
   test("getProfile returns user without password", async () => {
     const mockUser = { _id: "user1" };
-    mockFindById.mockReturnValue({ select: jest.fn().mockResolvedValue(mockUser) });
+    const mockSelect = jest.fn().mockResolvedValue(mockUser);
+    const mockPopulate = jest.fn().mockReturnValue({ select: mockSelect });
+    mockFindById.mockReturnValue({ populate: mockPopulate });
 
     const result = await profileService.getProfile("user1");
 
     expect(mockFindById).toHaveBeenCalledWith("user1");
+    expect(mockPopulate).toHaveBeenCalledWith("role");
+    expect(mockSelect).toHaveBeenCalledWith("-password");
     expect(result).toBe(mockUser);
   });
 
   test("updateProfile updates name and profileImage", async () => {
     const mockUser = { _id: "user1" };
-    mockFindByIdAndUpdate.mockReturnValue({ select: jest.fn().mockResolvedValue(mockUser) });
+    const mockSelect = jest.fn().mockResolvedValue(mockUser);
+    const mockPopulate = jest.fn().mockReturnValue({ select: mockSelect });
+    mockFindByIdAndUpdate.mockReturnValue({ populate: mockPopulate });
 
     const result = await profileService.updateProfile("user1", {
       name: "New Name",
@@ -44,6 +50,28 @@ describe("profile.service", () => {
         runValidators: true,
       }
     );
+    expect(mockPopulate).toHaveBeenCalledWith("role");
+    expect(mockSelect).toHaveBeenCalledWith("-password");
+    expect(result).toBe(mockUser);
+  });
+
+  test("updateProfilePhoto stores the uploaded image path without password", async () => {
+    const mockUser = { _id: "user1", profileImage: "/uploads/profile/avatar.png" };
+    const mockSelect = jest.fn().mockResolvedValue(mockUser);
+    const mockPopulate = jest.fn().mockReturnValue({ select: mockSelect });
+    mockFindByIdAndUpdate.mockReturnValue({ populate: mockPopulate });
+
+    const result = await profileService.updateProfilePhoto("user1", "avatar.png");
+
+    expect(mockFindByIdAndUpdate).toHaveBeenCalledWith(
+      "user1",
+      {
+        profileImage: "/uploads/profile/avatar.png",
+      },
+      { new: true }
+    );
+    expect(mockPopulate).toHaveBeenCalledWith("role");
+    expect(mockSelect).toHaveBeenCalledWith("-password");
     expect(result).toBe(mockUser);
   });
 });

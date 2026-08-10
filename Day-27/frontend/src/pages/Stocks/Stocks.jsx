@@ -148,7 +148,15 @@ const Stocks = () => {
   }
 
   return (
-    <div>
+        <div className="flex flex-col gap-5 p-3">
+        <div>
+          <h1 className="text-xl font-semibold text-slate-800 mb-0">
+            Stock Management
+          </h1>
+          <p className="text-sm text-gray-500 mt-1">
+            View all available stocks.
+          </p>
+        </div>
       <div className="mb-6 flex justify-between items-center gap-4">
         <div className="relative w-full max-w-md">
           <Input

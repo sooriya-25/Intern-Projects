@@ -23,6 +23,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(morgan("dev"));
+app.use("/uploads", express.static("uploads"));
 
 const apiLimiter = createRateLimiter({
   windowMs: 15 * 60 * 1000,

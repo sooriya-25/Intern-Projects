@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { Card, Table, Descriptions, Tag } from "antd";
+import { Card, Table, Tag } from "antd";
 import { RightOutlined, DownOutlined } from "@ant-design/icons";
 
 const RecentStocksTable = ({ data }) => {

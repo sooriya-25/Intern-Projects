@@ -21,6 +21,15 @@ const Dashboard = () => {
   }
 
   return (
+      <div className="flex flex-col gap-5 p-3">
+        <div>
+          <h1 className="text-xl font-semibold text-slate-800 mb-0">
+            Dashboard
+          </h1>
+          <p className="text-sm text-gray-500 mt-1">
+            View your dashboard metrics.
+          </p>
+        </div>
     <div className="space-y-6">
       <Modal
         open={openChart}
@@ -128,6 +137,7 @@ const Dashboard = () => {
       </Row>
 
       <RecentStocksTable data={data.recentStocks} />
+    </div>
     </div>
   );
 };

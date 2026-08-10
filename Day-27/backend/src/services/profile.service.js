@@ -1,7 +1,7 @@
 const User = require("../models/User");
 
 const getProfile = async (userId) => {
-  return await User.findById(userId).select("-password");
+  return await User.findById(userId).populate("role").select("-password");
 };
 
 const updateProfile = async (userId, data) => {
@@ -15,10 +15,38 @@ const updateProfile = async (userId, data) => {
       new: true,
       runValidators: true,
     }
-  ).select("-password");
+  )
+    .populate("role")
+    .select("-password");
+};
+
+const updateProfilePhoto = async (userId, filename) => {
+  return User.findByIdAndUpdate(
+    userId,
+    {
+      profileImage: `/uploads/profile/${filename}`,
+    },
+    { new: true }
+  )
+    .populate("role")
+    .select("-password");
+};
+
+const removeProfilePhoto = async (userId) => {
+  return User.findByIdAndUpdate(
+    userId,
+    {
+      profileImage: null,
+    },
+    { new: true }
+  )
+    .populate("role")
+    .select("-password");
 };
 
 module.exports = {
   getProfile,
   updateProfile,
+  updateProfilePhoto,
+  removeProfilePhoto,
 };

@@ -1,14 +1,7 @@
-import { Checkbox, Table } from "antd";
+import { Checkbox, ConfigProvider, Table } from "antd";
 
 import { MODULES, ACTIONS } from "../../constants/modules";
 
-// value: array of { module, view, add, edit, delete }
-// onChange: (nextValue) => void
-//
-// Dependency rule enforced here (mirrored defensively on the backend in
-// role.service.js's normalizePermissions): checking Add/Edit/Delete
-// auto-checks View. Unchecking View clears Add/Edit/Delete, since none
-// of those make sense without view access.
 const PermissionMatrix = ({ value = [], onChange }) => {
   const getRow = (moduleKey) =>
     value.find((permission) => permission.module === moduleKey) || {
@@ -31,7 +24,6 @@ const PermissionMatrix = ({ value = [], onChange }) => {
     const row = getRow(moduleKey);
 
     if (actionKey === "view" && !checked) {
-      // Unchecking view clears everything else on this row
       setRow(moduleKey, {
         ...row,
         view: false,
@@ -39,12 +31,15 @@ const PermissionMatrix = ({ value = [], onChange }) => {
         edit: false,
         delete: false,
       });
+
       return;
     }
 
-    const nextRow = { ...row, [actionKey]: checked };
+    const nextRow = {
+      ...row,
+      [actionKey]: checked,
+    };
 
-    // Add/Edit/Delete implies View
     if (actionKey !== "view" && checked) {
       nextRow.view = true;
     }
@@ -54,15 +49,29 @@ const PermissionMatrix = ({ value = [], onChange }) => {
 
   const columns = [
     {
-      title: "Module",
+      title: (
+        <span className="font-semibold text-slate-700">
+          Module
+        </span>
+      ),
       dataIndex: "label",
-      width: 160,
-      render: (label) => <span className="font-medium text-slate-700">{label}</span>,
+      width: 180,
+      render: (label) => (
+        <span className="font-medium text-slate-800">
+          {label}
+        </span>
+      ),
     },
+
     ...ACTIONS.map((action) => ({
-      title: action.label,
+      title: (
+        <span className="font-semibold text-slate-700">
+          {action.label}
+        </span>
+      ),
       key: action.key,
       align: "center",
+
       render: (_, module) => {
         const row = getRow(module.key);
 
@@ -70,23 +79,80 @@ const PermissionMatrix = ({ value = [], onChange }) => {
           <Checkbox
             checked={Boolean(row[action.key])}
             onChange={(e) =>
-              handleToggle(module.key, action.key, e.target.checked)
+              handleToggle(
+                module.key,
+                action.key,
+                e.target.checked
+              )
             }
           />
         );
       },
     })),
+
+    {
+      title: (
+        <span className="font-semibold text-blue-700">
+          All
+        </span>
+      ),
+      key: "all",
+      align: "center",
+
+      render: (_, module) => {
+        const row = getRow(module.key);
+
+        const checked =
+          row.view &&
+          row.add &&
+          row.edit &&
+          row.delete;
+
+        return (
+          <Checkbox
+            checked={checked}
+            onChange={(e) => {
+              const checked = e.target.checked;
+
+              setRow(module.key, {
+                ...row,
+                view: checked,
+                add: checked,
+                edit: checked,
+                delete: checked,
+              });
+            }}
+          />
+        );
+      },
+    },
   ];
 
   return (
-    <Table
-      rowKey="key"
-      pagination={false}
-      columns={columns}
-      dataSource={MODULES}
-      size="middle"
-      className="permission-matrix"
-    />
+    <ConfigProvider
+      theme={{
+        components: {
+          Checkbox: {
+            colorPrimary: "#2563EB",
+            colorPrimaryHover: "#1D4ED8",
+            colorBorder: "#64748B",
+            colorPrimaryBorder: "#475569",
+          },
+        },
+      }}
+    >
+      <Table
+        rowKey="key"
+        columns={columns}
+        dataSource={MODULES}
+        pagination={false}
+        bordered
+        size="middle"
+        rowClassName={(_, index) =>
+          index % 2 === 0 ? "bg-white" : "bg-slate-50"
+        }
+      />
+    </ConfigProvider>
   );
 };
 

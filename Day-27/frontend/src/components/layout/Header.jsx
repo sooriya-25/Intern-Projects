@@ -16,6 +16,18 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { logout } from "../../store/slices/authSlice";
 
+const getAvatarUrl = (profileImage) => {
+  if (!profileImage) {
+    return null;
+  }
+
+  if (profileImage.startsWith("http")) {
+    return profileImage;
+  }
+
+  return `${process.env.REACT_APP_API_URL.replace("/api", "")}${profileImage}`;
+};
+
 const Header = ({ collapsed, onToggle }) => {
   const dispatch = useDispatch();
 
@@ -78,7 +90,12 @@ const Header = ({ collapsed, onToggle }) => {
 
         <div className="flex items-center gap-3 rounded-full border border-slate-200 bg-slate-50 px-4 py-2">
 
-          <Avatar className="bg-slate-100 text-slate-700" icon={<UserOutlined />} />
+          <Avatar
+            size={40}
+            src={getAvatarUrl(user?.profileImage)}
+            className="bg-slate-100 text-slate-700"
+            icon={<UserOutlined />}
+          />
 
           <div className="min-w-[160px]">
             <p className="text-sm font-semibold text-slate-900 leading-none">{user?.name}</p>

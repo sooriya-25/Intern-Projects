@@ -30,7 +30,47 @@ const updateProfile = async (req, res, next) => {
   }
 };
 
+const updateProfilePhoto = async (req, res, next) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: "Please upload a profile photo",
+      });
+    }
+
+    const user = await profileService.updateProfilePhoto(
+      req.user._id,
+      req.file.filename
+    );
+
+    res.json({
+      success: true,
+      message: "Profile photo updated",
+      data: user,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const removeProfilePhoto = async (req, res, next) => {
+  try {
+    const user = await profileService.removeProfilePhoto(req.user._id);
+
+    res.json({
+      success: true,
+      message: "Profile photo removed",
+      data: user,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getProfile,
   updateProfile,
+  updateProfilePhoto,
+  removeProfilePhoto,
 };

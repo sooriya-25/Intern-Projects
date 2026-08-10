@@ -480,4 +480,28 @@ input:-internal-autofill-selected {
   padding-top: 8px !important;
   padding-bottom: 8px !important;
 }
+
+.ant-input-affix-wrapper {
+  align-items: center;
+}
+
+.ant-input {
+  background: transparent !important;
+  line-height: 1.4;
+  padding: 0 !important;
+}
+
+.ant-input-prefix {
+  display: flex;
+  align-items: center;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
+  background: none !important;
+  -webkit-text-fill-color: inherit;
+}
 /* Make search inputs fully rounded and consistent height (handled earlier) */

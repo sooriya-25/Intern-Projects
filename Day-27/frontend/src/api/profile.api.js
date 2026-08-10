@@ -11,3 +11,19 @@ export const updateProfile = async (data) => {
 
   return response.data;
 };
+
+export const uploadProfilePhoto = async (formData) => {
+  const response = await api.patch("/profile/photo", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+
+  return response.data;
+};
+
+export const removeProfilePhoto = async () => {
+  const response = await api.delete("/profile/photo");
+
+  return response.data;
+};

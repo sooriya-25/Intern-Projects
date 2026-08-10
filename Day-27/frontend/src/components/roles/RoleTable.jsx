@@ -80,6 +80,7 @@ const RoleTable = ({ roles, loading, onEdit, onDelete }) => {
       columns={columns}
       dataSource={roles}
       className="bg-transparent"
+      pagination={false}
     />
   );
 };
