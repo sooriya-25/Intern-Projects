@@ -39,11 +39,11 @@ const Header = ({ collapsed, onToggle }) => {
   console.log("user", user);
 
   const pageTitles = {
-    "/": "Dashboard",
-    "/stocks": "Stocks",
-    "/watchlist": "Watchlist",
-    "/users": "Users",
-    "/profile": "Profile",
+    "/dashboard": "Dashboard",
+    "/dashboard/stocks": "Stocks",
+    "/dashboard/watchlist": "Watchlist",
+    "/dashboard/users": "Users",
+    "/dashboard/profile": "Profile",
   };
 
   const title = pageTitles[location.pathname] || "StockPro";

@@ -25,7 +25,7 @@ const Login = () => {
 
         message.success(response.message);
 
-        navigate("/");
+        navigate("/dashboard");
       },
 
       onError: (error) => {

@@ -10,5 +10,6 @@ router.use("/profile", require("./profile.routes"));
 router.use("/dashboard", require("./dashboard.routes"));
 router.use("/roles", require("./role.routes"));
 router.use("/todos", require("./todo.routes"));
+router.use("/subscribe", require("./subscribe.routes"));
 
 module.exports = router;

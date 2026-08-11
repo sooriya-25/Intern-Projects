@@ -23,34 +23,34 @@ const Sidebar = ({ collapsed }) => {
 
   const items = [
     {
-      key: "/",
+      key: "/dashboard",
       icon: <DashboardOutlined />,
-      label: <Link to="/">Dashboard</Link>,
+      label: <Link to="/dashboard">Dashboard</Link>,
     },
     ...(hasPermission("STOCKS", "view")
       ? [
           {
-            key: "/stocks",
+            key: "/dashboard/stocks",
             icon: <StockOutlined />,
-            label: <Link to="/stocks">Stocks</Link>,
+            label: <Link to="/dashboard/stocks">Stocks</Link>,
           },
         ]
       : []),
     ...(hasPermission("WATCHLIST", "view")
       ? [
           {
-            key: "/watchlist",
+            key: "/dashboard/watchlist",
             icon: <StarOutlined />,
-            label: <Link to="/watchlist">Watchlist</Link>,
+            label: <Link to="/dashboard/watchlist">Watchlist</Link>,
           },
         ]
       : []),
     ...(hasPermission("TODO", "view")
       ? [
           {
-            key: "/todos",
+            key: "/dashboard/todos",
             icon: <CheckSquareOutlined />,
-            label: <Link to="/todos">Todo</Link>,
+            label: <Link to="/dashboard/todos">Todo</Link>,
           },
         ]
       : []),
@@ -59,21 +59,21 @@ const Sidebar = ({ collapsed }) => {
     ...(isAdmin
       ? [
           {
-            key: "/users",
+            key: "/dashboard/users",
             icon: <TeamOutlined />,
-            label: <Link to="/users">Users</Link>,
+            label: <Link to="/dashboard/users">Users</Link>,
           },
           {
-            key: "/roles",
+            key: "/dashboard/roles",
             icon: <SafetyCertificateOutlined />,
-            label: <Link to="/roles">Roles</Link>,
+            label: <Link to="/dashboard/roles">Roles</Link>,
           },
         ]
       : []),
     {
-      key: "/profile",
+      key: "/dashboard/profile",
       icon: <UserOutlined />,
-      label: <Link to="/profile">Profile</Link>,
+      label: <Link to="/dashboard/profile">Profile</Link>,
     },
   ];
 

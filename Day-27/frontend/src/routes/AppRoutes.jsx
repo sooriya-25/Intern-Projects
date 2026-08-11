@@ -6,6 +6,7 @@ import { Spin } from "antd";
 import ProtectedRoute from "./ProtectedRoute";
 import MainLayout from "../layouts/MainLayout";
 
+const Landing = lazy(() => import("../pages/Landing/Landing"));
 const Login = lazy(() => import("../pages/Login/Login"));
 const Dashboard = lazy(() => import("../pages/Dashboard/Dashboard"));
 const Stocks = lazy(() => import("../pages/Stocks/Stocks"));
@@ -31,10 +32,12 @@ const AppRoutes = () => {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={withSuspense(<Landing />)} />
+
         <Route path="/login" element={withSuspense(<Login />)} />
 
         <Route
-          path="/"
+          path="/dashboard"
           element={
             <ProtectedRoute>
               <MainLayout />
