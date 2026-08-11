@@ -2,9 +2,36 @@ const Subscriber = require("../models/Subscriber");
 const { generateCaptcha, verifyCaptcha } = require("../utils/captcha");
 const AppError = require("../utils/appError");
 const HTTP_STATUS = require("../constants/httpStatus");
+const { sendMail } = require("../utils/mailer");
+const { getRenderedTemplate } = require("./emailTemplate.service");
+const env = require("../config/env");
 
 const getCaptchaChallenge = () => {
   return generateCaptcha();
+};
+
+const sendWelcomeEmail = async (subscriber) => {
+  try {
+    const { subject, text, html } = await getRenderedTemplate(
+      "SUBSCRIPTION_WELCOME",
+      {
+        email: subscriber.email,
+        appName: env.SMTP_FROM_NAME,
+        clientUrl: env.CLIENT_URL,
+        year: new Date().getFullYear(),
+      }
+    );
+
+    await sendMail({ to: subscriber.email, subject, text, html });
+
+    subscriber.emailSentAt = new Date();
+    await subscriber.save();
+  } catch (error) {
+    console.error(
+      `❌ Failed to send welcome email to ${subscriber.email}:`,
+      error.message
+    );
+  }
 };
 
 const subscribeEmail = async ({ email, captchaAnswer, captchaToken }) => {
@@ -29,10 +56,14 @@ const subscribeEmail = async ({ email, captchaAnswer, captchaToken }) => {
     existing.status = "SUBSCRIBED";
     await existing.save();
 
+    sendWelcomeEmail(existing); 
+
     return existing;
   }
 
   const subscriber = await Subscriber.create({ email });
+
+  sendWelcomeEmail(subscriber); 
 
   return subscriber;
 };
