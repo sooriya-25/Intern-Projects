@@ -21,7 +21,8 @@ export const useUploadProfilePhoto = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: uploadProfilePhoto,
+    mutationFn: ({ formData, onUploadProgress }) =>
+      uploadProfilePhoto(formData, onUploadProgress),
 
     onSuccess: (response) => {
       queryClient.setQueryData(["profile"], response.data || response);

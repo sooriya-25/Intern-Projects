@@ -1,5 +1,5 @@
 import React, { lazy, Suspense } from "react";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 
 import { Spin } from "antd";
 
@@ -30,7 +30,6 @@ const withSuspense = (element) => (
 
 const AppRoutes = () => {
   return (
-    <BrowserRouter>
       <Routes>
         <Route path="/" element={withSuspense(<Landing />)} />
 
@@ -96,7 +95,6 @@ const AppRoutes = () => {
 
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-    </BrowserRouter>
   );
 };
 

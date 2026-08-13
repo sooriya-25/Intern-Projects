@@ -23,6 +23,7 @@ import { useDispatch } from "react-redux";
 import { useProfile } from "../../hooks/useProfile";
 import { useRemoveProfilePhoto, useUpdateProfile, useUploadProfilePhoto } from "../../hooks/useUpdateProfile";
 import { updateProfileImage, updateUser } from "../../store/slices/authSlice";
+import { useFloatingWidget } from "../../context/FloatingWidgetContext";
 
 const { Title, Text } = Typography;
 
@@ -35,6 +36,8 @@ const Profile = () => {
   const { mutate, isPending } = useUpdateProfile();
   const { mutate: uploadPhoto, isPending: isUploadingPhoto } = useUploadProfilePhoto();
   const { mutate: removePhoto, isPending: isRemovingPhoto } = useRemoveProfilePhoto();
+
+  const { addUpload, updateProgress, completeUpload, failUpload } = useFloatingWidget();
 
   useEffect(() => {
     if (data) {
@@ -80,24 +83,39 @@ const Profile = () => {
     const formData = new FormData();
     formData.append("photo", file);
 
-    uploadPhoto(formData, {
-      onSuccess: (response) => {
-        const nextImage = response?.data?.profileImage;
+// Add the upload to the floating widget and get its ID
+    const uploadId = addUpload(file.name);
 
-        if (nextImage) {
-          dispatch(updateProfileImage(nextImage));
-        }
-
-        if (response?.data) {
-          dispatch(updateUser(response.data));
-        }
-
-        message.success(response.message || "Profile photo updated");
+// Call the uploadPhoto mutation with the formData and progress callback
+    uploadPhoto(
+      {
+        formData,
+        onUploadProgress: (percent) => updateProgress(uploadId, percent),
       },
-      onError: (error) => {
-        message.error(error.response?.data?.message || "Photo upload failed");
-      },
-    });
+      {
+        onSuccess: (response) => {
+          completeUpload(uploadId);
+
+          const nextImage = response?.data?.profileImage;
+
+          if (nextImage) {
+            dispatch(updateProfileImage(nextImage));
+          }
+
+          if (response?.data) {
+            dispatch(updateUser(response.data));
+          }
+
+          message.success(response.message || "Profile photo updated");
+        },
+        onError: (error) => {
+          const errorMessage = error.response?.data?.message || "Photo upload failed";
+
+          failUpload(uploadId, errorMessage);
+          message.error(errorMessage);
+        },
+      }
+    );
 
     return Upload.LIST_IGNORE;
   };

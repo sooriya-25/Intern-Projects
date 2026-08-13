@@ -29,44 +29,34 @@ const Login = () => {
       },
 
       onError: (error) => {
-        message.error(
-          error.response?.data?.message || "Login failed"
-        );
+        message.error(error.response?.data?.message || "Login failed");
       },
     });
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-slate-100 px-4">
-
       <Card className="w-full max-w-md shadow-2xl rounded-[1.5rem] border border-slate-200">
-
-        <Title
-          level={2}
-          className="text-center text-slate-900"
-        >
+        <Title level={2} className="text-center text-slate-900">
           StockPro Login
         </Title>
 
-        <Form
-          layout="vertical"
-          onFinish={onFinish}
-        >
-
+        <Form layout="vertical" onFinish={onFinish}>
           <Form.Item
             label="Email"
             name="email"
-            rules={[
-              {
-                required: true,
-                message: "Email is required",
-              },
-            ]}
+rules={[
+  {
+    required: true,
+    message: "Email is required",
+  },
+  {
+    type: "email",
+    message: "Please enter a valid email address",
+  },
+]}
           >
-            <Input
-              prefix={<MailOutlined />}
-              placeholder="Enter Email"
-            />
+            <Input prefix={<MailOutlined />} placeholder="Enter Email" />
           </Form.Item>
 
           <Form.Item
@@ -94,11 +84,8 @@ const Login = () => {
           >
             Login
           </Button>
-
         </Form>
-
       </Card>
-
     </div>
   );
 };

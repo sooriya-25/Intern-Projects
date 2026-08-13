@@ -36,7 +36,6 @@ const Header = ({ collapsed, onToggle }) => {
   const location = useLocation();
 
   const { user } = useSelector((state) => state.auth);
-  console.log("user", user);
 
   const pageTitles = {
     "/dashboard": "Dashboard",

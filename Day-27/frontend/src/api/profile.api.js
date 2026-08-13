@@ -12,10 +12,17 @@ export const updateProfile = async (data) => {
   return response.data;
 };
 
-export const uploadProfilePhoto = async (formData) => {
+export const uploadProfilePhoto = async (formData, onUploadProgress) => {
   const response = await api.patch("/profile/photo", formData, {
     headers: {
       "Content-Type": "multipart/form-data",
+    },
+    onUploadProgress: (event) => {
+      console.log("Upload progress:", event);
+      if (onUploadProgress && event.total) {
+        const percent = Math.round((event.loaded * 100) / event.total);
+        onUploadProgress(percent);
+      }
     },
   });
 
