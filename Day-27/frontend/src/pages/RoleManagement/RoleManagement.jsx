@@ -88,7 +88,7 @@ const RoleManagement = () => {
   }
 
   return (
-    <div>
+    <div className="flex flex-col gap-2 p-3">
       <div className="mb-6 flex justify-between items-center gap-4">
         <div>
           <h1 className="text-xl font-semibold text-slate-800 mb-0">

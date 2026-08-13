@@ -10,6 +10,8 @@ const Landing = lazy(() => import("../pages/Landing/Landing"));
 const Login = lazy(() => import("../pages/Login/Login"));
 const Dashboard = lazy(() => import("../pages/Dashboard/Dashboard"));
 const Stocks = lazy(() => import("../pages/Stocks/Stocks"));
+const AddStock = lazy(() => import("../pages/Stocks/AddStock"));
+const EditStock = lazy(() => import("../pages/Stocks/EditStock"));
 const Watchlist = lazy(() => import("../pages/Watchlist/Watchlist"));
 const Users = lazy(() => import("../pages/Users/Users"));
 const Profile = lazy(() => import("../pages/Profile/Profile"));
@@ -50,6 +52,24 @@ const AppRoutes = () => {
             element={
               <ProtectedRoute module="STOCKS" action="view">
                 {withSuspense(<Stocks />)}
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="stocks/add"
+            element={
+              <ProtectedRoute module="STOCKS" action="add">
+                {withSuspense(<AddStock />)}
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="stocks/:id/edit"
+            element={
+              <ProtectedRoute module="STOCKS" action="edit">
+                {withSuspense(<EditStock />)}
               </ProtectedRoute>
             }
           />

@@ -157,7 +157,7 @@ const Users = () => {
             Manage user accounts and their roles.
           </p>
         </div>
-    <div className="rounded-[1.5rem] border border-[#d8e7f8] bg-[#eef6ff] shadow-sm overflow-hidden">
+    <div className="rounded-[1.5rem] border border-[#d8e7f8] bg-[#eef6ff] shadow-sm overflow-hidden mt-4">
       <Table
         rowKey="_id"
         columns={columns}

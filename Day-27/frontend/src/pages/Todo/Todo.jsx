@@ -154,39 +154,47 @@ const Todo = () => {
   }
 
   return (
-    <div>
-      <div className="mb-6 flex justify-between items-center gap-4">
-        <h1 className="text-xl font-semibold text-slate-800 mb-0">Todo</h1>
+<div className="flex flex-col gap-5 p-3">
+  <div>
+    <div className="flex items-center justify-between">
+      <h1 className="text-xl font-semibold text-slate-800 mb-0">
+        Todo Management
+      </h1>
 
-        {canAdd && (
-          <Button
-            type="primary"
-            className="rounded-full"
-            icon={<PlusOutlined />}
-            onClick={handleAdd}
-          >
-            Add Todo
-          </Button>
-        )}
-      </div>
-
-      <div className="rounded-[1.5rem] border border-[#d8e7f8] bg-[#eef6ff] shadow-sm overflow-hidden">
-        <Table
-          rowKey="_id"
-          columns={columns}
-          dataSource={data?.todos}
-          className="bg-transparent"
-        />
-      </div>
-
-      <TodoModal
-        open={modalOpen}
-        todo={selectedTodo}
-        loading={creating || updating}
-        onCancel={() => setModalOpen(false)}
-        onSubmit={handleSubmit}
-      />
+      {canAdd && (
+        <Button
+          type="primary"
+          className="rounded-full"
+          icon={<PlusOutlined />}
+          onClick={handleAdd}
+        >
+          Add Todo
+        </Button>
+      )}
     </div>
+
+    <p className="text-sm text-gray-500 mt-1">
+      View all available todos.
+    </p>
+  </div>
+
+  <div className="rounded-[1.5rem] border border-[#d8e7f8] bg-[#eef6ff] shadow-sm overflow-hidden">
+    <Table
+      rowKey="_id"
+      columns={columns}
+      dataSource={data?.todos}
+      className="bg-transparent"
+    />
+  </div>
+
+  <TodoModal
+    open={modalOpen}
+    todo={selectedTodo}
+    loading={creating || updating}
+    onCancel={() => setModalOpen(false)}
+    onSubmit={handleSubmit}
+  />
+</div>
   );
 };
 

@@ -40,12 +40,17 @@ const Header = ({ collapsed, onToggle }) => {
   const pageTitles = {
     "/dashboard": "Dashboard",
     "/dashboard/stocks": "Stocks",
+    "/dashboard/stocks/add": "Add Stock",
     "/dashboard/watchlist": "Watchlist",
     "/dashboard/users": "Users",
     "/dashboard/profile": "Profile",
   };
 
-  const title = pageTitles[location.pathname] || "StockPro";
+  const title =
+    pageTitles[location.pathname] ||
+    (/^\/dashboard\/stocks\/.+\/edit$/.test(location.pathname)
+      ? "Edit Stock"
+      : "StockPro");
 
   const handleLogout = () => {
     dispatch(logout());

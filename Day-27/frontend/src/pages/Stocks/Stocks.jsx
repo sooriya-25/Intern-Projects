@@ -3,6 +3,7 @@ import { Button, Input, Spin, message, Modal } from "antd";
 import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
 
 import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 import { useStocks } from "../../hooks/useStocks";
@@ -10,19 +11,15 @@ import useDebounce from "../../hooks/useDebounce";
 
 import { useAddWatchlist } from "../../hooks/useAddWatchlist";
 import { useWatchlist } from "../../hooks/useWatchlist";
-import { useCreateStock } from "../../hooks/useCreateStock";
-import { useUpdateStock } from "../../hooks/useUpdateStock";
 import { useDeleteStock } from "../../hooks/useDeleteStock";
 import usePermission from "../../hooks/usePermission";
 
-import StockModal from "../../components/stock/StockModal";
 import StockCard from "../../components/stock/StockCard";
 
 const Stocks = () => {
-  const [search, setSearch] = useState("");
-  const [modalOpen, setModalOpen] = useState(false);
+  const navigate = useNavigate();
 
-  const [selectedStock, setSelectedStock] = useState(null);
+  const [search, setSearch] = useState("");
 
   const { hasPermission } = usePermission();
 
@@ -32,10 +29,6 @@ const Stocks = () => {
   const canAddWatchlist = hasPermission("WATCHLIST", "add");
 
   const SCROLLABLE_TARGET = "page-content-main";
-
-  const { mutate: createStock } = useCreateStock();
-
-  const { mutate: updateStock } = useUpdateStock();
 
   const { mutate: deleteStock } = useDeleteStock();
 
@@ -76,43 +69,11 @@ const Stocks = () => {
   };
 
   const handleAdd = () => {
-    setSelectedStock(null);
-
-    setModalOpen(true);
+    navigate("/dashboard/stocks/add");
   };
 
   const handleEdit = (stock) => {
-    setSelectedStock(stock);
-
-    setModalOpen(true);
-  };
-
-  const handleSubmit = (values) => {
-    if (selectedStock) {
-      updateStock(
-        {
-          id: selectedStock._id,
-          data: values,
-        },
-        {
-          onSuccess: () => {
-            message.success("Stock updated successfully");
-
-            setModalOpen(false);
-          },
-        },
-      );
-
-      return;
-    }
-
-    createStock(values, {
-      onSuccess: () => {
-        message.success("Stock created successfully");
-
-        setModalOpen(false);
-      },
-    });
+    navigate(`/dashboard/stocks/${stock._id}/edit`, { state: { stock } });
   };
 
   const handleDelete = (stock) => {
@@ -212,13 +173,6 @@ const Stocks = () => {
           ))}
         </div>
       </InfiniteScroll>
-      <StockModal
-        open={modalOpen}
-        stock={selectedStock}
-        loading={false}
-        onCancel={() => setModalOpen(false)}
-        onSubmit={handleSubmit}
-      />
     </div>
   );
 };

@@ -150,7 +150,15 @@ const Profile = () => {
     : null;
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-8">
+    <div className="flex flex-col gap-5 p-3">
+        {/* <div>
+          <h1 className="text-xl font-semibold text-slate-800 mb-0">
+            Profile
+          </h1>
+          <p className="text-sm text-gray-500 mt-1">
+            View your profile information and update it at any time.
+          </p>
+        </div> */}
       <Card className="overflow-hidden rounded-2xl border border-[#d8e7f8] bg-gradient-to-br from-[#f6fbff] via-white to-[#eef6ff] shadow-lg">
         {/* Profile Header Section */}
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 mb-8 pb-8 border-b border-[#d8e7f8]">

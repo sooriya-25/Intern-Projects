@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 
 import Sidebar from "../components/layout/Sidebar";
 import Header from "../components/layout/Header";
+import Breadcrumb from "../components/layout/Breadcrumb";
 
 const MainLayout = () => {
   const { theme } = useSelector((state) => state.theme);
@@ -20,6 +21,7 @@ const MainLayout = () => {
           <Header collapsed={collapsed} onToggle={() => setCollapsed((prev) => !prev)} />
 
           <main id="page-content-main" className="flex-1 overflow-y-auto p-6">
+            <Breadcrumb />
             <Outlet />
           </main>
 
