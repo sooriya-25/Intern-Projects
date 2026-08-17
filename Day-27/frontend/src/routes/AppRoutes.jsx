@@ -8,6 +8,7 @@ import MainLayout from "../layouts/MainLayout";
 
 const Landing = lazy(() => import("../pages/Landing/Landing"));
 const Login = lazy(() => import("../pages/Login/Login"));
+const Signup = lazy(() => import("../pages/Signup/Signup"));
 const Dashboard = lazy(() => import("../pages/Dashboard/Dashboard"));
 const Stocks = lazy(() => import("../pages/Stocks/Stocks"));
 const AddStock = lazy(() => import("../pages/Stocks/AddStock"));
@@ -36,6 +37,8 @@ const AppRoutes = () => {
         <Route path="/" element={withSuspense(<Landing />)} />
 
         <Route path="/login" element={withSuspense(<Login />)} />
+
+        <Route path="/signup" element={withSuspense(<Signup />)} />
 
         <Route
           path="/dashboard"

@@ -1,7 +1,7 @@
 import { Button, Card, Form, Input, Typography, message } from "antd";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
 
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { useDispatch } from "react-redux";
 
@@ -9,7 +9,7 @@ import { loginSuccess } from "../../store/slices/authSlice";
 
 import { useLogin } from "../../hooks/useLogin";
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
 
 const Login = () => {
   const dispatch = useDispatch();
@@ -85,6 +85,10 @@ rules={[
             Login
           </Button>
         </Form>
+
+        <Text className="block text-center mt-6 text-slate-600">
+          Don't have an account? <Link to="/signup">Sign up</Link>
+        </Text>
       </Card>
     </div>
   );

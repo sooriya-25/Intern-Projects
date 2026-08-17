@@ -14,11 +14,20 @@ const app = express();
 
 app.use(
   cors({
-    origin: env.CLIENT_URL,
+    origin: (origin, callback) => {
+      // Allow non-browser tools (curl, Postman, server-to-server) which
+      // send no Origin header at all.
+      if (!origin) return callback(null, true);
+
+      if (env.CLIENT_URLS.includes(origin.replace(/\/$/, ""))) {
+        return callback(null, true);
+      }
+
+      return callback(new Error(`Not allowed by CORS: ${origin}`));
+    },
     credentials: true,
   })
 );
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

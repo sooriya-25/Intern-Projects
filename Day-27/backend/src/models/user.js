@@ -23,6 +23,29 @@ const userSchema = new mongoose.Schema(
       required: true,
     },
 
+    phone: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+
+    companyName: {
+      type: String,
+      trim: true,
+      default: null,
+    },
+
+    address: {
+      type: String,
+      trim: true,
+      default: null,
+    },
+
+    isEmailVerified: {
+      type: Boolean,
+      default: false,
+    },
+
     profileImage: {
       type: String,
       default: null,
