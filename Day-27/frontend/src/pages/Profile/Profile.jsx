@@ -7,7 +7,7 @@ import {
   Spin,
   Typography,
   Upload,
-  message,
+
 } from "antd";
 
 import {
@@ -24,12 +24,14 @@ import { useProfile } from "../../hooks/useProfile";
 import { useRemoveProfilePhoto, useUpdateProfile, useUploadProfilePhoto } from "../../hooks/useUpdateProfile";
 import { updateProfileImage, updateUser } from "../../store/slices/authSlice";
 import { useFloatingWidget } from "../../context/FloatingWidgetContext";
+import { useToast } from "../../components/Toast/ToastProvider";
 
 const { Title, Text } = Typography;
 
 const Profile = () => {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
+  const toast = useToast();
 
   const { data, isLoading } = useProfile();
 
@@ -55,10 +57,10 @@ const Profile = () => {
           dispatch(updateUser(response.data));
         }
 
-        message.success(response.message || "Profile updated successfully");
+        toast.success(response.message || "Profile updated successfully");
       },
       onError: (error) => {
-        message.error(
+        toast.error(
           error.response?.data?.message || "Update Failed"
         );
       },
@@ -69,14 +71,14 @@ const Profile = () => {
     const isImage = file.type.startsWith("image/");
 
     if (!isImage) {
-      message.error("You can only upload image files!");
+      toast.error("You can only upload image files!");
       return Upload.LIST_IGNORE;
     }
 
     const isLt2M = file.size / 1024 / 1024 < 2;
 
     if (!isLt2M) {
-      message.error("Image must be smaller than 2MB!");
+      toast.error("Image must be smaller than 2MB!");
       return Upload.LIST_IGNORE;
     }
 
@@ -106,13 +108,13 @@ const Profile = () => {
             dispatch(updateUser(response.data));
           }
 
-          message.success(response.message || "Profile photo updated");
+          toast.success(response.message || "Profile photo updated");
         },
         onError: (error) => {
           const errorMessage = error.response?.data?.message || "Photo upload failed";
 
           failUpload(uploadId, errorMessage);
-          message.error(errorMessage);
+          toast.error(errorMessage);
         },
       }
     );
@@ -129,10 +131,10 @@ const Profile = () => {
           dispatch(updateUser(response.data));
         }
 
-        message.success(response.message || "Profile photo removed");
+        toast.success(response.message || "Profile photo removed");
       },
       onError: (error) => {
-        message.error(error.response?.data?.message || "Photo removal failed");
+        toast.error(error.response?.data?.message || "Photo removal failed");
       },
     });
   };

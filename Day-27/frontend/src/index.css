@@ -15,6 +15,21 @@
   animation: marquee 24s linear infinite;
 }
 
+@keyframes toastIn {
+  0% {
+    opacity: 0;
+    transform: translateX(24px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+.animate-toast-in {
+  animation: toastIn 0.25s ease-out both;
+}
+
 :root {
   color-scheme: light;
   --bg: #eaf4ff;
@@ -516,5 +531,14 @@ input:-webkit-autofill:active {
   -webkit-box-shadow: 0 0 0 1000px transparent inset !important;
   background: none !important;
   -webkit-text-fill-color: inherit;
+}
+.verify-email-btn.ant-btn-primary:disabled,
+.verify-email-btn.ant-btn-primary.ant-btn-disabled,
+.verify-email-btn.ant-btn-primary:disabled:hover,
+.verify-email-btn.ant-btn-primary.ant-btn-disabled:hover {
+  background-color: #e2e5e9 !important;
+  border-color: #e2e5e9 !important;
+  color: #8a9199 !important;
+  box-shadow: none !important;
 }
 /* Make search inputs fully rounded and consistent height (handled earlier) */

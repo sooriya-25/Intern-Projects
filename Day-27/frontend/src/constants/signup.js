@@ -1,16 +1,12 @@
-export const RESEND_COOLDOWN_SECONDS = 30;
+export { RESEND_COOLDOWN_SECONDS, DEFAULT_OTP_TTL_MINUTES } from "./otp";
 
 export const STEP_COPY = [
   {
     title: "Your details",
-    subtitle: "Tell us a bit about yourself to get started.",
+    subtitle: "Tell us about yourself and set a password to get started.",
   },
   {
     title: "Verify email",
     subtitle: "Enter the code we just sent you.",
-  },
-  {
-    title: "Secure your account",
-    subtitle: "Almost done — set a password to finish.",
   },
 ];

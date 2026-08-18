@@ -79,9 +79,44 @@ const loginValidator = [
     .withMessage("Password is required"),
 ];
 
+const forgotPasswordValidator = [
+  body("email")
+    .trim()
+    .notEmpty()
+    .withMessage("Email is required")
+    .isEmail()
+    .withMessage("Please enter a valid email"),
+];
+
+const resetPasswordValidator = [
+  body("email")
+    .trim()
+    .notEmpty()
+    .withMessage("Email is required")
+    .isEmail()
+    .withMessage("Please enter a valid email"),
+
+  body("otp")
+    .trim()
+    .notEmpty()
+    .withMessage("Reset code is required")
+    .isLength({ min: 6, max: 6 })
+    .withMessage("Reset code must be 6 digits")
+    .isNumeric()
+    .withMessage("Reset code must contain only numbers"),
+
+  body("password")
+    .notEmpty()
+    .withMessage("Password is required")
+    .isLength({ min: 6 })
+    .withMessage("Password should be at least 6 characters"),
+];
+
 module.exports = {
   sendOtpValidator,
   verifyOtpValidator,
   registerValidator,
   loginValidator,
+  forgotPasswordValidator,
+  resetPasswordValidator,
 };

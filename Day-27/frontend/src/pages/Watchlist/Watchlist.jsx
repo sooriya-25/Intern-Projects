@@ -1,12 +1,14 @@
-import { Button, Card, Empty, Spin, Tag, message } from "antd";
+import { Button, Card, Empty, Spin, Tag } from "antd";
 
 import { DeleteOutlined } from "@ant-design/icons";
 
 import { useWatchlist } from "../../hooks/useWatchlist";
 import { useRemoveWatchlist } from "../../hooks/useRemoveWatchlist";
 import usePermission from "../../hooks/usePermission";
+import { useToast } from "../../components/Toast/ToastProvider";
 
 const Watchlist = () => {
+  const toast = useToast();
   const { data, isLoading } = useWatchlist();
 
   const { mutate } = useRemoveWatchlist();
@@ -18,11 +20,11 @@ const Watchlist = () => {
   const handleRemove = (stockId) => {
     mutate(stockId, {
       onSuccess: (response) => {
-        message.success(response.message);
+        toast.success(response.message);
       },
 
       onError: (error) => {
-        message.error(error.response?.data?.message || "Failed");
+        toast.error(error.response?.data?.message || "Failed");
       },
     });
   };

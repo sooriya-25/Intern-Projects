@@ -9,7 +9,7 @@ import {
   Switch,
   Row,
   Col,
-  message,
+
   Result,
 } from "antd";
 
@@ -18,6 +18,7 @@ import { ArrowLeftOutlined } from "@ant-design/icons";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { useUpdateStock } from "../../hooks/useUpdateStock";
+import { useToast } from "../../components/Toast/ToastProvider";
 
 const sectorOptions = [
   { value: "Technology", label: "Technology" },
@@ -44,6 +45,7 @@ const currencyOptions = [
 
 const EditStock = () => {
   const [form] = Form.useForm();
+  const toast = useToast();
 
   const navigate = useNavigate();
   const { id } = useParams();
@@ -89,7 +91,7 @@ const EditStock = () => {
       },
       {
         onSuccess: () => {
-          message.success("Stock updated successfully");
+          toast.success("Stock updated successfully");
 
           navigate("/dashboard/stocks");
         },

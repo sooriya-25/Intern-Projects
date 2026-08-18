@@ -1,5 +1,5 @@
-import { Button, Card, Form, Input, Typography, message } from "antd";
-import { LockOutlined, MailOutlined } from "@ant-design/icons";
+import { Button, Form, Input, Typography } from "antd";
+import { LockOutlined, LoginOutlined, MailOutlined } from "@ant-design/icons";
 
 import { Link, useNavigate } from "react-router-dom";
 
@@ -8,13 +8,15 @@ import { useDispatch } from "react-redux";
 import { loginSuccess } from "../../store/slices/authSlice";
 
 import { useLogin } from "../../hooks/useLogin";
+import { useToast } from "../../components/Toast/ToastProvider";
+import AuthLayout from "../../components/auth/AuthLayout";
 
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
 const Login = () => {
   const dispatch = useDispatch();
-
   const navigate = useNavigate();
+  const toast = useToast();
 
   const { mutate, isPending } = useLogin();
 
@@ -23,74 +25,81 @@ const Login = () => {
       onSuccess: (response) => {
         dispatch(loginSuccess(response.data));
 
-        message.success(response.message);
+        toast.success(response.message || "Login successful");
 
         navigate("/dashboard");
       },
 
       onError: (error) => {
-        message.error(error.response?.data?.message || "Login failed");
+        toast.error(error.response?.data?.message || "Login failed");
       },
     });
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-slate-100 px-4">
-      <Card className="w-full max-w-md shadow-2xl rounded-[1.5rem] border border-slate-200">
-        <Title level={2} className="text-center text-slate-900">
-          StockPro Login
-        </Title>
+    <AuthLayout
+      eyebrow="Welcome back"
+      title="Log in to StockPro"
+      subtitle="Enter your credentials to access your dashboard."
+    >
+      <Form layout="vertical" onFinish={onFinish} requiredMark={false}>
+        <Form.Item
+          label="Email"
+          name="email"
+          rules={[
+            { required: true, message: "Email is required" },
+            { type: "email", message: "Please enter a valid email address" },
+          ]}
+        >
+          <Input
+            size="large"
+            prefix={<MailOutlined className="text-slate-400" />}
+            placeholder="you@company.com"
+          />
+        </Form.Item>
 
-        <Form layout="vertical" onFinish={onFinish}>
-          <Form.Item
-            label="Email"
-            name="email"
-rules={[
-  {
-    required: true,
-    message: "Email is required",
-  },
-  {
-    type: "email",
-    message: "Please enter a valid email address",
-  },
-]}
-          >
-            <Input prefix={<MailOutlined />} placeholder="Enter Email" />
-          </Form.Item>
+        <Form.Item
+          label={
+            <div className="w-full flex items-center justify-between gap-2">
+              <span>Password</span>
+              <Link
+                to="/forgot-password"
+                className="text-xs font-medium text-surge-500 hover:text-surge-600"
+              >
+                Forgot password?
+              </Link>
+            </div>
+          }
+          name="password"
+          className="[&_.ant-form-item-label]:w-full"
+          rules={[{ required: true, message: "Password is required" }]}
+        >
+          <Input.Password
+            size="large"
+            prefix={<LockOutlined className="text-slate-400" />}
+            placeholder="Enter Password"
+          />
+        </Form.Item>
 
-          <Form.Item
-            label="Password"
-            name="password"
-            rules={[
-              {
-                required: true,
-                message: "Password is required",
-              },
-            ]}
-          >
-            <Input.Password
-              prefix={<LockOutlined />}
-              placeholder="Enter Password"
-            />
-          </Form.Item>
-
-          <Button
-            type="primary"
-            htmlType="submit"
-            block
-            loading={isPending}
-            className="rounded-full"
-          >
-            Login
-          </Button>
-        </Form>
-
-        <Text className="block text-center mt-6 text-slate-600">
-          Don't have an account? <Link to="/signup">Sign up</Link>
-        </Text>
-      </Card>
-    </div>
+        <Button
+          type="primary"
+          htmlType="submit"
+          block
+          size="large"
+          loading={isPending}
+          icon={<LoginOutlined />}
+          className="rounded-xl mt-2 h-12"
+        >
+          Log in
+        </Button>
+        <Text className="block text-center mt-5 text-slate-600">
+        Don't have an account?{" "}
+        <Link to="/signup" className="font-semibold text-surge-500">
+          Sign up
+        </Link>
+      </Text>
+      </Form>
+    </AuthLayout>
   );
 };
 

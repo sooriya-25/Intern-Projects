@@ -1,4 +1,4 @@
-import { Button, Input, Spin, message, Modal } from "antd";
+import { Button, Input, Spin, Modal } from "antd";
 
 import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
 
@@ -15,9 +15,11 @@ import { useDeleteStock } from "../../hooks/useDeleteStock";
 import usePermission from "../../hooks/usePermission";
 
 import StockCard from "../../components/stock/StockCard";
+import { useToast } from "../../components/Toast/ToastProvider";
 
 const Stocks = () => {
   const navigate = useNavigate();
+  const toast = useToast();
 
   const [search, setSearch] = useState("");
 
@@ -59,11 +61,11 @@ const Stocks = () => {
     addWatchlist(stockId, {
       onSuccess: (response) => {
         setPendingAdds((p) => p.filter((id) => id !== stockId));
-        message.success(response.message);
+        toast.success(response.message);
       },
       onError: (error) => {
         setPendingAdds((p) => p.filter((id) => id !== stockId));
-        message.error(error.response?.data?.message || "Failed");
+        toast.error(error.response?.data?.message || "Failed");
       },
     });
   };
@@ -91,7 +93,7 @@ const Stocks = () => {
       onOk() {
         deleteStock(stock._id, {
           onSuccess: () => {
-            message.success("Stock deleted successfully");
+            toast.success("Stock deleted successfully");
           },
         });
       },

@@ -20,6 +20,7 @@ const AppError = require("../utils/appError");
 const env = require("../config/env");
 
 const SIGNUP_PURPOSE = "SIGNUP";
+const PASSWORD_RESET_PURPOSE = "PASSWORD_RESET";
 
 const sendSignupOtp = async ({ email }) => {
   const existingUser = await User.findOne({ email });
@@ -197,9 +198,119 @@ const login = async ({ email, password }) => {
   };
 };
 
+// Sends a password-reset OTP. Always resolves the same way whether or not
+// the email exists, so the endpoint can't be used to enumerate accounts.
+const forgotPassword = async ({ email }) => {
+  const expiresInMinutes = Math.round(OTP_TTL_MS / 60000);
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    // Don't reveal whether the account exists — just report success as if
+    // an email was sent.
+    return { email, expiresInMinutes };
+  }
+
+  const otp = generateOtp();
+  const otpHash = hashOtp(otp);
+  const expiresAt = new Date(Date.now() + OTP_TTL_MS);
+
+  await OtpVerification.findOneAndUpdate(
+    { email, purpose: PASSWORD_RESET_PURPOSE },
+    { otpHash, expiresAt, verified: false, attempts: 0 },
+    { upsert: true, new: true }
+  );
+
+  try {
+    const { subject, text, html } = await getRenderedTemplate(
+      "PASSWORD_RESET_OTP",
+      {
+        otp,
+        appName: env.SMTP_FROM_NAME,
+        minutes: String(expiresInMinutes),
+        year: String(new Date().getFullYear()),
+      }
+    );
+
+    await sendMail({ to: email, subject, text, html });
+  } catch (error) {
+    console.error(
+      `❌ Failed to send password reset email to ${email}:`,
+      error.message
+    );
+
+    throw new AppError(
+      "Failed to send reset email. Please try again.",
+      HTTP_STATUS.INTERNAL_SERVER_ERROR
+    );
+  }
+
+  return { email, expiresInMinutes };
+};
+
+const resetPassword = async ({ email, otp, password }) => {
+  const record = await OtpVerification.findOne({
+    email,
+    purpose: PASSWORD_RESET_PURPOSE,
+  });
+
+  if (!record) {
+    throw new AppError(
+      "No reset request found for this email. Please request a new code.",
+      HTTP_STATUS.BAD_REQUEST
+    );
+  }
+
+  if (record.expiresAt < new Date()) {
+    throw new AppError(
+      "Reset code has expired. Please request a new one.",
+      HTTP_STATUS.BAD_REQUEST
+    );
+  }
+
+  if (record.attempts >= MAX_ATTEMPTS) {
+    throw new AppError(
+      "Too many incorrect attempts. Please request a new code.",
+      HTTP_STATUS.BAD_REQUEST
+    );
+  }
+
+  if (hashOtp(otp) !== record.otpHash) {
+    record.attempts += 1;
+    await record.save();
+
+    throw new AppError("Invalid reset code", HTTP_STATUS.BAD_REQUEST);
+  }
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    // The OTP was valid but the account is gone — clean up and bail.
+    await OtpVerification.deleteOne({ _id: record._id });
+
+    throw new AppError("Account not found", HTTP_STATUS.BAD_REQUEST);
+  }
+
+  const isSamePassword = await comparePassword(password, user.password);
+  if (isSamePassword) {
+    throw new AppError(
+      "New password cannot be the same as your old password",
+      HTTP_STATUS.BAD_REQUEST
+    );
+  }
+
+  user.password = await hashPassword(password);
+  await user.save({ validateModifiedOnly: true });
+
+  await OtpVerification.deleteOne({ _id: record._id });
+
+  return { email };
+};
+
 module.exports = {
   sendSignupOtp,
   verifySignupOtp,
   register,
   login,
+  forgotPassword,
+  resetPassword,
 };

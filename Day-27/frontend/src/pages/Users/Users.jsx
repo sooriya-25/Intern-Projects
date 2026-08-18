@@ -6,7 +6,7 @@ import {
   Switch,
   Table,
   Tag,
-  message,
+
 } from "antd";
 
 import { UserOutlined } from "@ant-design/icons";
@@ -15,8 +15,10 @@ import { useUsers } from "../../hooks/useUsers";
 import { useUpdateUserStatus } from "../../hooks/useUpdateUserStatus";
 import { useUpdateUserRole } from "../../hooks/useUpdateUserRole";
 import { useRoles } from "../../hooks/useRoles";
+import { useToast } from "../../components/Toast/ToastProvider";
 
 const Users = () => {
+  const toast = useToast();
   const { data, isLoading } = useUsers();
 
   const { data: roles } = useRoles();
@@ -35,11 +37,11 @@ const Users = () => {
       },
       {
         onSuccess: (response) => {
-          message.success(response.message);
+          toast.success(response.message);
         },
 
         onError: (error) => {
-          message.error(
+          toast.error(
             error.response?.data?.message ||
               "Failed"
           );
@@ -53,10 +55,10 @@ const Users = () => {
       { id: user._id, role: roleId },
       {
         onSuccess: (response) => {
-          message.success(response.message);
+          toast.success(response.message);
         },
         onError: (error) => {
-          message.error(error.response?.data?.message || "Failed");
+          toast.error(error.response?.data?.message || "Failed");
         },
       }
     );

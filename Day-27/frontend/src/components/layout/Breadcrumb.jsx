@@ -4,13 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 
 
 const LABELS = {
-  "/dashboard/stocks": "Stocks",
-  "/dashboard/stocks/add": "Add Stock",
-  "/dashboard/watchlist": "Watchlist",
-  "/dashboard/todos": "Todo",
-  "/dashboard/users": "Users",
-  "/dashboard/roles": "Roles",
-  "/dashboard/profile": "Profile",
+
 };
 
 const toLabel = (segment) =>

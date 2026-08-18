@@ -1,4 +1,4 @@
-import { Button, Space, Spin, Table, Tag, Modal, message } from "antd";
+import { Button, Space, Spin, Table, Tag, Modal } from "antd";
 
 import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
@@ -12,6 +12,7 @@ import { useDeleteTodo } from "../../hooks/useDeleteTodo";
 import usePermission from "../../hooks/usePermission";
 
 import TodoModal from "../../components/todo/TodoModal";
+import { useToast } from "../../components/Toast/ToastProvider";
 
 const statusColor = {
   PENDING: "default",
@@ -20,6 +21,7 @@ const statusColor = {
 };
 
 const Todo = () => {
+  const toast = useToast();
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedTodo, setSelectedTodo] = useState(null);
 
@@ -51,11 +53,11 @@ const Todo = () => {
         { id: selectedTodo._id, data: values },
         {
           onSuccess: (response) => {
-            message.success(response.message);
+            toast.success(response.message);
             setModalOpen(false);
           },
           onError: (error) => {
-            message.error(error.response?.data?.message || "Failed");
+            toast.error(error.response?.data?.message || "Failed");
           },
         }
       );
@@ -64,11 +66,11 @@ const Todo = () => {
 
     createTodo(values, {
       onSuccess: (response) => {
-        message.success(response.message);
+        toast.success(response.message);
         setModalOpen(false);
       },
       onError: (error) => {
-        message.error(error.response?.data?.message || "Failed");
+        toast.error(error.response?.data?.message || "Failed");
       },
     });
   };
@@ -82,10 +84,10 @@ const Todo = () => {
       onOk() {
         deleteTodo(todo._id, {
           onSuccess: (response) => {
-            message.success(response.message);
+            toast.success(response.message);
           },
           onError: (error) => {
-            message.error(error.response?.data?.message || "Failed");
+            toast.error(error.response?.data?.message || "Failed");
           },
         });
       },

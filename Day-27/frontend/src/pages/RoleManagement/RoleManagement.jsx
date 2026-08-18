@@ -1,4 +1,4 @@
-import { Button, Modal, Spin, message } from "antd";
+import { Button, Modal, Spin } from "antd";
 
 import { PlusOutlined } from "@ant-design/icons";
 
@@ -11,8 +11,10 @@ import { useDeleteRole } from "../../hooks/useDeleteRole";
 
 import RoleTable from "../../components/roles/RoleTable";
 import RoleModal from "../../components/roles/RoleModal";
+import { useToast } from "../../components/Toast/ToastProvider";
 
 const RoleManagement = () => {
+  const toast = useToast();
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedRole, setSelectedRole] = useState(null);
 
@@ -38,11 +40,11 @@ const RoleManagement = () => {
         { id: selectedRole._id, data: values },
         {
           onSuccess: (response) => {
-            message.success(response.message);
+            toast.success(response.message);
             setModalOpen(false);
           },
           onError: (error) => {
-            message.error(error.response?.data?.message || "Failed");
+            toast.error(error.response?.data?.message || "Failed");
           },
         }
       );
@@ -51,11 +53,11 @@ const RoleManagement = () => {
 
     createRole(values, {
       onSuccess: (response) => {
-        message.success(response.message);
+        toast.success(response.message);
         setModalOpen(false);
       },
       onError: (error) => {
-        message.error(error.response?.data?.message || "Failed");
+        toast.error(error.response?.data?.message || "Failed");
       },
     });
   };
@@ -69,10 +71,10 @@ const RoleManagement = () => {
       onOk() {
         deleteRole(role._id, {
           onSuccess: (response) => {
-            message.success(response.message);
+            toast.success(response.message);
           },
           onError: (error) => {
-            message.error(error.response?.data?.message || "Failed");
+            toast.error(error.response?.data?.message || "Failed");
           },
         });
       },
