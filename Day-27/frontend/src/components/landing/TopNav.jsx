@@ -85,7 +85,7 @@ const TopNav = () => {
               <Button
                 type="primary"
                 className="!rounded-full !h-[42px] !px-6 !bg-surge-500 !border-surge-500 hover:!bg-surge-600 shadow-glow-blue"
-                onClick={() => navigate("/login")}
+                onClick={() => navigate("/signup")}
               >
                 Sign Up
               </Button>

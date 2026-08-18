@@ -15,8 +15,19 @@ describe('auth.validators', () => {
     ]));
   });
 
+  test('registerValidator - password must include uppercase, number, and special character', async () => {
+    const req = { body: { name: 'Alice', email: 'alice@example.com', password: 'secret123' } };
+    await Promise.all(registerValidator.map(v => v.run(req)));
+    const errors = validationResult(req);
+    expect(errors.isEmpty()).toBe(false);
+    const msgs = errors.array().map(e => e.msg);
+    expect(msgs).toEqual(expect.arrayContaining([
+      'Password must contain at least one uppercase letter, one number, and one special character',
+    ]));
+  });
+
   test('registerValidator - valid input has no errors', async () => {
-    const req = { body: { name: 'Alice', email: 'alice@example.com', password: 'secret6' } };
+    const req = { body: { name: 'Alice', email: 'alice@example.com', password: 'Secret@123' } };
     await Promise.all(registerValidator.map(v => v.run(req)));
     const errors = validationResult(req);
     expect(errors.isEmpty()).toBe(true);

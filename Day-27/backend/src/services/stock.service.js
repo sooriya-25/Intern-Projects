@@ -1,8 +1,34 @@
 const Stock = require("../models/Stock");
 const getPagination = require("../utils/pagination");
+const HTTP_STATUS = require("../constants/httpStatus");
+const AppError = require("../utils/appError");
 
 const createStock = async (stockData) => {
-  return await Stock.create(stockData);
+  try {
+    const symbol = stockData?.symbol?.trim()?.toUpperCase();
+    const normalizedStockData = {
+      ...stockData,
+      ...(symbol ? { symbol } : {}),
+    };
+
+    const existingStockSymbol = await Stock.findOne({ symbol: symbol || undefined });
+    if (symbol && existingStockSymbol) {
+      throw new AppError(
+        "Stock with this symbol already exists",
+        HTTP_STATUS.CONFLICT
+      );
+    }
+
+    return await Stock.create(normalizedStockData);
+  } catch (error) {
+    if (error instanceof AppError) {
+      throw error;
+    }
+    throw new AppError(
+      "Failed to create stock",
+      HTTP_STATUS.INTERNAL_SERVER_ERROR
+    );
+  }
 };
 
 const getStocks = async ({

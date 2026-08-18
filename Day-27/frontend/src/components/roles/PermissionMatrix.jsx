@@ -14,7 +14,7 @@ const PermissionMatrix = ({ value = [], onChange }) => {
 
   const setRow = (moduleKey, nextRow) => {
     const next = MODULES.map((module) =>
-      module.key === moduleKey ? nextRow : getRow(module.key)
+      module.key === moduleKey ? nextRow : getRow(module.key),
     );
 
     onChange(next);
@@ -49,25 +49,17 @@ const PermissionMatrix = ({ value = [], onChange }) => {
 
   const columns = [
     {
-      title: (
-        <span className="font-semibold text-slate-700">
-          Module
-        </span>
-      ),
+      title: <span className="font-semibold text-slate-700">Module</span>,
       dataIndex: "label",
       width: 180,
       render: (label) => (
-        <span className="font-medium text-slate-800">
-          {label}
-        </span>
+        <span className="font-medium text-slate-800">{label}</span>
       ),
     },
 
     ...ACTIONS.map((action) => ({
       title: (
-        <span className="font-semibold text-slate-700">
-          {action.label}
-        </span>
+        <span className="font-semibold text-slate-700">{action.label}</span>
       ),
       key: action.key,
       align: "center",
@@ -79,11 +71,7 @@ const PermissionMatrix = ({ value = [], onChange }) => {
           <Checkbox
             checked={Boolean(row[action.key])}
             onChange={(e) =>
-              handleToggle(
-                module.key,
-                action.key,
-                e.target.checked
-              )
+              handleToggle(module.key, action.key, e.target.checked)
             }
           />
         );
@@ -91,26 +79,21 @@ const PermissionMatrix = ({ value = [], onChange }) => {
     })),
 
     {
-      title: (
-        <span className="font-semibold text-blue-700">
-          All
-        </span>
-      ),
+      title: <span className="font-semibold text-blue-700">All</span>,
       key: "all",
       align: "center",
 
       render: (_, module) => {
         const row = getRow(module.key);
 
-        const checked =
-          row.view &&
-          row.add &&
-          row.edit &&
-          row.delete;
+        const checked = row.view && row.add && row.edit && row.delete;
+
+        const indeterminate = row.view || row.add || row.edit || row.delete;
 
         return (
           <Checkbox
             checked={checked}
+            indeterminate={indeterminate && !checked}
             onChange={(e) => {
               const checked = e.target.checked;
 

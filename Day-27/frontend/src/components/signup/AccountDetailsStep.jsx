@@ -12,6 +12,15 @@ import { Link } from "react-router-dom";
 
 const { Text } = Typography;
 
+const passwordRules = [
+  { required: true, message: "Password is required" },
+  { min: 6, message: "Password should be at least 6 characters" },
+  {
+    pattern: /^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{6,}$/,
+    message:
+      "Password must contain at least one uppercase letter, one number, and one special character",
+  },
+];
 
 const AccountDetailsStep = ({ form, initialValues, loading, onFinish }) => (
   <Form
@@ -90,10 +99,7 @@ const AccountDetailsStep = ({ form, initialValues, loading, onFinish }) => (
       <Form.Item
         label="Password"
         name="password"
-        rules={[
-          { required: true, message: "Password is required" },
-          { min: 6, message: "At least 6 characters" },
-        ]}
+        rules={passwordRules}
         hasFeedback
       >
         <Input.Password

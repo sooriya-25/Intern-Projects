@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Card, Collapse, Progress } from "antd";
 import {
   CheckCircleFilled,
@@ -44,9 +44,19 @@ const UploadItem = ({ upload }) => {
 const FloatingWidget = () => {
   const { uploads, expanded, visible, toggleWidget, cancelWidget } = useFloatingWidget();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [shouldRender, setShouldRender] = useState(false);
   const [isEntering, setIsEntering] = useState(false);
+
+  const authRoutes = ["/login", "/signup", "/forgot-password"];
+  const isAuthRoute = authRoutes.includes(location.pathname);
+
+  useEffect(() => {
+    if (isAuthRoute) {
+      cancelWidget();
+    }
+  }, [isAuthRoute, cancelWidget]);
 
   const lastUploadsRef = useRef(uploads);
   if (uploads.length > 0) {
@@ -54,6 +64,12 @@ const FloatingWidget = () => {
   }
 
   useEffect(() => {
+    if (isAuthRoute) {
+      setShouldRender(false);
+      setIsEntering(false);
+      return;
+    }
+
     if (visible) {
       setShouldRender(true);
       const frame = requestAnimationFrame(() => setIsEntering(true));
@@ -63,9 +79,9 @@ const FloatingWidget = () => {
     setIsEntering(false);
     const timeout = setTimeout(() => setShouldRender(false), 250);
     return () => clearTimeout(timeout);
-  }, [visible]);
+  }, [isAuthRoute, visible]);
 
-  if (!shouldRender) return null;
+  if (isAuthRoute || !shouldRender) return null;
 
   const displayUploads = uploads.length > 0 ? uploads : lastUploadsRef.current;
   const activeCount = displayUploads.filter(

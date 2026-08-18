@@ -11,6 +11,7 @@ const {
   verifyOtpValidator,
   registerValidator,
   loginValidator,
+  verifyLoginOtpValidator,
   forgotPasswordValidator,
   verifyResetOtpValidator,
   resetPasswordValidator,
@@ -20,6 +21,12 @@ const loginLimiter = createRateLimiter({
   windowMs: 15 * 60 * 1000,
   max: 100,
   message: "Too many login attempts, please try again later.",
+});
+
+const loginOtpLimiter = createRateLimiter({
+  windowMs: 3 * 60 * 1000,
+  max: 5,
+  message: "Too many attempts, please try again later.",
 });
 
 const otpLimiter = createRateLimiter({
@@ -81,6 +88,14 @@ router.post(
   loginValidator,
   validate,
   authController.login
+);
+
+router.post(
+  "/verify-login-otp",
+  loginOtpLimiter,
+  verifyLoginOtpValidator,
+  validate,
+  authController.verifyLoginOtp
 );
 
 router.post(

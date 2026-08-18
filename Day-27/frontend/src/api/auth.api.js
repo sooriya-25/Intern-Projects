@@ -15,6 +15,11 @@ export const verifyOtp = async (data) => {
   return response.data;
 };
 
+export const verifyLoginOtp = async (data) => {
+  const response = await api.post("/auth/verify-login-otp", data);
+  return response.data;
+};
+
 export const register = async (data) => {
   const response = await api.post("/auth/register", data);
   return response.data;

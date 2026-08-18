@@ -76,11 +76,11 @@ const Header = ({ collapsed, onToggle }) => {
 
       <div className="flex items-center gap-4">
 
-        <Button
+        {/* <Button
           shape="circle"
           className="bg-slate-100 border-slate-200 text-slate-600"
           icon={<BellOutlined />}
-        />
+        /> */}
 
         {/* <Button
           shape="circle"

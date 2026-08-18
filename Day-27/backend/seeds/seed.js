@@ -5,8 +5,10 @@ const mongoose = require("mongoose");
 const connectDB = require("../src/config/db");
 
 const User = require("../src/models/User");
+const Role = require("../src/models/Role");
 const Stock = require("../src/models/Stock");
 
+const roles = require("./roles");
 const users = require("./users");
 const stocks = require("./stocks");
 
@@ -17,7 +19,12 @@ const seedDatabase = async () => {
     console.log("Clearing database...");
 
     await User.deleteMany();
+    await Role.deleteMany();
     await Stock.deleteMany();
+
+    console.log("Seeding roles...");
+
+    await Role.insertMany(roles);
 
     console.log("Seeding users...");
 

@@ -121,11 +121,30 @@ const resetPasswordValidator = [
     .withMessage("Password should be at least 6 characters"),
 ];
 
+const verifyLoginOtpValidator = [
+  body("email")
+    .trim()
+    .notEmpty()
+    .withMessage("Email is required")
+    .isEmail()
+    .withMessage("Please enter a valid email"),
+
+  body("otp")
+    .trim()
+    .notEmpty()
+    .withMessage("Code is required")
+    .isLength({ min: 6, max: 6 })
+    .withMessage("Code must be 6 digits")
+    .isNumeric()
+    .withMessage("Code must contain only numbers"),
+];
+
 module.exports = {
   sendOtpValidator,
   verifyOtpValidator,
   registerValidator,
   loginValidator,
+  verifyLoginOtpValidator,
   forgotPasswordValidator,
   verifyResetOtpValidator,
   resetPasswordValidator,

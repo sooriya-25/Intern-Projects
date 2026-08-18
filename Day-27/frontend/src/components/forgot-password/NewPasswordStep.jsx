@@ -3,6 +3,16 @@ import { LockOutlined } from "@ant-design/icons";
 
 const { Text } = Typography;
 
+const passwordRules = [
+  { required: true, message: "Password is required" },
+  { min: 6, message: "Password should be at least 6 characters" },
+  {
+    pattern: /^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{6,}$/,
+    message:
+      "Password must contain at least one uppercase letter, one number, and one special character",
+  },
+];
+
 const NewPasswordStep = ({ form, email, loading, onFinish, onBack }) => (
   <Form layout="vertical" form={form} onFinish={onFinish} requiredMark={false}>
     <Text type="secondary" className="block mb-4">
@@ -12,10 +22,7 @@ const NewPasswordStep = ({ form, email, loading, onFinish, onBack }) => (
     <Form.Item
       label="New Password"
       name="password"
-      rules={[
-        { required: true, message: "Password is required" },
-        { min: 6, message: "At least 6 characters" },
-      ]}
+      rules={passwordRules}
       hasFeedback
     >
       <Input.Password

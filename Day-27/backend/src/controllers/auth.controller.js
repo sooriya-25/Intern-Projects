@@ -44,7 +44,21 @@ const register = async (req, res, next) => {
 
 const login = async (req, res, next) => {
   try {
-    const data = await authService.login(req.body);
+    const data = await authService.loginWithPassword(req.body);
+
+    res.status(200).json({
+      success: true,
+      message: "Password verified. Enter the code sent to your email to finish logging in.",
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const verifyLoginOtp = async (req, res, next) => {
+  try {
+    const data = await authService.verifyLoginOtp(req.body);
 
     res.status(200).json({
       success: true,
@@ -103,6 +117,7 @@ module.exports = {
   verifyOtp,
   register,
   login,
+  verifyLoginOtp,
   forgotPassword,
   verifyResetOtp,
   resetPassword,

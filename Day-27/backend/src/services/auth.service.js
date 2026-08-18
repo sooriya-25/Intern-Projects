@@ -21,6 +21,7 @@ const env = require("../config/env");
 
 const SIGNUP_PURPOSE = "SIGNUP";
 const PASSWORD_RESET_PURPOSE = "PASSWORD_RESET";
+const LOGIN_PURPOSE = "LOGIN";
 
 const sendSignupOtp = async ({ email }) => {
   const existingUser = await User.findOne({ email });
@@ -158,28 +159,118 @@ const register = async ({
   };
 };
 
-const login = async ({ email, password }) => {
-  const user = await User.findOne({ email }).populate("role");
+// Step 1 of login: verify credentials only. On success, sends an OTP to
+// the user's email and returns no token yet — the token is only issued
+// once verifyLoginOtp() below succeeds. This means correct email+password
+// alone is never enough to log in.
+const loginWithPassword = async ({ email, password }) => {
+  const user = await User.findOne({ email });
 
   if (!user) {
     throw new AppError("Invalid email or password", HTTP_STATUS.UNAUTHORIZED);
   }
 
-  const isPasswordCorrect = await comparePassword(
-    password,
-    user.password
-  );
+  const isPasswordCorrect = await comparePassword(password, user.password);
 
   if (!isPasswordCorrect) {
     throw new AppError("Invalid email or password", HTTP_STATUS.UNAUTHORIZED);
   }
 
   if (user.status === STATUS.INACTIVE) {
-    throw new AppError("Your account has been deactivated", HTTP_STATUS.FORBIDDEN);
+    throw new AppError(
+      "Your account has been deactivated",
+      HTTP_STATUS.FORBIDDEN
+    );
   }
 
-  user.lastLogin = new Date();
+  const otp = generateOtp();
+  const otpHash = hashOtp(otp);
+  const expiresAt = new Date(Date.now() + OTP_TTL_MS);
 
+  await OtpVerification.findOneAndUpdate(
+    { email, purpose: LOGIN_PURPOSE },
+    { otpHash, expiresAt, verified: false, attempts: 0 },
+    { upsert: true, new: true }
+  );
+
+  try {
+    const { subject, text, html } = await getRenderedTemplate("LOGIN_OTP", {
+      otp,
+      appName: env.SMTP_FROM_NAME,
+      minutes: String(Math.round(OTP_TTL_MS / 60000)),
+      year: String(new Date().getFullYear()),
+    });
+
+    await sendMail({ to: email, subject, text, html });
+  } catch (error) {
+    console.error(`❌ Failed to send login OTP email to ${email}:`, error.message);
+
+    throw new AppError(
+      "Failed to send verification email. Please try again.",
+      HTTP_STATUS.INTERNAL_SERVER_ERROR
+    );
+  }
+
+  return { email, expiresInMinutes: Math.round(OTP_TTL_MS / 60000) };
+};
+
+// Step 2 of login: verify the OTP and, only then, issue the auth token.
+const verifyLoginOtp = async ({ email, otp }) => {
+  const record = await OtpVerification.findOne({
+    email,
+    purpose: LOGIN_PURPOSE,
+  });
+
+  if (!record) {
+    throw new AppError(
+      "No login request found for this email. Please log in again.",
+      HTTP_STATUS.BAD_REQUEST
+    );
+  }
+
+  if (record.expiresAt < new Date()) {
+    throw new AppError(
+      "Code has expired. Please log in again to get a new one.",
+      HTTP_STATUS.BAD_REQUEST
+    );
+  }
+
+  if (record.attempts >= MAX_ATTEMPTS) {
+    throw new AppError(
+      "Too many incorrect attempts. Please log in again to get a new code.",
+      HTTP_STATUS.BAD_REQUEST
+    );
+  }
+
+  if (hashOtp(otp) !== record.otpHash) {
+    record.attempts += 1;
+    await record.save();
+
+    throw new AppError("Invalid code", HTTP_STATUS.BAD_REQUEST);
+  }
+
+  // Re-check the user in case anything changed (e.g. deactivated) between
+  // step 1 and step 2.
+  const user = await User.findOne({ email }).populate("role");
+
+  if (!user) {
+    await OtpVerification.deleteOne({ _id: record._id });
+
+    throw new AppError("Invalid email or password", HTTP_STATUS.UNAUTHORIZED);
+  }
+
+  if (user.status === STATUS.INACTIVE) {
+    await OtpVerification.deleteOne({ _id: record._id });
+
+    throw new AppError(
+      "Your account has been deactivated",
+      HTTP_STATUS.FORBIDDEN
+    );
+  }
+
+  await OtpVerification.deleteOne({ _id: record._id });
+
+  user.lastLogin = new Date();
   await user.save({ validateModifiedOnly: true });
 
   const token = generateToken({
@@ -198,7 +289,15 @@ const login = async ({ email, password }) => {
   };
 };
 
-
+// Sends a password-reset OTP, but only to emails that belong to an existing
+// user account.
+//
+// NOTE: this intentionally trades away the "don't reveal whether an account
+// exists" protection (a 404 here confirms/denies an email is registered,
+// i.e. account/user enumeration) in favor of not sending OTP mail to
+// unregistered addresses. If that trade-off isn't acceptable, keep this
+// check but return the same generic success response for both branches
+// instead of throwing.
 const forgotPassword = async ({ email }) => {
   const expiresInMinutes = Math.round(OTP_TTL_MS / 60000);
   const user = await User.findOne({ email });
@@ -247,6 +346,10 @@ const forgotPassword = async ({ email }) => {
   return { email, expiresInMinutes };
 };
 
+// Step 1 of the reset flow: verify the OTP on its own, without a new
+// password. Mirrors verifySignupOtp — on success the record is flagged
+// `verified` and its TTL is extended so the user has a window to submit
+// the new password via resetPassword() below.
 const verifyResetOtp = async ({ email, otp }) => {
   const record = await OtpVerification.findOne({
     email,
@@ -288,6 +391,9 @@ const verifyResetOtp = async ({ email, otp }) => {
   return { email, verified: true };
 };
 
+// Step 2 of the reset flow: set the new password. Requires the OTP to have
+// already been verified via verifyResetOtp() above (no otp is accepted
+// here anymore).
 const resetPassword = async ({ email, password }) => {
   const record = await OtpVerification.findOne({
     email,
@@ -337,7 +443,8 @@ module.exports = {
   sendSignupOtp,
   verifySignupOtp,
   register,
-  login,
+  loginWithPassword,
+  verifyLoginOtp,
   forgotPassword,
   verifyResetOtp,
   resetPassword,
