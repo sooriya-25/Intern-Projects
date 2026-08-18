@@ -5,6 +5,7 @@ import { Form, Typography } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 
 import { useForgotPassword } from "../../hooks/useForgotPassword";
+import { useVerifyResetOtp } from "../../hooks/useVerifyResetOtp";
 import { useResetPassword } from "../../hooks/useResetPassword";
 import { useResendCooldown } from "../../hooks/useResendCooldown";
 import { useCountdown } from "../../hooks/useCountdown";
@@ -16,7 +17,8 @@ import {
 } from "../../constants/otp";
 
 import RequestResetStep from "../../components/forgot-password/RequestResetStep";
-import ResetPasswordStep from "../../components/forgot-password/ResetPasswordStep";
+import VerifyResetOtpStep from "../../components/forgot-password/VerifyResetOtpStep";
+import NewPasswordStep from "../../components/forgot-password/NewPasswordStep";
 import AuthLayout from "../../components/auth/AuthLayout";
 
 const { Text } = Typography;
@@ -28,7 +30,11 @@ const STEP_COPY = [
   },
   {
     title: "Enter the code",
-    subtitle: "Verify the code and choose a new password.",
+    subtitle: "Verify the code sent to your email.",
+  },
+  {
+    title: "Choose a new password",
+    subtitle: "Your code is verified. Set a new password to finish up.",
   },
 ];
 
@@ -37,7 +43,8 @@ const ForgotPassword = () => {
   const toast = useToast();
 
   const [requestForm] = Form.useForm();
-  const [resetForm] = Form.useForm();
+  const [otpForm] = Form.useForm();
+  const [passwordForm] = Form.useForm();
 
   const [currentStep, setCurrentStep] = useState(0);
   const [email, setEmail] = useState("");
@@ -49,7 +56,10 @@ const ForgotPassword = () => {
 
   const { mutate: sendResetOtp, isPending: isSendingOtp } =
     useForgotPassword();
-  const { mutate: submitReset, isPending: isResetting } = useResetPassword();
+  const { mutate: verifyOtp, isPending: isVerifyingOtp } =
+    useVerifyResetOtp();
+  const { mutate: submitNewPassword, isPending: isResetting } =
+    useResetPassword();
 
   const requestReset = (targetEmail) => {
     sendResetOtp(
@@ -88,9 +98,30 @@ const ForgotPassword = () => {
     requestReset(email);
   };
 
-  const handleResetSubmit = ({ otp, password }) => {
-    submitReset(
-      { email, otp, password },
+  const handleVerifyOtpSubmit = ({ otp }) => {
+    verifyOtp(
+      { email, otp },
+      {
+        onSuccess: (response) => {
+          toast.success(response.message || "Code verified successfully");
+
+          otpForm.resetFields();
+          resetExpiry.clear();
+
+          setCurrentStep(2);
+        },
+        onError: (error) => {
+          toast.error(
+            error.response?.data?.message || "Failed to verify code",
+          );
+        },
+      },
+    );
+  };
+
+  const handleNewPasswordSubmit = ({ password }) => {
+    submitNewPassword(
+      { email, password },
       {
         onSuccess: (response) => {
           toast.success(
@@ -110,7 +141,8 @@ const ForgotPassword = () => {
   };
 
   const goBack = () => {
-    resetForm.resetFields();
+    otpForm.resetFields();
+    passwordForm.resetFields();
     resetExpiry.clear();
 
     setCurrentStep(0);
@@ -142,17 +174,27 @@ const ForgotPassword = () => {
       )}
 
       {currentStep === 1 && (
-        <ResetPasswordStep
-          form={resetForm}
+        <VerifyResetOtpStep
+          form={otpForm}
           email={email}
-          loading={isResetting}
-          onFinish={handleResetSubmit}
+          loading={isVerifyingOtp}
+          onFinish={handleVerifyOtpSubmit}
           resendCooldown={resendCooldown}
           resendLoading={isSendingOtp}
           onResend={handleResend}
           onBack={goBack}
           expiryLabel={resetExpiry.label}
           isExpired={resetExpiry.isExpired}
+        />
+      )}
+
+      {currentStep === 2 && (
+        <NewPasswordStep
+          form={passwordForm}
+          email={email}
+          loading={isResetting}
+          onFinish={handleNewPasswordSubmit}
+          onBack={goBack}
         />
       )}
     </AuthLayout>

@@ -1,13 +1,12 @@
 import { Button, Form, Input, Typography } from "antd";
 import {
   ClockCircleOutlined,
-  LockOutlined,
   SafetyCertificateOutlined,
 } from "@ant-design/icons";
 
 const { Text } = Typography;
 
-const ResetPasswordStep = ({
+const VerifyResetOtpStep = ({
   form,
   email,
   loading,
@@ -21,8 +20,7 @@ const ResetPasswordStep = ({
 }) => (
   <Form layout="vertical" form={form} onFinish={onFinish} requiredMark={false}>
     <Text type="secondary" className="block mb-1">
-      Enter the code sent to <strong>{email}</strong> and choose a new
-      password.
+      Enter the code sent to <strong>{email}</strong> to continue.
     </Text>
 
     {expiryLabel && (
@@ -59,49 +57,6 @@ const ResetPasswordStep = ({
       />
     </Form.Item>
 
-    <Form.Item
-      label="New Password"
-      name="password"
-      rules={[
-        { required: true, message: "Password is required" },
-        { min: 6, message: "At least 6 characters" },
-      ]}
-      hasFeedback
-    >
-      <Input.Password
-        size="large"
-        prefix={<LockOutlined className="text-slate-400" />}
-        placeholder="Create a new password"
-        disabled={isExpired}
-      />
-    </Form.Item>
-
-    <Form.Item
-      label="Confirm New Password"
-      name="confirmPassword"
-      dependencies={["password"]}
-      hasFeedback
-      rules={[
-        { required: true, message: "Please confirm your new password" },
-        ({ getFieldValue }) => ({
-          validator(_, value) {
-            if (!value || getFieldValue("password") === value) {
-              return Promise.resolve();
-            }
-
-            return Promise.reject(new Error("Passwords do not match"));
-          },
-        }),
-      ]}
-    >
-      <Input.Password
-        size="large"
-        prefix={<LockOutlined className="text-slate-400" />}
-        placeholder="Re-enter new password"
-        disabled={isExpired}
-      />
-    </Form.Item>
-
     <Button
       type="primary"
       htmlType="submit"
@@ -111,7 +66,7 @@ const ResetPasswordStep = ({
       disabled={isExpired}
       className="rounded-xl mt-2 h-12"
     >
-      Reset Password
+      Verify Code
     </Button>
 
     <div className="flex items-center justify-between mt-4">
@@ -134,4 +89,4 @@ const ResetPasswordStep = ({
   </Form>
 );
 
-export default ResetPasswordStep;
+export default VerifyResetOtpStep;

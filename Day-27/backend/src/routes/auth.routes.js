@@ -12,6 +12,7 @@ const {
   registerValidator,
   loginValidator,
   forgotPasswordValidator,
+  verifyResetOtpValidator,
   resetPasswordValidator,
 } = require("../validators/auth.validator");
 
@@ -37,6 +38,12 @@ const forgotPasswordLimiter = createRateLimiter({
   windowMs: 10 * 60 * 1000,
   max: 5,
   message: "Too many password reset requests, please try again later.",
+});
+
+const verifyResetOtpLimiter = createRateLimiter({
+  windowMs: 3 * 60 * 1000,
+  max: 5,
+  message: "Too many attempts, please try again later.",
 });
 
 const resetPasswordLimiter = createRateLimiter({
@@ -82,6 +89,14 @@ router.post(
   forgotPasswordValidator,
   validate,
   authController.forgotPassword
+);
+
+router.post(
+  "/verify-reset-otp",
+  verifyResetOtpLimiter,
+  verifyResetOtpValidator,
+  validate,
+  authController.verifyResetOtp
 );
 
 router.post(

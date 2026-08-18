@@ -198,16 +198,16 @@ const login = async ({ email, password }) => {
   };
 };
 
-// Sends a password-reset OTP. Always resolves the same way whether or not
-// the email exists, so the endpoint can't be used to enumerate accounts.
+
 const forgotPassword = async ({ email }) => {
   const expiresInMinutes = Math.round(OTP_TTL_MS / 60000);
   const user = await User.findOne({ email });
 
   if (!user) {
-    // Don't reveal whether the account exists — just report success as if
-    // an email was sent.
-    return { email, expiresInMinutes };
+    throw new AppError(
+      "No account found with this email address",
+      HTTP_STATUS.NOT_FOUND
+    );
   }
 
   const otp = generateOtp();
@@ -247,7 +247,7 @@ const forgotPassword = async ({ email }) => {
   return { email, expiresInMinutes };
 };
 
-const resetPassword = async ({ email, otp, password }) => {
+const verifyResetOtp = async ({ email, otp }) => {
   const record = await OtpVerification.findOne({
     email,
     purpose: PASSWORD_RESET_PURPOSE,
@@ -281,6 +281,33 @@ const resetPassword = async ({ email, otp, password }) => {
     throw new AppError("Invalid reset code", HTTP_STATUS.BAD_REQUEST);
   }
 
+  record.verified = true;
+  record.expiresAt = new Date(Date.now() + VERIFIED_TTL_MS);
+  await record.save();
+
+  return { email, verified: true };
+};
+
+const resetPassword = async ({ email, password }) => {
+  const record = await OtpVerification.findOne({
+    email,
+    purpose: PASSWORD_RESET_PURPOSE,
+  });
+
+  if (!record || !record.verified) {
+    throw new AppError(
+      "Please verify your reset code before setting a new password.",
+      HTTP_STATUS.BAD_REQUEST
+    );
+  }
+
+  if (record.expiresAt < new Date()) {
+    throw new AppError(
+      "Your verification has expired. Please request a new code.",
+      HTTP_STATUS.BAD_REQUEST
+    );
+  }
+
   const user = await User.findOne({ email });
 
   if (!user) {
@@ -312,5 +339,6 @@ module.exports = {
   register,
   login,
   forgotPassword,
+  verifyResetOtp,
   resetPassword,
 };

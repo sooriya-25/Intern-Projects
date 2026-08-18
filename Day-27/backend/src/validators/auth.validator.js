@@ -88,7 +88,7 @@ const forgotPasswordValidator = [
     .withMessage("Please enter a valid email"),
 ];
 
-const resetPasswordValidator = [
+const verifyResetOtpValidator = [
   body("email")
     .trim()
     .notEmpty()
@@ -104,6 +104,15 @@ const resetPasswordValidator = [
     .withMessage("Reset code must be 6 digits")
     .isNumeric()
     .withMessage("Reset code must contain only numbers"),
+];
+
+const resetPasswordValidator = [
+  body("email")
+    .trim()
+    .notEmpty()
+    .withMessage("Email is required")
+    .isEmail()
+    .withMessage("Please enter a valid email"),
 
   body("password")
     .notEmpty()
@@ -118,5 +127,6 @@ module.exports = {
   registerValidator,
   loginValidator,
   forgotPasswordValidator,
+  verifyResetOtpValidator,
   resetPasswordValidator,
 };

@@ -139,12 +139,13 @@ const Signup = () => {
       subtitle={subtitle}
       panelWidthClassName={currentStep === 0 ? "max-w-xl" : "max-w-md"}
     >
-      <Steps
-        size="small"
-        current={currentStep}
-        className="mb-5"
-        items={STEP_COPY.map((step) => ({ title: step.title }))}
-      />
+      <div className="max-w-sm mx-auto mb-10 mt-8">
+        <Steps
+          size="small"
+          current={currentStep}
+          items={STEP_COPY.map((step) => ({ title: step.title }))}
+        />
+      </div>
 
       {currentStep === 0 && (
         <AccountDetailsStep

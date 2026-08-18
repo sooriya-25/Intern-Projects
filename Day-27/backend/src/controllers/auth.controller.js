@@ -62,7 +62,21 @@ const forgotPassword = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      message: "If that email exists, a reset code has been sent",
+      message: "Reset code has been sent to your email",
+      data,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const verifyResetOtp = async (req, res, next) => {
+  try {
+    const data = await authService.verifyResetOtp(req.body);
+
+    res.status(200).json({
+      success: true,
+      message: "Code verified successfully",
       data,
     });
   } catch (error) {
@@ -90,5 +104,6 @@ module.exports = {
   register,
   login,
   forgotPassword,
+  verifyResetOtp,
   resetPassword,
 };
