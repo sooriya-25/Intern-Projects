@@ -1,15 +1,21 @@
 import { Button, Form, Input, Typography } from "antd";
 import { LockOutlined } from "@ant-design/icons";
 
+import PasswordInput from "../common/PasswordInput";
+import { isPasswordValid } from "../../constants/password";
+
 const { Text } = Typography;
 
 const passwordRules = [
   { required: true, message: "Password is required" },
-  { min: 6, message: "Password should be at least 6 characters" },
   {
-    pattern: /^(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{6,}$/,
-    message:
-      "Password must contain at least one uppercase letter, one number, and one special character",
+    validator: (_, value) => {
+      if (!value || isPasswordValid(value)) {
+        return Promise.resolve();
+      }
+
+      return Promise.reject(new Error("Password does not meet all the requirements"));
+    },
   },
 ];
 
@@ -25,12 +31,7 @@ const NewPasswordStep = ({ form, email, loading, onFinish, onBack }) => (
       rules={passwordRules}
       hasFeedback
     >
-      <Input.Password
-        size="large"
-        prefix={<LockOutlined className="text-slate-400" />}
-        placeholder="Create a new password"
-        autoFocus
-      />
+      <PasswordInput placeholder="Create a new password" autoFocus />
     </Form.Item>
 
     <Form.Item

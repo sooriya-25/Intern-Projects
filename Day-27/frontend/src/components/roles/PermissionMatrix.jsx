@@ -1,6 +1,15 @@
-import { Checkbox, ConfigProvider, Table } from "antd";
+import { ConfigProvider, Checkbox, Table, Tooltip } from "antd";
+import { LockOutlined } from "@ant-design/icons";
 
 import { MODULES, ACTIONS } from "../../constants/modules";
+
+const isActionDisabled = (module, actionKey) =>
+  Boolean(module.disabledActions?.includes(actionKey));
+
+// Actions that actually count towards a module's "All" state — locked
+// actions are excluded entirely rather than treated as always-false.
+const relevantActions = (module) =>
+  ACTIONS.filter((action) => !isActionDisabled(module, action.key));
 
 const PermissionMatrix = ({ value = [], onChange }) => {
   const getRow = (moduleKey) =>
@@ -20,11 +29,15 @@ const PermissionMatrix = ({ value = [], onChange }) => {
     onChange(next);
   };
 
-  const handleToggle = (moduleKey, actionKey, checked) => {
-    const row = getRow(moduleKey);
+  const handleToggle = (module, actionKey, checked) => {
+    if (isActionDisabled(module, actionKey)) {
+      return;
+    }
+
+    const row = getRow(module.key);
 
     if (actionKey === "view" && !checked) {
-      setRow(moduleKey, {
+      setRow(module.key, {
         ...row,
         view: false,
         add: false,
@@ -44,7 +57,7 @@ const PermissionMatrix = ({ value = [], onChange }) => {
       nextRow.view = true;
     }
 
-    setRow(moduleKey, nextRow);
+    setRow(module.key, nextRow);
   };
 
   const columns = [
@@ -66,12 +79,25 @@ const PermissionMatrix = ({ value = [], onChange }) => {
 
       render: (_, module) => {
         const row = getRow(module.key);
+        const disabled = isActionDisabled(module, action.key);
+
+        if (disabled) {
+          return (
+            <Tooltip title={`${action.label} isn't assignable for ${module.label}`}>
+              <div className="w-full h-full flex items-center justify-center py-1">
+                <span className="inline-flex items-center justify-center w-6 h-6 rounded-md bg-slate-100 border border-dashed border-slate-300 text-slate-400 cursor-not-allowed">
+                  <LockOutlined style={{ fontSize: 11 }} />
+                </span>
+              </div>
+            </Tooltip>
+          );
+        }
 
         return (
           <Checkbox
             checked={Boolean(row[action.key])}
             onChange={(e) =>
-              handleToggle(module.key, action.key, e.target.checked)
+              handleToggle(module, action.key, e.target.checked)
             }
           />
         );
@@ -85,25 +111,26 @@ const PermissionMatrix = ({ value = [], onChange }) => {
 
       render: (_, module) => {
         const row = getRow(module.key);
+        const actions = relevantActions(module);
 
-        const checked = row.view && row.add && row.edit && row.delete;
-
-        const indeterminate = row.view || row.add || row.edit || row.delete;
+        const checked = actions.every((action) => row[action.key]);
+        const indeterminate =
+          !checked && actions.some((action) => row[action.key]);
 
         return (
           <Checkbox
             checked={checked}
-            indeterminate={indeterminate && !checked}
+            indeterminate={indeterminate}
             onChange={(e) => {
               const checked = e.target.checked;
 
-              setRow(module.key, {
-                ...row,
-                view: checked,
-                add: checked,
-                edit: checked,
-                delete: checked,
+              const nextRow = { ...row };
+
+              actions.forEach((action) => {
+                nextRow[action.key] = checked;
               });
+
+              setRow(module.key, nextRow);
             }}
           />
         );

@@ -4,6 +4,11 @@ const initialState = {
   token: null,
   user: null,
   isAuthenticated: false,
+  // Why the user was logged out, so redirects (ProtectedRoute, axios
+  // interceptor) can agree on where to send them instead of racing each
+  // other. null = normal/manual logout -> /login.
+  // "accessDenied" -> /access-denied. "expired" -> /login.
+  logoutReason: null,
 };
 
 const authSlice = createSlice({
@@ -14,6 +19,7 @@ const authSlice = createSlice({
       state.token = action.payload.token;
       state.user = action.payload.user;
       state.isAuthenticated = true;
+      state.logoutReason = null;
     },
 
     updateUser: (state, action) => {
@@ -26,10 +32,11 @@ const authSlice = createSlice({
       }
     },
 
-    logout: (state) => {
+    logout: (state, action) => {
       state.token = null;
       state.user = null;
       state.isAuthenticated = false;
+      state.logoutReason = action?.payload?.reason ?? null;
     },
   },
 });

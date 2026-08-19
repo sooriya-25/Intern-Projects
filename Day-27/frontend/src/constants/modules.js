@@ -2,7 +2,13 @@
 // intentionally excluded — those two are locked to isSystem admin
 // roles and never appear in the editable permission matrix.
 export const MODULES = [
-  { key: "STOCKS", label: "Stocks" },
+  {
+    key: "STOCKS",
+    label: "Stocks",
+    // Editing/deleting stocks isn't grantable through roles anymore —
+    // the checkboxes stay locked (and unset) in the permission matrix.
+    disabledActions: ["edit", "delete"],
+  },
   { key: "WATCHLIST", label: "Watchlist" },
   { key: "TODO", label: "Todo" },
 ];

@@ -1,21 +1,13 @@
 import { Button, Card, Tag } from "antd";
 
-import {
-  DeleteOutlined,
-  EditOutlined,
-  StarOutlined,
-} from "@ant-design/icons";
+import { StarOutlined } from "@ant-design/icons";
 
 const StockCard = ({
   stock,
-  canEdit,
-  canDelete,
   canAddWatchlist,
   isInWatchlist,
   isPending,
   onWatchlist,
-  onEdit,
-  onDelete,
 }) => {
   const buttonLabel = isPending
     ? "Adding..."
@@ -57,8 +49,8 @@ const StockCard = ({
         <p className="text-sm text-slate-600 leading-relaxed line-clamp-2 mb-0">{stock.description}</p>
       </div>
 
-      <div className="mt-4 grid gap-2">
-        {canAddWatchlist && (
+      {canAddWatchlist && (
+        <div className="mt-4 grid gap-2">
           <Button
             type={isInWatchlist || isPending ? "default" : "primary"}
             size="large"
@@ -70,33 +62,8 @@ const StockCard = ({
           >
             {buttonLabel}
           </Button>
-        )}
-
-        {(canEdit || canDelete) && (
-          <div className="flex gap-3">
-            {canEdit && (
-              <Button
-                className="flex-1 rounded-full h-10 font-medium"
-                icon={<EditOutlined />}
-                onClick={() => onEdit(stock)}
-              >
-                Edit
-              </Button>
-            )}
-
-            {canDelete && (
-              <Button
-                danger
-                className="flex-1 rounded-full h-10 font-medium"
-                icon={<DeleteOutlined />}
-                onClick={() => onDelete(stock)}
-              >
-                Delete
-              </Button>
-            )}
-          </div>
-        )}
-      </div>
+        </div>
+      )}
     </Card>
   );
 };

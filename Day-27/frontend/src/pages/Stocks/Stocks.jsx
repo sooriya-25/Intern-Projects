@@ -1,4 +1,4 @@
-import { Button, Input, Spin, Modal } from "antd";
+import { Button, Input, Spin } from "antd";
 
 import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
 
@@ -11,7 +11,6 @@ import useDebounce from "../../hooks/useDebounce";
 
 import { useAddWatchlist } from "../../hooks/useAddWatchlist";
 import { useWatchlist } from "../../hooks/useWatchlist";
-import { useDeleteStock } from "../../hooks/useDeleteStock";
 import usePermission from "../../hooks/usePermission";
 
 import StockCard from "../../components/stock/StockCard";
@@ -26,13 +25,9 @@ const Stocks = () => {
   const { hasPermission } = usePermission();
 
   const canAddStock = hasPermission("STOCKS", "add");
-  const canEditStock = hasPermission("STOCKS", "edit");
-  const canDeleteStock = hasPermission("STOCKS", "delete");
   const canAddWatchlist = hasPermission("WATCHLIST", "add");
 
   const SCROLLABLE_TARGET = "page-content-main";
-
-  const { mutate: deleteStock } = useDeleteStock();
 
   const debouncedSearch = useDebounce(search);
 
@@ -72,32 +67,6 @@ const Stocks = () => {
 
   const handleAdd = () => {
     navigate("/dashboard/stocks/add");
-  };
-
-  const handleEdit = (stock) => {
-    navigate(`/dashboard/stocks/${stock._id}/edit`, { state: { stock } });
-  };
-
-  const handleDelete = (stock) => {
-    Modal.confirm({
-      title: "Delete Stock",
-
-      content: `Delete ${stock.company}?`,
-
-      okText: "Delete",
-
-      okButtonProps: {
-        danger: true,
-      },
-
-      onOk() {
-        deleteStock(stock._id, {
-          onSuccess: () => {
-            toast.success("Stock deleted successfully");
-          },
-        });
-      },
-    });
   };
 
   const isInitialLoading = isLoading && !data;
@@ -163,14 +132,10 @@ const Stocks = () => {
             <StockCard
               key={stock._id}
               stock={stock}
-              canEdit={canEditStock}
-              canDelete={canDeleteStock}
               canAddWatchlist={canAddWatchlist}
               isInWatchlist={watchlistIds.includes(stock._id)}
               isPending={pendingAdds.includes(stock._id)}
               onWatchlist={handleWatchlist}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
             />
           ))}
         </div>
