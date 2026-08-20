@@ -6,11 +6,9 @@ const watchlistController = require("../controllers/watchlist.controller");
 
 const authenticate = require("../middlewares/auth.middleware");
 const checkPermission = require("../middlewares/checkPermission.middleware");
-const validate = require("../middlewares/validate.middleware");
 
-const {
-  addToWatchlistValidator,
-} = require("../validators/watchlist.validator");
+// Request body validation is handled globally by express-openapi-validator
+// (see app.js + src/openapi/modules/watchlist.yaml).
 
 const MODULES = require("../constants/modules");
 const ACTIONS = require("../constants/actions");
@@ -26,8 +24,6 @@ router.post(
   "/",
   authenticate,
   checkPermission(MODULES.WATCHLIST, ACTIONS.ADD),
-  addToWatchlistValidator,
-  validate,
   watchlistController.addToWatchlist
 );
 

@@ -12,6 +12,7 @@ const {
   MAX_ATTEMPTS,
 } = require("../utils/otp");
 const { sendMail } = require("../utils/mailer");
+const logger = require("../utils/logger");
 const { getRenderedTemplate } = require("./emailTemplate.service");
 
 const STATUS = require("../constants/status");
@@ -50,7 +51,10 @@ const sendSignupOtp = async ({ email }) => {
 
     await sendMail({ to: email, subject, text, html });
   } catch (error) {
-    console.error(`❌ Failed to send OTP email to ${email}:`, error.message);
+    logger("error", "auth.signup_otp_email_failed", {
+      message: error.message,
+      stack: error.stack,
+    });
 
     throw new AppError(
       "Failed to send verification email. Please try again.",
@@ -203,7 +207,10 @@ const loginWithPassword = async ({ email, password }) => {
 
     await sendMail({ to: email, subject, text, html });
   } catch (error) {
-    console.error(`❌ Failed to send login OTP email to ${email}:`, error.message);
+    logger("error", "auth.login_otp_email_failed", {
+      message: error.message,
+      stack: error.stack,
+    });
 
     throw new AppError(
       "Failed to send verification email. Please try again.",
@@ -332,10 +339,10 @@ const forgotPassword = async ({ email }) => {
 
     await sendMail({ to: email, subject, text, html });
   } catch (error) {
-    console.error(
-      `❌ Failed to send password reset email to ${email}:`,
-      error.message
-    );
+    logger("error", "auth.password_reset_email_failed", {
+      message: error.message,
+      stack: error.stack,
+    });
 
     throw new AppError(
       "Failed to send reset email. Please try again.",

@@ -6,12 +6,9 @@ const todoController = require("../controllers/todo.controller");
 
 const authenticate = require("../middlewares/auth.middleware");
 const checkPermission = require("../middlewares/checkPermission.middleware");
-const validate = require("../middlewares/validate.middleware");
 
-const {
-  createTodoValidator,
-  updateTodoValidator,
-} = require("../validators/todo.validator");
+// Request body validation is handled globally by express-openapi-validator
+// (see app.js + src/openapi/modules/todo.yaml).
 
 const MODULES = require("../constants/modules");
 const ACTIONS = require("../constants/actions");
@@ -27,8 +24,6 @@ router.post(
   "/",
   authenticate,
   checkPermission(MODULES.TODO, ACTIONS.ADD),
-  createTodoValidator,
-  validate,
   todoController.createTodo
 );
 
@@ -36,8 +31,6 @@ router.put(
   "/:id",
   authenticate,
   checkPermission(MODULES.TODO, ACTIONS.EDIT),
-  updateTodoValidator,
-  validate,
   todoController.updateTodo
 );
 

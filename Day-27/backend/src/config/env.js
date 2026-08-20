@@ -4,9 +4,7 @@ require("dotenv").config();
 // "http://localhost:3000,http://192.168.1.10:3000" — handy when the app is
 // also opened from a phone/other device on the same network during dev.
 const rawClientUrl = process.env.CLIENT_URL || "http://localhost:3000";
-const CLIENT_URLS = rawClientUrl
-  .split(",")
-  .map((url) => url.trim().replace(/\/$/, ""))
+const CLIENT_URLS = [rawClientUrl, "http://localhost:5000"]
   .filter(Boolean);
 
 module.exports = {

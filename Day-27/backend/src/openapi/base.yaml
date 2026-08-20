@@ -1,0 +1,102 @@
+openapi: 3.0.3
+
+info:
+  title: Task Manager / Stock Management API
+  version: "1.0.0"
+  description: >
+    API for the Stock Management platform (auth, stocks, watchlist, users,
+    roles, profile, dashboard, todos, subscribe). This spec is assembled at
+    startup from one YAML file per module (see src/openapi/modules/*.yaml)
+    and doubles as both the express-openapi-validator request-validation
+    source and the Swagger UI documentation.
+
+servers:
+  - url: /api
+
+tags:
+  - name: Auth
+  - name: Stocks
+  - name: Watchlist
+  - name: Users
+  - name: Profile
+  - name: Dashboard
+  - name: Roles
+  - name: Todos
+  - name: Subscribe
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: >
+        Documentation only. Enforced separately by the app's own
+        auth.middleware.js / checkPermission.middleware.js /
+        requireSystemRole.middleware.js — NOT by the OpenAPI validator.
+
+  parameters:
+    MongoIdParam:
+      name: id
+      in: path
+      required: true
+      description: MongoDB ObjectId
+      schema:
+        $ref: "#/components/schemas/MongoId"
+
+  schemas:
+    MongoId:
+      type: string
+      pattern: "^[0-9a-fA-F]{24}$"
+      example: "64f1a2b3c4d5e6f7a8b9c0d1"
+
+    SuccessResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+        data: {}
+
+    ErrorResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+      required:
+        - success
+        - message
+
+  # Reusable "empty" responses to keep module files short.
+  responses:
+    BadRequest:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    Unauthorized:
+      description: Missing / invalid auth token
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    Forbidden:
+      description: Authenticated but not permitted
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ErrorResponse"
+
+paths: {}

@@ -1,0 +1,74 @@
+components:
+  schemas:
+    Watchlist_AddRequest:
+      type: object
+      required: [stockId]
+      properties:
+        stockId:
+          $ref: "#/components/schemas/MongoId"
+
+paths:
+  /watchlist:
+    get:
+      tags: [Watchlist]
+      summary: Get the current user's watchlist
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200":
+          description: Watchlist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+    post:
+      tags: [Watchlist]
+      summary: Add a stock to the watchlist
+      security: [{ bearerAuth: [] }]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Watchlist_AddRequest"
+      responses:
+        "201":
+          description: Added to watchlist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+
+  /watchlist/{stockId}:
+    delete:
+      tags: [Watchlist]
+      summary: Remove a stock from the watchlist
+      security: [{ bearerAuth: [] }]
+      parameters:
+        - name: stockId
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/MongoId"
+      responses:
+        "200":
+          description: Removed from watchlist
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"

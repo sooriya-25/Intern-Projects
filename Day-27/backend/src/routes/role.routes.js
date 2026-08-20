@@ -6,13 +6,9 @@ const roleController = require("../controllers/role.controller");
 
 const authenticate = require("../middlewares/auth.middleware");
 const requireSystemRole = require("../middlewares/requireSystemRole.middleware");
-const validate = require("../middlewares/validate.middleware");
 
-const {
-  createRoleValidator,
-  updateRoleValidator,
-} = require("../validators/role.validator");
-
+// Request body validation is handled globally by express-openapi-validator
+// (see app.js + src/openapi/modules/role.yaml).
 
 router.get("/", authenticate, requireSystemRole, roleController.getRoles);
 
@@ -22,8 +18,6 @@ router.post(
   "/",
   authenticate,
   requireSystemRole,
-  createRoleValidator,
-  validate,
   roleController.createRole
 );
 
@@ -31,8 +25,6 @@ router.put(
   "/:id",
   authenticate,
   requireSystemRole,
-  updateRoleValidator,
-  validate,
   roleController.updateRole
 );
 

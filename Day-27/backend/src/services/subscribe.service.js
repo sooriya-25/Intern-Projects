@@ -3,6 +3,7 @@ const { generateCaptcha, verifyCaptcha } = require("../utils/captcha");
 const AppError = require("../utils/appError");
 const HTTP_STATUS = require("../constants/httpStatus");
 const { sendMail } = require("../utils/mailer");
+const logger = require("../utils/logger");
 const { getRenderedTemplate } = require("./emailTemplate.service");
 const env = require("../config/env");
 
@@ -27,10 +28,10 @@ const sendWelcomeEmail = async (subscriber) => {
     subscriber.emailSentAt = new Date();
     await subscriber.save();
   } catch (error) {
-    console.error(
-      `❌ Failed to send welcome email to ${subscriber.email}:`,
-      error.message
-    );
+    logger("error", "subscription.welcome_email_failed", {
+      message: error.message,
+      stack: error.stack,
+    });
   }
 };
 

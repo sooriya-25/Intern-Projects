@@ -1,0 +1,48 @@
+components:
+  schemas:
+    Subscribe_Request:
+      type: object
+      required: [email, captchaAnswer, captchaToken]
+      properties:
+        email:
+          type: string
+          format: email
+        captchaAnswer:
+          type: string
+          pattern: "^[a-zA-Z0-9]+$"
+        captchaToken:
+          type: string
+          minLength: 1
+
+paths:
+  /subscribe/captcha:
+    get:
+      tags: [Subscribe]
+      summary: Get a CAPTCHA challenge for the newsletter form
+      responses:
+        "200":
+          description: CAPTCHA
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+
+  /subscribe:
+    post:
+      tags: [Subscribe]
+      summary: Subscribe to the newsletter
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/Subscribe_Request"
+      responses:
+        "201":
+          description: Subscribed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"

@@ -1,5 +1,6 @@
 const nodemailer = require("nodemailer");
 const env = require("../config/env");
+const logger = require("./logger");
 
 let transporter = null;
 
@@ -7,9 +8,9 @@ const getTransporter = () => {
   if (transporter) return transporter;
 
   if (!env.SMTP_USER || !env.SMTP_PASS) {
-    console.warn(
-      "⚠️  SMTP_USER / SMTP_PASS not set — emails will fail to send."
-    );
+    logger("warn", "mailer.credentials_missing", {
+      message: "SMTP_USER / SMTP_PASS not set; emails will fail to send.",
+    });
   }
 
   transporter = nodemailer.createTransport({

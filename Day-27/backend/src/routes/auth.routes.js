@@ -3,19 +3,10 @@ const express = require("express");
 const router = express.Router();
 
 const authController = require("../controllers/auth.controller");
-const validate = require("../middlewares/validate.middleware");
 const createRateLimiter = require("../middlewares/rateLimit.middleware");
 
-const {
-  sendOtpValidator,
-  verifyOtpValidator,
-  registerValidator,
-  loginValidator,
-  verifyLoginOtpValidator,
-  forgotPasswordValidator,
-  verifyResetOtpValidator,
-  resetPasswordValidator,
-} = require("../validators/auth.validator");
+// Request body validation for all routes below is handled globally by
+// express-openapi-validator (see app.js + src/openapi/modules/auth.yaml).
 
 const loginLimiter = createRateLimiter({
   windowMs: 15 * 60 * 1000,
@@ -59,66 +50,39 @@ const resetPasswordLimiter = createRateLimiter({
   message: "Too many attempts, please try again later.",
 });
 
-router.post(
-  "/send-otp",
-  otpLimiter,
-  sendOtpValidator,
-  validate,
-  authController.sendOtp
-);
+router.post("/send-otp", otpLimiter, authController.sendOtp);
 
 router.post(
   "/verify-otp",
   //otpVerifyLimiter,
-  verifyOtpValidator,
-  validate,
   authController.verifyOtp
 );
 
-router.post(
-  "/register",
-  registerValidator,
-  validate,
-  authController.register
-);
+router.post("/register", authController.register);
 
-router.post(
-  "/login",
-  loginLimiter,
-  loginValidator,
-  validate,
-  authController.login
-);
+router.post("/login", loginLimiter, authController.login);
 
 router.post(
   "/verify-login-otp",
   loginOtpLimiter,
-  verifyLoginOtpValidator,
-  validate,
   authController.verifyLoginOtp
 );
 
 router.post(
   "/forgot-password",
   forgotPasswordLimiter,
-  forgotPasswordValidator,
-  validate,
   authController.forgotPassword
 );
 
 router.post(
   "/verify-reset-otp",
   verifyResetOtpLimiter,
-  verifyResetOtpValidator,
-  validate,
   authController.verifyResetOtp
 );
 
 router.post(
   "/reset-password",
   resetPasswordLimiter,
-  resetPasswordValidator,
-  validate,
   authController.resetPassword
 );
 
