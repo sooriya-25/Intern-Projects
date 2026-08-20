@@ -24,6 +24,10 @@ const authenticate = async (req, res, next) => {
       throw new AppError("User not found", HTTP_STATUS.UNAUTHORIZED);
     }
 
+    if (user.isDeleted) {
+      throw new AppError("This account has been deleted", HTTP_STATUS.UNAUTHORIZED);
+    }
+
     if (!user.role) {
       throw new AppError("No role assigned to this user", HTTP_STATUS.FORBIDDEN);
     }

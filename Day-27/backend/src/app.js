@@ -1,5 +1,6 @@
 const express = require("express");
 const cors = require("cors");
+const morgan = require("morgan");
 const swaggerUi = require("swagger-ui-express");
 const OpenApiValidator = require("express-openapi-validator");
 
@@ -37,6 +38,7 @@ app.use(
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(morgan("dev"));
 app.use(requestLogger);
 app.use("/uploads", express.static("uploads"));
 

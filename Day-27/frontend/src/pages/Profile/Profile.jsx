@@ -4,6 +4,7 @@ import {
   Card,
   Form,
   Input,
+  Modal,
   Spin,
   Typography,
   Upload,
@@ -13,6 +14,7 @@ import {
 import {
   CameraOutlined,
   DeleteOutlined,
+  ExclamationCircleFilled,
   MailOutlined,
   UserOutlined,
 } from "@ant-design/icons";
@@ -22,6 +24,7 @@ import { useDispatch } from "react-redux";
 
 import { useProfile } from "../../hooks/useProfile";
 import { useRemoveProfilePhoto, useUpdateProfile, useUploadProfilePhoto } from "../../hooks/useUpdateProfile";
+import { useDeleteAccount } from "../../hooks/useDeleteAccount";
 import { updateProfileImage, updateUser } from "../../store/slices/authSlice";
 import { useFloatingWidget } from "../../context/FloatingWidgetContext";
 import { useToast } from "../../components/Toast/ToastProvider";
@@ -38,6 +41,7 @@ const Profile = () => {
   const { mutate, isPending } = useUpdateProfile();
   const { mutate: uploadPhoto, isPending: isUploadingPhoto } = useUploadProfilePhoto();
   const { mutate: removePhoto, isPending: isRemovingPhoto } = useRemoveProfilePhoto();
+  const { mutate: deleteAccount, isPending: isDeletingAccount } = useDeleteAccount();
 
   const { addUpload, updateProgress, completeUpload, failUpload } = useFloatingWidget();
 
@@ -136,6 +140,33 @@ const Profile = () => {
       onError: (error) => {
         toast.error(error.response?.data?.message || "Photo removal failed");
       },
+    });
+  };
+
+  const handleDeleteAccount = () => {
+    Modal.confirm({
+      title: "Delete your account?",
+      icon: <ExclamationCircleFilled className="text-red-500" />,
+      content:
+        "This will deactivate your account and you'll be signed out immediately. This action cannot be undone from here.",
+      okText: "Delete account",
+      okButtonProps: { danger: true, loading: isDeletingAccount },
+      cancelText: "Cancel",
+      onOk: () =>
+        new Promise((resolve, reject) => {
+          deleteAccount(undefined, {
+            onSuccess: (response) => {
+              toast.success(response.message || "Your account has been deleted");
+              resolve();
+            },
+            onError: (error) => {
+              toast.error(
+                error.response?.data?.message || "Failed to delete account"
+              );
+              reject(error);
+            },
+          });
+        }),
     });
   };
 
@@ -274,6 +305,30 @@ const Profile = () => {
               Save Changes
             </Button>
           </Form>
+        </div>
+      </Card>
+
+      <Card className="rounded-2xl border border-red-200 bg-red-50/50 shadow-sm">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <Title level={5} className="!mb-1 !text-red-700">
+              Danger Zone
+            </Title>
+            <Text type="secondary">
+              Deleting your account signs you out immediately and disables
+              login. This cannot be undone from here.
+            </Text>
+          </div>
+
+          <Button
+            danger
+            icon={<DeleteOutlined />}
+            loading={isDeletingAccount}
+            onClick={handleDeleteAccount}
+            className="shrink-0"
+          >
+            Delete Account
+          </Button>
         </div>
       </Card>
     </div>

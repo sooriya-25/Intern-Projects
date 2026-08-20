@@ -19,4 +19,7 @@ router.patch(
 );
 router.delete("/photo", authenticate, profileController.removeProfilePhoto);
 
+// Self-service soft delete — see profile.service.js#deleteAccount.
+router.delete("/", authenticate, profileController.deleteAccount);
+
 module.exports = router;

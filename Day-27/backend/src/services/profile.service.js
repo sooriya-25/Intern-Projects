@@ -44,9 +44,26 @@ const removeProfilePhoto = async (userId) => {
     .select("-password");
 };
 
+// Soft delete: flips isDeleted + records deletedAt, but keeps the
+// document (and anything referencing it, e.g. Todos/Watchlist) intact.
+// auth.middleware / auth.service reject the account afterwards.
+const deleteAccount = async (userId) => {
+  return User.findByIdAndUpdate(
+    userId,
+    {
+      isDeleted: true,
+      deletedAt: new Date(),
+    },
+    { new: true }
+  )
+    .populate("role")
+    .select("-password");
+};
+
 module.exports = {
   getProfile,
   updateProfile,
   updateProfilePhoto,
   removeProfilePhoto,
+  deleteAccount,
 };

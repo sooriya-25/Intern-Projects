@@ -55,6 +55,35 @@ paths:
       tags: [Stocks]
       summary: List stocks
       security: [{ bearerAuth: [] }]
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 10
+        - name: search
+          in: query
+          allowEmptyValue: true
+          schema:
+            type: string
+        - name: sort
+          in: query
+          schema:
+            type: string
+            default: company
+        - name: order
+          in: query
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: asc
       responses:
         "200":
           description: List of stocks

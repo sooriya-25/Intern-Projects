@@ -68,9 +68,23 @@ const removeProfilePhoto = async (req, res, next) => {
   }
 };
 
+const deleteAccount = async (req, res, next) => {
+  try {
+    await profileService.deleteAccount(req.user._id);
+
+    res.json({
+      success: true,
+      message: "Your account has been deleted.",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getProfile,
   updateProfile,
   updateProfilePhoto,
   removeProfilePhoto,
+  deleteAccount,
 };

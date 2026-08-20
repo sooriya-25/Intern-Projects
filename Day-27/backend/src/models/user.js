@@ -67,6 +67,21 @@ const userSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
+
+    // Soft delete: the user's own record is kept (audit trail, referenced
+    // documents like Todos/Watchlist stay valid) but the account can no
+    // longer log in or authenticate. Deliberately separate from `status`
+    // (ACTIVE/INACTIVE), which is an admin-controlled enable/disable
+    // toggle — deletion is user-initiated and one-way.
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
+
+    deletedAt: {
+      type: Date,
+      default: null,
+    },
   },
   {
     timestamps: true,

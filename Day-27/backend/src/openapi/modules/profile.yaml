@@ -43,6 +43,23 @@ paths:
           $ref: "#/components/responses/BadRequest"
         "401":
           $ref: "#/components/responses/Unauthorized"
+    delete:
+      tags: [Profile]
+      summary: Soft delete the current user's own account
+      description: >
+        Sets isDeleted=true / deletedAt on the user's own record. The
+        account can no longer authenticate afterwards (see
+        auth.middleware.js and auth.service.js). Data is not hard-deleted.
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200":
+          description: Account deleted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
 
   /profile/photo:
     patch:

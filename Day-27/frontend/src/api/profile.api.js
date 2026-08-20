@@ -34,3 +34,9 @@ export const removeProfilePhoto = async () => {
 
   return response.data;
 };
+
+export const deleteAccount = async () => {
+  const response = await api.delete("/profile");
+
+  return response.data;
+};

@@ -180,6 +180,10 @@ const loginWithPassword = async ({ email, password }) => {
     throw new AppError("Invalid email or password", HTTP_STATUS.UNAUTHORIZED);
   }
 
+  if (user.isDeleted) {
+    throw new AppError("This account has been deleted", HTTP_STATUS.FORBIDDEN);
+  }
+
   if (user.status === STATUS.INACTIVE) {
     throw new AppError(
       "Your account has been deactivated",
@@ -264,6 +268,12 @@ const verifyLoginOtp = async ({ email, otp }) => {
     await OtpVerification.deleteOne({ _id: record._id });
 
     throw new AppError("Invalid email or password", HTTP_STATUS.UNAUTHORIZED);
+  }
+
+  if (user.isDeleted) {
+    await OtpVerification.deleteOne({ _id: record._id });
+
+    throw new AppError("This account has been deleted", HTTP_STATUS.FORBIDDEN);
   }
 
   if (user.status === STATUS.INACTIVE) {

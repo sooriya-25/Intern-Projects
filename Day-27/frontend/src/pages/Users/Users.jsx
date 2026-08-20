@@ -102,7 +102,7 @@ const Users = () => {
           size="small"
           value={role?._id}
           style={{ minWidth: 140 }}
-          disabled={role?.isSystem}
+          disabled={role?.isSystem || user.isDeleted}
           onChange={(roleId) => handleRoleChange(user, roleId)}
           options={roles?.map((r) => ({
             value: r._id,
@@ -114,16 +114,19 @@ const Users = () => {
     {
       title: "Status",
       dataIndex: "status",
-      render: (status) => (
-        <Tag
-          color={
-            status === "ACTIVE"
-              ? "green"
-              : "red"
-          }
-        >
-          {status}
-        </Tag>
+      render: (status, user) => (
+        <Space size={4}>
+          <Tag
+            color={
+              status === "ACTIVE"
+                ? "green"
+                : "red"
+            }
+          >
+            {status}
+          </Tag>
+          {user.isDeleted && <Tag color="default">Deleted</Tag>}
+        </Space>
       ),
     },
     {
@@ -132,6 +135,7 @@ const Users = () => {
         <Space>
           <Switch
             checked={user.status === "ACTIVE"}
+            disabled={user.isDeleted}
             onChange={() =>
               handleStatus(user)
             }
