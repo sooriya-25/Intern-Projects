@@ -57,13 +57,33 @@ const login = async (req, res, next) => {
 };
 
 const verifyLoginOtp = async (req, res, next) => {
+  console.log("req.ip", req.ip);
   try {
-    const data = await authService.verifyLoginOtp(req.body);
+    const data = await authService.verifyLoginOtp({
+      ...req.body,
+      userAgent: req.headers["user-agent"],
+      ip: req.ip,
+    });
 
     res.status(200).json({
       success: true,
       message: "Login successful",
       data,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// Revokes only the session that's making this request. Requires
+// `authenticate` on the route, which is what supplies req.user/req.sessionId.
+const logout = async (req, res, next) => {
+  try {
+    await authService.logout(req.user._id, req.sessionId);
+
+    res.status(200).json({
+      success: true,
+      message: "Logged out successfully",
     });
   } catch (error) {
     next(error);
@@ -118,6 +138,7 @@ module.exports = {
   register,
   login,
   verifyLoginOtp,
+  logout,
   forgotPassword,
   verifyResetOtp,
   resetPassword,

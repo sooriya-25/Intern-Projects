@@ -297,6 +297,80 @@ This code expires in {{minutes}} minutes. If you didn't request this, you can sa
 
 © {{year}} {{appName}}`;
 
+const accountDeletedHtml = `
+<!DOCTYPE html>
+<html>
+  <body style="margin:0;padding:0;background-color:#f1f5f9;font-family:'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color:#f1f5f9;padding:24px 16px;">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:480px;background-color:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 12px 28px rgba(15,23,42,0.12);">
+
+            <!-- Header -->
+            <tr>
+              <td style="background:linear-gradient(135deg,#ef4444 0%,#f97316 100%);padding:26px 28px;text-align:center;">
+                <h1 style="margin:0;color:#ffffff;font-size:21px;font-weight:700;letter-spacing:-0.3px;">
+                  Account Deleted
+                </h1>
+              </td>
+            </tr>
+
+            <!-- Body -->
+            <tr>
+              <td style="padding:24px 28px 4px;">
+                <p style="margin:0 0 14px;color:#475569;font-size:14px;line-height:1.6;">
+                  A user permanently deleted their {{appName}} account.
+                </p>
+
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 20px;background-color:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;">
+                  <tr>
+                    <td style="padding:14px 16px;">
+                      <p style="margin:0 0 4px;color:#94a3b8;font-size:11px;text-transform:uppercase;letter-spacing:0.4px;">Name</p>
+                      <p style="margin:0 0 12px;color:#1e293b;font-size:14px;font-weight:600;">{{userName}}</p>
+                      <p style="margin:0 0 4px;color:#94a3b8;font-size:11px;text-transform:uppercase;letter-spacing:0.4px;">Email</p>
+                      <p style="margin:0;color:#1e293b;font-size:14px;font-weight:600;">{{userEmail}}</p>
+                    </td>
+                  </tr>
+                </table>
+
+                <p style="margin:0 0 4px;color:#94a3b8;font-size:12px;">
+                  This account and its data have been removed and cannot be recovered.
+                </p>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding:0 28px;">
+                <hr style="border:none;border-top:1px solid #e2e8f0;margin:12px 0;" />
+              </td>
+            </tr>
+
+            <tr>
+              <td style="padding:0 28px 20px;text-align:center;">
+                <p style="margin:0;color:#cbd5e1;font-size:11px;">
+                  © {{year}} {{appName}}
+                </p>
+              </td>
+            </tr>
+
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>`;
+
+const accountDeletedText = `Account deleted
+
+A user permanently deleted their {{appName}} account.
+
+Name: {{userName}}
+Email: {{userEmail}}
+
+This account and its data have been removed and cannot be recovered.
+
+© {{year}} {{appName}}`;
+
 module.exports = [
   {
     key: "SUBSCRIPTION_WELCOME",
@@ -328,6 +402,14 @@ module.exports = [
     subject: "Your login code",
     text: loginOtpText,
     html: loginOtpHtml,
+    isActive: true,
+  },
+  {
+    key: "ACCOUNT_DELETED",
+    name: "Account Deleted (Admin Notification)",
+    subject: "A user account was deleted",
+    text: accountDeletedText,
+    html: accountDeletedHtml,
     isActive: true,
   },
 ];

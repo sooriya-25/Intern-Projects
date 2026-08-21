@@ -40,3 +40,8 @@ export const resetPassword = async (data) => {
   const response = await api.post("/auth/reset-password", data);
   return response.data;
 };
+
+export const logout = async () => {
+  const response = await api.post("/auth/logout");
+  return response.data;
+};

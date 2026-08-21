@@ -4,6 +4,7 @@ const router = express.Router();
 
 const authController = require("../controllers/auth.controller");
 const createRateLimiter = require("../middlewares/rateLimit.middleware");
+const authenticate = require("../middlewares/auth.middleware");
 
 // Request body validation for all routes below is handled globally by
 // express-openapi-validator (see app.js + src/openapi/modules/auth.yaml).
@@ -67,6 +68,8 @@ router.post(
   loginOtpLimiter,
   authController.verifyLoginOtp
 );
+
+router.post("/logout", authenticate, authController.logout);
 
 router.post(
   "/forgot-password",

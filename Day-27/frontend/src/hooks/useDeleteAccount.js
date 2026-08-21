@@ -1,22 +1,16 @@
 import { useMutation } from "@tanstack/react-query";
-import { useDispatch } from "react-redux";
 
 import { deleteAccount } from "../api/profile.api";
-import { logout } from "../store/slices/authSlice";
-import { redirectTo } from "../utils/navigation";
 
-// Self-service account deletion (soft delete on the backend). On success
-// we log the user out locally and send them to the landing page — the
-// account no longer authenticates, so there's nothing left to show them.
+// Self-service account deletion (hard delete on the backend — the
+// account is permanently removed and cannot be recovered).
+//
+// Deliberately has no onSuccess side effects (logout/redirect) here —
+// those are driven by the confirm modal in Profile.jsx so the UI can
+// close/animate the modal first and only then navigate away, instead of
+// the navigation yanking the modal out of the tree mid-animation.
 export const useDeleteAccount = () => {
-  const dispatch = useDispatch();
-
   return useMutation({
     mutationFn: deleteAccount,
-
-    onSuccess: () => {
-      dispatch(logout());
-      redirectTo("/", { replace: true });
-    },
   });
 };

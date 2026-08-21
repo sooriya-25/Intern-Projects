@@ -81,10 +81,59 @@ const deleteAccount = async (req, res, next) => {
   }
 };
 
+const getSessions = async (req, res, next) => {
+  try {
+    const sessions = await profileService.getSessions(
+      req.user._id,
+      req.sessionId
+    );
+
+    res.json({
+      success: true,
+      data: sessions,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const revokeSession = async (req, res, next) => {
+  try {
+    const isCurrent = req.params.sessionId === req.sessionId;
+
+    await profileService.revokeSession(req.user._id, req.params.sessionId);
+
+    res.json({
+      success: true,
+      message: isCurrent
+        ? "You have been logged out of this device"
+        : "Device logged out",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const revokeOtherSessions = async (req, res, next) => {
+  try {
+    await profileService.revokeOtherSessions(req.user._id, req.sessionId);
+
+    res.json({
+      success: true,
+      message: "Logged out of all other devices",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getProfile,
   updateProfile,
   updateProfilePhoto,
   removeProfilePhoto,
   deleteAccount,
+  getSessions,
+  revokeSession,
+  revokeOtherSessions,
 };

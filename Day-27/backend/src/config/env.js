@@ -24,4 +24,8 @@ module.exports = {
   SMTP_PASS: process.env.SMTP_PASS,
   SMTP_FROM_NAME: process.env.SMTP_FROM_NAME || "Team",
   SMTP_FROM_EMAIL: process.env.SMTP_FROM_EMAIL || process.env.SMTP_USER,
+
+  // Notified whenever a user hard-deletes their own account (see
+  // profile.service.js#deleteAccount).
+  ADMIN_EMAIL: process.env.ADMIN_EMAIL,
 };

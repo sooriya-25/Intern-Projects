@@ -15,6 +15,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import { logout } from "../../store/slices/authSlice";
+import { useLogout } from "../../hooks/useLogout";
 
 const getAvatarUrl = (profileImage) => {
   if (!profileImage) {
@@ -37,13 +38,15 @@ const Header = ({ collapsed, onToggle }) => {
 
   const { user } = useSelector((state) => state.auth);
 
+  const { mutate: logoutFromServer } = useLogout();
+
   const pageTitles = {
     "/dashboard": "Dashboard",
     "/dashboard/stocks": "Stocks",
     "/dashboard/stocks/add": "Add Stock",
     "/dashboard/watchlist": "Watchlist",
     "/dashboard/users": "Users",
-    "/dashboard/profile": "Profile",
+    "/dashboard/profile": "Settings",
   };
 
   const title =
@@ -53,8 +56,15 @@ const Header = ({ collapsed, onToggle }) => {
       : "StockPro");
 
   const handleLogout = () => {
-    dispatch(logout());
-    navigate("/login");
+    // Revoke the session server-side (so it drops off Active Sessions on
+    // other devices) but don't let a failed/slow request block the user
+    // from logging out locally — onSettled fires either way.
+    logoutFromServer(undefined, {
+      onSettled: () => {
+        dispatch(logout());
+        navigate("/login");
+      },
+    });
   };
 
   return (

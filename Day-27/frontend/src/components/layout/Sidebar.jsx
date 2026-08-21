@@ -2,10 +2,10 @@ import {
   DashboardOutlined,
   StockOutlined,
   StarOutlined,
-  UserOutlined,
   TeamOutlined,
   CheckSquareOutlined,
   SafetyCertificateOutlined,
+  SettingOutlined,
 } from "@ant-design/icons";
 
 import { Menu } from "antd";
@@ -72,8 +72,8 @@ const Sidebar = ({ collapsed }) => {
       : []),
     {
       key: "/dashboard/profile",
-      icon: <UserOutlined />,
-      label: <Link to="/dashboard/profile">Profile</Link>,
+      icon: <SettingOutlined />,
+      label: <Link to="/dashboard/profile">Settings</Link>,
     },
   ];
 

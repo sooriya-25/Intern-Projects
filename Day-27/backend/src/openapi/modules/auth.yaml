@@ -196,6 +196,24 @@ paths:
         "400":
           $ref: "#/components/responses/BadRequest"
 
+  /auth/logout:
+    post:
+      tags: [Auth]
+      summary: Log out the current session
+      description: >
+        Revokes the session tied to the token used on this request (see
+        the `sid` claim / User.sessions). Other devices stay logged in.
+      security: [{ bearerAuth: [] }]
+      responses:
+        "200":
+          description: Logged out
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SuccessResponse"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+
   /auth/forgot-password:
     post:
       tags: [Auth]

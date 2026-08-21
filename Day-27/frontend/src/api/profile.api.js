@@ -40,3 +40,21 @@ export const deleteAccount = async () => {
 
   return response.data;
 };
+
+export const getSessions = async () => {
+  const response = await api.get("/profile/sessions");
+
+  return response.data.data;
+};
+
+export const revokeSession = async (sessionId) => {
+  const response = await api.delete(`/profile/sessions/${sessionId}`);
+
+  return response.data;
+};
+
+export const revokeOtherSessions = async () => {
+  const response = await api.delete("/profile/sessions");
+
+  return response.data;
+};

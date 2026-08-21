@@ -1,9 +1,12 @@
+const { randomUUID } = require("node:crypto");
+
 const User = require("../models/User");
 const OtpVerification = require("../models/OtpVerification");
 const roleService = require("./role.service");
 
 const { hashPassword, comparePassword } = require("../utils/password");
-const { generateToken } = require("../utils/jwt");
+const { generateToken, decodeToken } = require("../utils/jwt");
+const { getBrowserName, getDeviceName } = require("../utils/device");
 const {
   generateOtp,
   hashOtp,
@@ -23,6 +26,11 @@ const env = require("../config/env");
 const SIGNUP_PURPOSE = "SIGNUP";
 const PASSWORD_RESET_PURPOSE = "PASSWORD_RESET";
 const LOGIN_PURPOSE = "LOGIN";
+
+// Caps how many devices a single account can stay logged into at once.
+// Applied only at login time (cheap, infrequent) — never on the
+// request-by-request path.
+const MAX_SESSIONS = 10;
 
 const sendSignupOtp = async ({ email }) => {
   const existingUser = await User.findOne({ email });
@@ -180,10 +188,6 @@ const loginWithPassword = async ({ email, password }) => {
     throw new AppError("Invalid email or password", HTTP_STATUS.UNAUTHORIZED);
   }
 
-  if (user.isDeleted) {
-    throw new AppError("This account has been deleted", HTTP_STATUS.FORBIDDEN);
-  }
-
   if (user.status === STATUS.INACTIVE) {
     throw new AppError(
       "Your account has been deactivated",
@@ -226,7 +230,10 @@ const loginWithPassword = async ({ email, password }) => {
 };
 
 // Step 2 of login: verify the OTP and, only then, issue the auth token.
-const verifyLoginOtp = async ({ email, otp }) => {
+// `userAgent`/`ip` (passed through from the controller's req) are used
+// only to label the new session for the Active Sessions list — they're
+// never used for anything security-sensitive.
+const verifyLoginOtp = async ({ email, otp, userAgent, ip }) => {
   const record = await OtpVerification.findOne({
     email,
     purpose: LOGIN_PURPOSE,
@@ -270,12 +277,6 @@ const verifyLoginOtp = async ({ email, otp }) => {
     throw new AppError("Invalid email or password", HTTP_STATUS.UNAUTHORIZED);
   }
 
-  if (user.isDeleted) {
-    await OtpVerification.deleteOne({ _id: record._id });
-
-    throw new AppError("This account has been deleted", HTTP_STATUS.FORBIDDEN);
-  }
-
   if (user.status === STATUS.INACTIVE) {
     await OtpVerification.deleteOne({ _id: record._id });
 
@@ -287,12 +288,44 @@ const verifyLoginOtp = async ({ email, otp }) => {
 
   await OtpVerification.deleteOne({ _id: record._id });
 
-  user.lastLogin = new Date();
-  await user.save({ validateModifiedOnly: true });
+  const sessionId = randomUUID();
+  const token = generateToken({ id: user._id, sid: sessionId });
 
-  const token = generateToken({
-    id: user._id,
+  // Mirror the token's own expiry onto the session record, so a session
+  // never outlives (or falls short of) the JWT it belongs to.
+  const decoded = decodeToken(token);
+  console.log("decoded", decoded);
+  const expiresAt = decoded?.exp
+    ? new Date(decoded.exp * 1000)
+    : new Date(Date.now() + 24 * 60 * 60 * 1000);
+
+  const now = new Date();
+
+  // Drop anything already expired, then evict the oldest-by-activity
+  // session(s) if we're at the cap — keeps the array from growing
+  // forever for a device that never explicitly logs out.
+  const liveSessions = (user.sessions || [])
+    .filter((s) => s.expiresAt > now)
+    .sort((a, b) => a.lastActiveAt - b.lastActiveAt);
+
+  while (liveSessions.length >= MAX_SESSIONS) {
+    liveSessions.shift();
+  }
+
+  liveSessions.push({
+    sessionId,
+    browserName: getBrowserName(userAgent),
+    deviceName: getDeviceName(userAgent),
+    userAgent: userAgent || null,
+    ip: ip || null,
+    createdAt: now,
+    lastActiveAt: now,
+    expiresAt,
   });
+
+  user.sessions = liveSessions;
+  user.lastLogin = now;
+  await user.save({ validateModifiedOnly: true });
 
   return {
     token,
@@ -304,6 +337,16 @@ const verifyLoginOtp = async ({ email, otp }) => {
       role: user.role,
     },
   };
+};
+
+// Logs out the session that made this request — removes it from the
+// user's session list so it immediately shows as gone in the Active
+// Sessions list and (once the DB-check-carrying next request comes in
+// for that same token, if any) is rejected by auth.middleware too.
+const logout = async (userId, sessionId) => {
+  if (!sessionId) return;
+
+  await User.updateOne({ _id: userId }, { $pull: { sessions: { sessionId } } });
 };
 
 // Sends a password-reset OTP, but only to emails that belong to an existing
@@ -462,6 +505,7 @@ module.exports = {
   register,
   loginWithPassword,
   verifyLoginOtp,
+  logout,
   forgotPassword,
   verifyResetOtp,
   resetPassword,
